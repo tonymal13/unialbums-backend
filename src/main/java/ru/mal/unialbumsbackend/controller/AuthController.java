@@ -49,4 +49,9 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
+    @GetMapping("/svo")
+    public String  svo(){
+        return "svo";
+    }
+
 }

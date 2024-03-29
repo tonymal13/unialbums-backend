@@ -4,10 +4,7 @@ import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.mal.unialbumsbackend.domain.JwtAuthentication;
-//import ru.mal.unialbumsbackend.domain.Role;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtils {
