@@ -1,34 +1,27 @@
 package ru.mal.unialbumsbackend.service;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.mal.unialbumsbackend.domain.Role;
-import ru.mal.unialbumsbackend.domain.User;
 
-import java.util.Collections;
-import java.util.List;
+import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.repositories.UserRepository;
+
+
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
-    private final List<User> users;
 
-    // TODO: password encryption, create db,add cookie to response
+    private final UserRepository userRepository;
 
-    public UserService() {
-        this.users = List.of(
-                new User("anton", "1234", "Антон", "Иванов", Collections.singleton(Role.USER)),
-                new User("ivan", "12345", "Сергей", "Петров", Collections.singleton(Role.ADMIN))
-        );
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+
     }
 
     public Optional<User> getByLogin(@NonNull String login) {
-        return users.stream()
-                .filter(user -> login.equals(user.getLogin()))
-                .findFirst();
+        return userRepository.findByLogin(login);
     }
 
 }
