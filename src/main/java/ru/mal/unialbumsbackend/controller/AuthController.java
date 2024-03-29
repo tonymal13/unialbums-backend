@@ -5,10 +5,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.*;
+import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
+import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
+import ru.mal.unialbumsbackend.domain.response.LogInResponse;
+import ru.mal.unialbumsbackend.domain.response.RegResponse;
+import ru.mal.unialbumsbackend.domain.response.RespWithRefresh;
+import ru.mal.unialbumsbackend.domain.response.TokensResponse;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
 
@@ -21,10 +26,17 @@ public class AuthController {
     private final UserRepository repository;
 
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
-        LogInResponse tokens = authService.login(authRequest);
-        AccessTokenResponse accessToken=new AccessTokenResponse(tokens.getAccessToken());
-        String refreshToken=tokens.getRefreshToken();
+    public ResponseEntity<LogInResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+        RespWithRefresh respWithRefresh = authService.login(authRequest);
+
+        String refreshToken=respWithRefresh.getRefreshToken();
+
+        LogInResponse logInResponse=new LogInResponse(
+                respWithRefresh.getAccessToken(),
+                respWithRefresh.getLogin(),
+                respWithRefresh.getFirstName(),
+                respWithRefresh.getLastName());
+
         Cookie cookie=new Cookie("refresh_token",refreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
@@ -33,18 +45,18 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok(logInResponse);
     }
 
     @PostMapping("/token")
-    public ResponseEntity<LogInResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
-        final LogInResponse token = authService.getAccessToken(request.getRefreshToken());
+    public ResponseEntity<TokensResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
+        final TokensResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LogInResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
-        final LogInResponse token = authService.refresh(request.getRefreshToken());
+    public ResponseEntity<TokensResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
+        final TokensResponse token = authService.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
