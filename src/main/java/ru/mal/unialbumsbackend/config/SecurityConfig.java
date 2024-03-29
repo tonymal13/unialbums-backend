@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManager->sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/login", "/token","/svo").permitAll()
+                                .requestMatchers("/login", "/token").permitAll()
                                 .anyRequest().authenticated()
                 ).build();
     }

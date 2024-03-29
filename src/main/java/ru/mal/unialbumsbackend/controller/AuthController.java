@@ -60,9 +60,4 @@ public class AuthController {
 //    }
 
 
-    @GetMapping("/svo")
-    public String  svo(){
-        return "svo";
-    }
-
 }
