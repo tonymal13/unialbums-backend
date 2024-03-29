@@ -8,4 +8,3 @@ run
 docker compose up -d
 command
 
-run queries inside bd.sql

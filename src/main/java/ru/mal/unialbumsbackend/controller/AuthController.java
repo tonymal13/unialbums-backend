@@ -3,8 +3,10 @@ package ru.mal.unialbumsbackend.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.JwtRequest;
@@ -13,6 +15,7 @@ import ru.mal.unialbumsbackend.domain.JwtResponse;
 import ru.mal.unialbumsbackend.domain.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.service.AuthService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -48,6 +51,14 @@ public class AuthController {
         final JwtResponse token = authService.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
+
+//    @PostMapping("/register")
+//    public ResponseEntity<> register(@RequestBody JwtRequest authRequest )
+//    {
+//        System.out.println(authRequest);
+//        return HttpStatus.ok();
+//    }
+
 
     @GetMapping("/svo")
     public String  svo(){
