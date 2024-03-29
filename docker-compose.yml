@@ -6,6 +6,7 @@ services:
       POSTGRES_DB: unialbums-backend
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
     volumes:
       - ./db:/data/postgres
     expose:
