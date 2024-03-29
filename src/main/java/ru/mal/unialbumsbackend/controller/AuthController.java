@@ -1,16 +1,19 @@
 package ru.mal.unialbumsbackend.controller;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.JwtRequest;
+import ru.mal.unialbumsbackend.domain.AccessTokenResponse;
 import ru.mal.unialbumsbackend.domain.JwtResponse;
 import ru.mal.unialbumsbackend.domain.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.service.AuthService;
 
-import java.sql.SQLOutput;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,10 +22,19 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) {
-        final JwtResponse token = authService.login(authRequest);
-        System.out.println(authRequest);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AccessTokenResponse> login(@RequestBody JwtRequest authRequest, HttpServletResponse response) {
+        JwtResponse tokens = authService.login(authRequest);
+        AccessTokenResponse accessToken=new AccessTokenResponse(tokens.getAccessToken());
+        String refreshToken=tokens.getRefreshToken();
+        Cookie cookie=new Cookie("refresh_token",refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setDomain(null);
+        cookie.setMaxAge(30*24*60*60);
+
+        response.addCookie(cookie);
+        return ResponseEntity.ok(accessToken);
     }
 
     @PostMapping("/token")

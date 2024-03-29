@@ -16,6 +16,8 @@ public class UserService {
 
     private final List<User> users;
 
+    // TODO: password encryption, create db,add cookie to response
+
     public UserService() {
         this.users = List.of(
                 new User("anton", "1234", "Антон", "Иванов", Collections.singleton(Role.USER)),

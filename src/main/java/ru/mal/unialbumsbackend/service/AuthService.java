@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.mal.unialbumsbackend.domain.JwtAuthentication;
 import ru.mal.unialbumsbackend.domain.JwtRequest;
+
 import ru.mal.unialbumsbackend.domain.JwtResponse;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.exception.AuthException;
