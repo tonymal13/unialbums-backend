@@ -3,20 +3,19 @@ package ru.mal.unialbumsbackend.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mal.unialbumsbackend.domain.JwtRequest;
-import ru.mal.unialbumsbackend.domain.AccessTokenResponse;
-import ru.mal.unialbumsbackend.domain.JwtResponse;
-import ru.mal.unialbumsbackend.domain.RefreshJwtRequest;
+import ru.mal.unialbumsbackend.domain.*;
+import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
+import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
+import ru.mal.unialbumsbackend.domain.response.AccessTokenResponse;
+import ru.mal.unialbumsbackend.domain.response.LogInResponse;
+import ru.mal.unialbumsbackend.domain.response.RegResponse;
+import ru.mal.unialbumsbackend.domain.response.TokensResponse;
+import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
-
-import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,11 +23,17 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private final UserRepository repository;
+
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@RequestBody JwtRequest authRequest, HttpServletResponse response) {
-        JwtResponse tokens = authService.login(authRequest);
-        AccessTokenResponse accessToken=new AccessTokenResponse(tokens.getAccessToken());
+    public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+        TokensResponse tokens = authService.login(authRequest);
+
         String refreshToken=tokens.getRefreshToken();
+
+        AccessTokenResponse accessTokenResponse=new AccessTokenResponse(
+                tokens.getAccessToken());
+
         Cookie cookie=new Cookie("refresh_token",refreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
@@ -37,27 +42,36 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok(accessTokenResponse);
     }
 
     @PostMapping("/token")
-    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
-        final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
+    public ResponseEntity<TokensResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
+        final TokensResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
-        final JwtResponse token = authService.refresh(request.getRefreshToken());
+    public ResponseEntity<TokensResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
+        final TokensResponse token = authService.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
-//    @PostMapping("/register")
-//    public ResponseEntity<> register(@RequestBody JwtRequest authRequest )
-//    {
-//        System.out.println(authRequest);
-//        return HttpStatus.ok();
-//    }
+    @PostMapping("/register")
+    public ResponseEntity<RegResponse> register(@RequestBody LogInRequest request)
+    {
+        RegResponse response=new RegResponse();
+        response.setMessage("added to db");
+        User user=new User();
+        user.setRole("USER");
+        user.setPassword(request.getPassword());
+        user.setLogin(request.getLogin());
+        user.setLastName("aaaa");
+        user.setFirstName("bbbbbb");
+        user.setAvatar("");
+       repository.save(user);
+        return ResponseEntity.ok(response);
+    }
 
 
 }
