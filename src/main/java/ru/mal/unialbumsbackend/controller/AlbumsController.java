@@ -36,9 +36,6 @@ public class AlbumsController {
         this.userService = userService;
     }
 
-//    @Value("{jwt.secret.access}")
-//    private String secret;
-
     @PostMapping("/create")
     public ResponseEntity<CreatedResponse> create(@RequestBody CreateAlbumRequest request)
     {
@@ -65,19 +62,10 @@ public class AlbumsController {
         JSONObject jsonObject = new JSONObject(payload);
 
 
-//        long userId= (Long) jsonObject.get("userId");
-
         long userId = ((Number) (Object) jsonObject.get("userId")).longValue();
 
         return albumService.getAlbumsByUserId(userId);
     }
 
-    public Authentication getAuth(){
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
-
-    public String getPrincipalName(){
-        return getAuth().getName();
-    }
 
 }

@@ -29,11 +29,6 @@ public class AlbumService {
 
     private Album enrich(CreateAlbumRequest albumRequest) {
         Album album=new Album();
-
-        if(album==null){
-            System.out.println("nuuuuuuuuuuuuuuuuuuuuuuuuuuuluuuuuuuuuuuuu");
-        }
-
         album.setTitle(albumRequest.getTitle());
         album.setCover(albumRequest.getCover());
         album.setAtmosphereRating(albumRequest.getAtmosphereRating());
@@ -43,11 +38,8 @@ public class AlbumService {
         album.setArtist(albumRequest.getArtist());
         Optional<User> user=userService.findById(albumRequest.getUserId());
         if(user.isPresent()) {
-            System.out.println(user.toString());
             user.get().setAlbums(List.of(album));
             album.setUser(user.get());
-
-            System.out.println(album.toString());
 
         }
 

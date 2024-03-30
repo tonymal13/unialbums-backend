@@ -29,15 +29,6 @@ public class AuthController {
 
     private final UserService userService;
 
-//    private String generateSafeToken() {
-//        SecureRandom random = new SecureRandom();
-//        byte[] bytes = new byte[38]; // 36 bytes * 8 = 288 bits, a little bit more than
-//        // the 256 required bits
-//        random.nextBytes(bytes);
-//        var encoder = Base64.getUrlEncoder().withoutPadding();
-//        return encoder.encodeToString(bytes);
-//    }
-
     @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
         TokensResponse tokens = authService.login(authRequest);
@@ -55,8 +46,6 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
-
-//        System.out.println(generateSafeToken());
 
         return ResponseEntity.ok(accessTokenResponse);
     }
