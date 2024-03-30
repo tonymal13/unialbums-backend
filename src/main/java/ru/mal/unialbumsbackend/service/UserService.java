@@ -1,9 +1,12 @@
 package ru.mal.unialbumsbackend.service;
 
+import jakarta.persistence.Table;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.domain.requests.RegRequest;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 
 
@@ -24,4 +27,20 @@ public class UserService {
         return userRepository.findByLogin(login);
     }
 
+    @Transactional
+    public void register(RegRequest regRequest) {
+        User user= enrich(regRequest);
+        userRepository.save(user);
+    }
+
+    private User enrich(RegRequest request) {
+        User user=new User();
+        user.setRole("USER");
+        user.setPassword(request.getPassword());
+        user.setLogin(request.getLogin());
+        user.setLastName(request.getLastName());
+        user.setFirstName(request.getFirstName());
+        user.setAvatar("");
+        return user;
+    }
 }

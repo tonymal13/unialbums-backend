@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
+import ru.mal.unialbumsbackend.domain.requests.RegRequest;
 import ru.mal.unialbumsbackend.domain.response.AccessTokenResponse;
-import ru.mal.unialbumsbackend.domain.response.LogInResponse;
-import ru.mal.unialbumsbackend.domain.response.RegResponse;
+import ru.mal.unialbumsbackend.domain.response.CreatedResponse;
 import ru.mal.unialbumsbackend.domain.response.TokensResponse;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
+import ru.mal.unialbumsbackend.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    private final UserRepository repository;
+    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
@@ -58,18 +59,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegResponse> register(@RequestBody LogInRequest request)
+    public ResponseEntity<CreatedResponse> register(@RequestBody RegRequest request)
     {
-        RegResponse response=new RegResponse();
+        CreatedResponse response=new CreatedResponse();
         response.setMessage("added to db");
-        User user=new User();
-        user.setRole("USER");
-        user.setPassword(request.getPassword());
-        user.setLogin(request.getLogin());
-        user.setLastName("aaaa");
-        user.setFirstName("bbbbbb");
-        user.setAvatar("");
-       repository.save(user);
+
+       userService.register(request);
         return ResponseEntity.ok(response);
     }
 

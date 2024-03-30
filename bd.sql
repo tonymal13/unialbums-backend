@@ -5,9 +5,22 @@ CREATE TABLE our_user(
                          login varchar(100) NOT NULL,
                          password varchar(100) NOT NULL,
                          role varchar(100) NOT NULL,
-                         avatar varchar(100) NOT NULL
+                         avatar varchar(100) NOT NULL,
+                         album_id bigint UNIQUE
 
 );
+
+CREATE TABLE albums(
+                       id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                       user_id  bigint REFERENCES our_user(album_id),
+                       title varchar(100) NOT NULL,
+                       artist varchar(100) NOT NULL,
+                       cover varchar(100) NOT NULL,
+                       tracks_rating double precision NOT NULL,
+                       atmosphere_rating double precision NOT NULL,
+                       bits_rating double precision NOT NULL,
+                       text_rating double precision NOT NULL
+)
 
 
 

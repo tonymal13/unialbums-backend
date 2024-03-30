@@ -98,10 +98,10 @@ public class JwtProvider {
 
     public String generateAccessTokenForLogin(@NonNull User user) {
         return generateToken(user)
-                .claim("lastName", user.getLastName())
                 .claim("avatar", user.getAvatar())
                 .claim("role", user.getRole())
                 .claim("firstName", user.getFirstName())
+                .claim("userId",user.getId())
                 .compact();
     }
 

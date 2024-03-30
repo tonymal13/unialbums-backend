@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegResponse {
+public class CreatedResponse {
     String message;
 }

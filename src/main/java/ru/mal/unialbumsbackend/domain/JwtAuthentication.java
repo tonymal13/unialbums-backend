@@ -16,10 +16,14 @@ public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
 
-    private User user;
+    private String firstName;
+
+    private String role;
+
+    private String login;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { return Collections.singletonList(new SimpleGrantedAuthority(user.getRole())); }
+    public Collection<? extends GrantedAuthority> getAuthorities() { return Collections.singletonList(new SimpleGrantedAuthority(role)); }
 
 
     @Override
@@ -29,7 +33,7 @@ public class JwtAuthentication implements Authentication {
     public Object getDetails() { return null; }
 
     @Override
-    public Object getPrincipal() { return user.getLogin(); }
+    public Object getPrincipal() { return login; }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -40,17 +44,17 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return user.getFirstName(); }
+    public String getName() { return firstName; }
 
     public void setRole(String  role) {
-        user.setRole(role);
+        this.role=role;
     }
 
     public void setFirstName(String firstName) {
-        user.setFirstName(firstName);
+        this.firstName=firstName;
     }
 
     public void setUsername(String subject) {
-        user.setLogin(subject);
+        login=subject;
     }
 }
