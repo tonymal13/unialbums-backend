@@ -1,10 +1,6 @@
 package ru.mal.unialbumsbackend.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -35,19 +31,6 @@ public class JwtProvider {
     ) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
-    }
-
-    public String generateAccessToken(@NonNull User user) {
-        final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
-        final Date accessExpiration = Date.from(accessExpirationInstant);
-        return Jwts.builder()
-                .setSubject(user.getLogin())
-                .setExpiration(accessExpiration)
-                .signWith(jwtAccessSecret)
-                .claim("roles", user.getRole())
-                .claim("firstName", user.getFirstName())
-                .compact();
     }
 
     public String generateRefreshToken(@NonNull User user) {
@@ -105,5 +88,33 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String generateAccessToken(@NonNull User user) {
+        return generateToken(user)
+                .claim("role", user.getRole())
+                .claim("firstName", user.getFirstName())
+                .compact();
+    }
+
+    public String generateAccessTokenForLogin(@NonNull User user) {
+        return generateToken(user)
+                .claim("lastName", user.getLastName())
+                .claim("avatar", user.getAvatar())
+                .claim("role", user.getRole())
+                .claim("firstName", user.getFirstName())
+                .compact();
+    }
+
+    private JwtBuilder generateToken(User user) {
+        final LocalDateTime now = LocalDateTime.now();
+        final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
+        final Date accessExpiration = Date.from(accessExpirationInstant);
+
+        return Jwts.builder()
+                .setSubject(user.getLogin())
+                .setExpiration(accessExpiration)
+                .signWith(jwtAccessSecret);
+    }
+
 
 }

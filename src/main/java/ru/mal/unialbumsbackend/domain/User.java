@@ -42,5 +42,8 @@ public class User {
     @Size(max = 100)
     private String password;
 
+    @Column(name="avatar",nullable = false)
+    @Size(max = 100)
+    private String avatar;
 
 }

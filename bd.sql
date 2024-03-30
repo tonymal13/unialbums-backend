@@ -4,9 +4,11 @@ CREATE TABLE our_user(
                          last_name varchar(100) NOT NULL,
                          login varchar(100) NOT NULL,
                          password varchar(100) NOT NULL,
-                         role varchar(100) NOT NULL
+                         role varchar(100) NOT NULL,
+                         avatar varchar(100) NOT NULL
+
 );
 
 
 
-INSERT INTO our_user values (1,'a','a','a','a','USER');
+INSERT INTO our_user values (1,'a','a','a','a','USER','');

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
+import ru.mal.unialbumsbackend.domain.response.AccessTokenResponse;
 import ru.mal.unialbumsbackend.domain.response.LogInResponse;
 import ru.mal.unialbumsbackend.domain.response.RegResponse;
-import ru.mal.unialbumsbackend.domain.response.RespWithRefresh;
 import ru.mal.unialbumsbackend.domain.response.TokensResponse;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
@@ -26,16 +26,13 @@ public class AuthController {
     private final UserRepository repository;
 
     @PostMapping("/login")
-    public ResponseEntity<LogInResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
-        RespWithRefresh respWithRefresh = authService.login(authRequest);
+    public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+        TokensResponse tokens = authService.login(authRequest);
 
-        String refreshToken=respWithRefresh.getRefreshToken();
+        String refreshToken=tokens.getRefreshToken();
 
-        LogInResponse logInResponse=new LogInResponse(
-                respWithRefresh.getAccessToken(),
-                respWithRefresh.getLogin(),
-                respWithRefresh.getFirstName(),
-                respWithRefresh.getLastName());
+        AccessTokenResponse accessTokenResponse=new AccessTokenResponse(
+                tokens.getAccessToken());
 
         Cookie cookie=new Cookie("refresh_token",refreshToken);
         cookie.setHttpOnly(true);
@@ -45,7 +42,7 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
-        return ResponseEntity.ok(logInResponse);
+        return ResponseEntity.ok(accessTokenResponse);
     }
 
     @PostMapping("/token")
@@ -71,6 +68,7 @@ public class AuthController {
         user.setLogin(request.getLogin());
         user.setLastName("aaaa");
         user.setFirstName("bbbbbb");
+        user.setAvatar("");
        repository.save(user);
         return ResponseEntity.ok(response);
     }

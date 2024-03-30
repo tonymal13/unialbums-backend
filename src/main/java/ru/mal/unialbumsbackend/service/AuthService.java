@@ -9,7 +9,6 @@ import ru.mal.unialbumsbackend.domain.*;
 
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.response.LogInResponse;
-import ru.mal.unialbumsbackend.domain.response.RespWithRefresh;
 import ru.mal.unialbumsbackend.domain.response.TokensResponse;
 import ru.mal.unialbumsbackend.exception.AuthException;
 
@@ -24,17 +23,15 @@ public class AuthService {
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
 
-    public RespWithRefresh login(@NonNull LogInRequest authRequest) {
+    public TokensResponse login(@NonNull LogInRequest authRequest) {
         final User user = userService.getByLogin(authRequest.getLogin())
                 .orElseThrow(() -> new AuthException("Пользователь не найден"));
 
-        System.out.println(user.getFirstName());
-
         if (user.getPassword().equals(authRequest.getPassword())) {
-            final String accessToken = jwtProvider.generateAccessToken(user);
+            final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getLogin(), refreshToken);
-            return new RespWithRefresh(accessToken,refreshToken, user.getLogin(),user.getFirstName(),user.getLastName());
+            return new TokensResponse(accessToken,refreshToken);
         } else {
             throw new AuthException("Неправильный пароль");
         }
