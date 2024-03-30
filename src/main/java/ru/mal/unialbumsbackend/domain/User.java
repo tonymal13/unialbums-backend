@@ -18,6 +18,19 @@ import java.util.Set;
 @Entity
 @Table(name="our_user")
 public class User {
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "role='" + role + '\'' +
+//                ", id=" + id +
+//                ", firstName='" + firstName + '\'' +
+//                ", lastName='" + lastName + '\'' +
+//                ", login='" + login + '\'' +
+//                ", password='" + password + '\'' +
+//                ", avatar='" + avatar + '\'' +
+//                ", albums=" + albums +
+//                '}';
+//    }
 
     @Column(name = "role")
     @Size(max = 100)

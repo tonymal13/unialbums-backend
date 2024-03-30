@@ -69,8 +69,5 @@ public class AuthService {
         throw new AuthException("Невалидный JWT токен");
     }
 
-    public JwtAuthentication getAuthInfo() {
-        return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
-    }
 
 }

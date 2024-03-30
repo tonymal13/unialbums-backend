@@ -18,6 +18,9 @@ import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -25,6 +28,15 @@ public class AuthController {
     private final AuthService authService;
 
     private final UserService userService;
+
+//    private String generateSafeToken() {
+//        SecureRandom random = new SecureRandom();
+//        byte[] bytes = new byte[38]; // 36 bytes * 8 = 288 bits, a little bit more than
+//        // the 256 required bits
+//        random.nextBytes(bytes);
+//        var encoder = Base64.getUrlEncoder().withoutPadding();
+//        return encoder.encodeToString(bytes);
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
@@ -43,6 +55,9 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
+
+//        System.out.println(generateSafeToken());
+
         return ResponseEntity.ok(accessTokenResponse);
     }
 
@@ -67,6 +82,7 @@ public class AuthController {
        userService.register(request);
         return ResponseEntity.ok(response);
     }
+
 
 
 }

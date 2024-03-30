@@ -10,4 +10,5 @@ public class UnialbumsBackendApplication {
 		SpringApplication.run(UnialbumsBackendApplication.class, args);
 	}
 
+
 }

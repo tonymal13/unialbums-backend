@@ -1,6 +1,5 @@
 package ru.mal.unialbumsbackend.service;
 
-import jakarta.persistence.Table;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +41,9 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setAvatar("");
         return user;
+    }
+
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 }

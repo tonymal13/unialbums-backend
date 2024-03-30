@@ -44,4 +44,21 @@ public class Album {
     @Column(name = "text_rating",nullable = false)
     private double textRating;
 
+    @Column(name="artist",nullable = false)
+    private String artist;
+
+//    @Override
+//    public String toString() {
+//        return "Album{" +
+//                "id=" + id +
+//                ", user=" + user +
+//                ", title='" + title + '\'' +
+//                ", cover='" + cover + '\'' +
+//                ", tracksRating=" + tracksRating +
+//                ", atmosphereRating=" + atmosphereRating +
+//                ", bitsRating=" + bitsRating +
+//                ", textRating=" + textRating +
+//                ", artist='" + artist + '\'' +
+//                '}';
+//    }
 }

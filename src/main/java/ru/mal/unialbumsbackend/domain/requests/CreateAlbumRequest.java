@@ -24,4 +24,21 @@ public class CreateAlbumRequest {
 
     private double textRating;
 
+    private String artist;
+
+    private Long userId;
+
+    @Override
+    public String toString() {
+        return "CreateAlbumRequest{" +
+                "title='" + title + '\'' +
+                ", cover='" + cover + '\'' +
+                ", tracksRating=" + tracksRating +
+                ", atmosphereRating=" + atmosphereRating +
+                ", bitsRating=" + bitsRating +
+                ", textRating=" + textRating +
+                ", artist='" + artist + '\'' +
+                ", userId=" + userId +
+                '}';
+    }
 }
