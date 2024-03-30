@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -45,5 +46,8 @@ public class User {
     @Column(name="avatar",nullable = false)
     @Size(max = 100)
     private String avatar;
+
+    @OneToMany(mappedBy = "user")
+    private List<Album> albums;
 
 }
