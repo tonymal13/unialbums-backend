@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.domain.User;
+
 import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
 import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
@@ -21,13 +22,12 @@ public class AlbumService {
     private final UserService userService;
 
     @Transactional
-    public void create(CreateAlbumRequest albumRequest) {
-        System.out.println(albumRequest.toString());
-        Album album = enrich(albumRequest);
+    public void create(CreateAlbumRequest albumRequest,long userId) {
+        Album album = enrich(albumRequest,userId);
         albumRepository.save(album);
     }
 
-    private Album enrich(CreateAlbumRequest albumRequest) {
+    private Album enrich(CreateAlbumRequest albumRequest,long userId) {
         Album album=new Album();
         album.setTitle(albumRequest.getTitle());
         album.setCover(albumRequest.getCover());
@@ -36,7 +36,7 @@ public class AlbumService {
         album.setTextRating(albumRequest.getTextRating());
         album.setTracksRating(albumRequest.getTracksRating());
         album.setArtist(albumRequest.getArtist());
-        Optional<User> user=userService.findById(albumRequest.getUserId());
+        Optional<User> user=userService.findById(userId);
         if(user.isPresent()) {
             user.get().addAlbums(album);
             System.out.println("albums:"+user.get().getAlbums().get(0).getTitle());
@@ -50,6 +50,7 @@ public class AlbumService {
         return albumRepository.getAlbumByUserId();
 
     }
+
 }
 
 

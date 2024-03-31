@@ -1,0 +1,20 @@
+package ru.mal.unialbumsbackend.domain.response;
+
+import lombok.*;
+import org.springframework.http.HttpStatus;
+
+import java.util.HashMap;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UniverseResponse {
+
+    private HashMap<String,String> data;
+
+    private String message;
+
+    private int code;
+
+}

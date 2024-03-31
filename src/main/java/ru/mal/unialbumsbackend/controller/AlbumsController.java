@@ -40,34 +40,33 @@ public class AlbumsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CreatedResponse> create(@RequestBody CreateAlbumRequest request)
+    public ResponseEntity<CreatedResponse> create(@RequestHeader(name = "Authorization") String jwt, @RequestBody CreateAlbumRequest request)
     {
-
-
+        JSONObject jsonObject = decodeJWTgetHeader(jwt);
         CreatedResponse response=new CreatedResponse();
         response.setMessage("album_created");
-
-        albumService.create(request);
+        long userId = ((Number)jsonObject.get("userId")).longValue();
+        albumService.create(request,userId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getByUserId")
     @ResponseStatus(HttpStatus.OK)
     public List<AlbumResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
-        jwt= jwt.replace("Bearer ", "");
-        String[] chunks=jwt.split("\\.");
-
-        Base64.Decoder decoder=Base64.getUrlDecoder();
-        String header=new String(decoder.decode(chunks[0]));
-        String payload=new String(decoder.decode(chunks[1]));
-
-        JSONObject jsonObject = new JSONObject(payload);
-
+        JSONObject jsonObject = decodeJWTgetHeader(jwt);
 
         long userId = ((Number) (Object) jsonObject.get("userId")).longValue();
 
          return albumService.getAlbumsByUserId(userId);
     }
 
+    public JSONObject decodeJWTgetHeader(String jwt){
+        jwt= jwt.replace("Bearer ", "");
+        String[] chunks=jwt.split("\\.");
+
+        Base64.Decoder decoder=Base64.getUrlDecoder();
+        String payload=new String(decoder.decode(chunks[1]));
+        return new JSONObject(payload);
+    }
 
 }
