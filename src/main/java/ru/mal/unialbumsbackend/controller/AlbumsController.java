@@ -40,7 +40,6 @@ public class AlbumsController {
         UniverseResponse response=new UniverseResponse();
         response.setMessage("album_created");
         response.setData(new HashMap<>());
-        response.setCode(200);
         long userId = ((Number)jsonObject.get("userId")).longValue();
         albumService.create(request,userId);
         return ResponseEntity.ok(response);

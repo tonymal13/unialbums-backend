@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.*;
@@ -16,6 +17,7 @@ import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
+import ru.mal.unialbumsbackend.util.UserNotFoundException;
 
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -32,18 +34,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
-        TokensResponse tokens = authService.login(authRequest);
+        UniverseResponse tokens = authService.login(authRequest);
 
-        String refreshToken=tokens.getRefreshToken();
+        String refreshToken=tokens.getData().get("refreshToken");
 
         UniverseResponse universeResponse=new UniverseResponse(
                 );
         universeResponse.setData(new HashMap<>());
         universeResponse.setMessage("logged in");
-        universeResponse.addData("access_token",tokens.getAccessToken());
-        universeResponse.setCode(200);
+        universeResponse.addData("accessToken",tokens.getData().get("accessToken"));
 
-        Cookie cookie=new Cookie("refresh_token",refreshToken);
+
+        Cookie cookie=new Cookie("refreshToken",refreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setPath("/");
@@ -56,8 +58,8 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<TokensResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
-        final TokensResponse token = authService.getAccessToken(request.getRefreshToken());
+    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
+        final UniverseResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
@@ -73,12 +75,16 @@ public class AuthController {
         UniverseResponse response=new UniverseResponse();
         response.setMessage("added to db");
         response.setData(new HashMap<>());
-        response.setCode(200);
 
        userService.register(request);
         return ResponseEntity.ok(response);
     }
 
-
+    @ExceptionHandler
+    private ResponseEntity<UniverseResponse> handleException(UserNotFoundException e){
+        UniverseResponse universeResponse=new UniverseResponse();
+        universeResponse.setMessage("User not found");
+        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    }
 
 }
