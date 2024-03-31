@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
+import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @Service
 @AllArgsConstructor
@@ -38,19 +38,18 @@ public class AlbumService {
         album.setArtist(albumRequest.getArtist());
         Optional<User> user=userService.findById(albumRequest.getUserId());
         if(user.isPresent()) {
-            user.get().setAlbums(List.of(album));
+            user.get().addAlbums(album);
+            System.out.println("albums:"+user.get().getAlbums().get(0).getTitle());
             album.setUser(user.get());
 
         }
 
         return album;
     }
+    public List<AlbumResponse> getAlbumsByUserId(Long userId) {
+        return albumRepository.getAlbumByUserId();
 
-    public List<Album> getAllAlbums() {
-        return albumRepository.findAll();
-    }
-
-    public List<Album> getAlbumsByUserId(Long userId) {
-        return albumRepository.findAllByUserId(userId);
     }
 }
+
+

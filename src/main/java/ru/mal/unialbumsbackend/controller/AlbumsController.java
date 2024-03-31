@@ -10,7 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.Album;
+import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
+import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
 import ru.mal.unialbumsbackend.domain.response.CreatedResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.UserService;
@@ -18,6 +20,7 @@ import ru.mal.unialbumsbackend.service.UserService;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/albums")
 @RestController
@@ -50,10 +53,9 @@ public class AlbumsController {
 
     @GetMapping("/getByUserId")
     @ResponseStatus(HttpStatus.OK)
-    public List<Album> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
+    public List<AlbumResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
         jwt= jwt.replace("Bearer ", "");
         String[] chunks=jwt.split("\\.");
-        System.out.println(jwt);
 
         Base64.Decoder decoder=Base64.getUrlDecoder();
         String header=new String(decoder.decode(chunks[0]));
@@ -64,7 +66,7 @@ public class AlbumsController {
 
         long userId = ((Number) (Object) jsonObject.get("userId")).longValue();
 
-        return albumService.getAlbumsByUserId(userId);
+         return albumService.getAlbumsByUserId(userId);
     }
 
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,13 @@ public class User {
     private String avatar;
 
     @OneToMany(mappedBy = "user")
+//    @Transient
     private List<Album> albums;
+
+    public void addAlbums(Album album) {
+        albums.add(album);
+    }
+
+//    public void addAlbum
 
 }
