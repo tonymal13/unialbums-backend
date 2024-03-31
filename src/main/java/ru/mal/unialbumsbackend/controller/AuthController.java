@@ -11,15 +11,17 @@ import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.domain.requests.RegRequest;
-import ru.mal.unialbumsbackend.domain.response.AccessTokenResponse;
 import ru.mal.unialbumsbackend.domain.response.CreatedResponse;
 import ru.mal.unialbumsbackend.domain.response.TokensResponse;
+import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,13 +32,17 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
         TokensResponse tokens = authService.login(authRequest);
 
         String refreshToken=tokens.getRefreshToken();
 
-        AccessTokenResponse accessTokenResponse=new AccessTokenResponse(
-                tokens.getAccessToken());
+        UniverseResponse universeResponse=new UniverseResponse(
+                );
+        universeResponse.setData(new HashMap<>());
+        universeResponse.setMessage("logged in");
+        universeResponse.addData("access_token",tokens.getAccessToken());
+        universeResponse.setCode(200);
 
         Cookie cookie=new Cookie("refresh_token",refreshToken);
         cookie.setHttpOnly(true);
@@ -47,7 +53,7 @@ public class AuthController {
 
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(accessTokenResponse);
+        return ResponseEntity.ok(universeResponse);
     }
 
     @PostMapping("/token")
