@@ -1,26 +1,20 @@
 package ru.mal.unialbumsbackend.controller;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.mal.unialbumsbackend.domain.Album;
-import ru.mal.unialbumsbackend.domain.User;
+
 import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
 import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
-import ru.mal.unialbumsbackend.domain.response.CreatedResponse;
+import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.UserService;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/albums")
 @RestController
@@ -40,11 +34,13 @@ public class AlbumsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CreatedResponse> create(@RequestHeader(name = "Authorization") String jwt, @RequestBody CreateAlbumRequest request)
+    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @RequestBody CreateAlbumRequest request)
     {
-        JSONObject jsonObject = decodeJWTgetHeader(jwt);
-        CreatedResponse response=new CreatedResponse();
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+        UniverseResponse response=new UniverseResponse();
         response.setMessage("album_created");
+        response.setData(new HashMap<>());
+        response.setCode(200);
         long userId = ((Number)jsonObject.get("userId")).longValue();
         albumService.create(request,userId);
         return ResponseEntity.ok(response);
@@ -53,14 +49,14 @@ public class AlbumsController {
     @GetMapping("/getByUserId")
     @ResponseStatus(HttpStatus.OK)
     public List<AlbumResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
-        JSONObject jsonObject = decodeJWTgetHeader(jwt);
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
 
         long userId = ((Number) (Object) jsonObject.get("userId")).longValue();
 
          return albumService.getAlbumsByUserId(userId);
     }
 
-    public JSONObject decodeJWTgetHeader(String jwt){
+    public JSONObject decodeJWTGetHeader(String jwt){
         jwt= jwt.replace("Bearer ", "");
         String[] chunks=jwt.split("\\.");
 

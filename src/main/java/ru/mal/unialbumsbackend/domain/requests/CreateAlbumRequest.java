@@ -1,10 +1,10 @@
 package ru.mal.unialbumsbackend.domain.requests;
 
 import lombok.Getter;
-import org.hibernate.annotations.SecondaryRow;
+import lombok.Setter;
 
 @Getter
-@SecondaryRow
+@Setter
 public class CreateAlbumRequest {
 
     private String title;

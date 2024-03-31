@@ -11,7 +11,6 @@ import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.domain.requests.RegRequest;
-import ru.mal.unialbumsbackend.domain.response.CreatedResponse;
 import ru.mal.unialbumsbackend.domain.response.TokensResponse;
 import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
@@ -69,10 +68,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CreatedResponse> register(@RequestBody RegRequest request)
+    public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request)
     {
-        CreatedResponse response=new CreatedResponse();
+        UniverseResponse response=new UniverseResponse();
         response.setMessage("added to db");
+        response.setData(new HashMap<>());
+        response.setCode(200);
 
        userService.register(request);
         return ResponseEntity.ok(response);
