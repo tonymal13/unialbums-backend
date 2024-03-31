@@ -5,14 +5,14 @@ CREATE TABLE our_user(
                          login varchar(100) NOT NULL,
                          password varchar(100) NOT NULL,
                          role varchar(100) NOT NULL,
-                         avatar varchar(100) NOT NULL,
-                         album_id bigint UNIQUE
+                         avatar varchar(100) NOT NULL
+--                         album_id bigint UNIQUE
 
 );
 
 CREATE TABLE albums(
                        id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-                       user_id  bigint REFERENCES our_user(album_id),
+                       user_id  bigint REFERENCES our_user(id),
                        title varchar(100) NOT NULL,
                        artist varchar(100) NOT NULL,
                        cover varchar(100) NOT NULL,
@@ -20,8 +20,4 @@ CREATE TABLE albums(
                        atmosphere_rating double precision NOT NULL,
                        bits_rating double precision NOT NULL,
                        text_rating double precision NOT NULL
-)
-
-
-
-INSERT INTO our_user values (1,'a','a','a','a','USER','');
+);
