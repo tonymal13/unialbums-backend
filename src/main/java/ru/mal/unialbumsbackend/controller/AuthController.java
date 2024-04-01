@@ -20,6 +20,7 @@ import ru.mal.unialbumsbackend.service.UserService;
 import ru.mal.unialbumsbackend.util.UserNotFoundException;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,13 +37,17 @@ public class AuthController {
     public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
         UniverseResponse tokens = authService.login(authRequest);
 
-        String refreshToken=tokens.getData().get("refreshToken");
+        String refreshToken=tokens.getData().get(0).get("refreshToken");
 
         UniverseResponse universeResponse=new UniverseResponse(
                 );
-        universeResponse.setData(new HashMap<>());
+        universeResponse.setData(new ArrayList<>());
         universeResponse.setMessage("logged in");
-        universeResponse.addData("accessToken",tokens.getData().get("accessToken"));
+
+
+        HashMap<String,String> map = new HashMap<>();
+        universeResponse.addMap(map);
+        universeResponse.addData(map,"accessToken",tokens.getData().get(0).get("accessToken"));
 
 
         Cookie cookie=new Cookie("refreshToken",refreshToken);
@@ -74,7 +79,7 @@ public class AuthController {
     {
         UniverseResponse response=new UniverseResponse();
         response.setMessage("added to db");
-        response.setData(new HashMap<>());
+        response.setData(new ArrayList<>());
 
        userService.register(request);
         return ResponseEntity.ok(response);

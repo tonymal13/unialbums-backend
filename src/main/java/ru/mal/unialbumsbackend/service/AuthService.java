@@ -15,6 +15,7 @@ import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.util.UserNotFoundException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,14 +31,16 @@ public class AuthService {
     public UniverseResponse login(@NonNull LogInRequest authRequest) {
         Optional<User> user = userService.getByLogin(authRequest.getLogin());
         UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setData(new HashMap<>());
+        universeResponse.setData(new ArrayList<>());
         if(user.isPresent()) {
             if (user.get().getPassword().equals(authRequest.getPassword())) {
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String refreshToken = jwtProvider.generateRefreshToken(user.get());
                 refreshStorage.put(user.get().getLogin(), refreshToken);
-                universeResponse.addData("accessToken",accessToken);
-                universeResponse.addData("refreshToken",refreshToken);
+                HashMap<String,String> map=new HashMap<>();
+                universeResponse.addMap(map);
+                universeResponse.addData(map,"accessToken",accessToken);
+                universeResponse.addData(map,"refreshToken",refreshToken);
                 universeResponse.setMessage("Logged in");
             } else {
                 universeResponse.setMessage("Wrong password");
@@ -54,7 +57,7 @@ public class AuthService {
 
     public UniverseResponse getAccessToken(@NonNull String refreshToken) {
         UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setData(new HashMap<>());
+        universeResponse.setData(new ArrayList<>());
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
@@ -69,7 +72,9 @@ public class AuthService {
                 }
                 else {
                     String accessToken = jwtProvider.generateAccessToken(user.get());
-                    universeResponse.addData("accessToken", accessToken);
+                    HashMap<String,String> map=new HashMap<>();
+//                    universeResponse.addMap(map);
+                    universeResponse.addData(map,"accessToken", accessToken);
                 }
 
             }

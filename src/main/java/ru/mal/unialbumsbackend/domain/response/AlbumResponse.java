@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.mal.unialbumsbackend.domain.User;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,14 +21,15 @@ public class AlbumResponse {
 
     private String cover;
 
-    private double tracksRating;
+    private int tracksRating;
 
-    private double atmosphereRating;
+    private int atmosphereRating;
 
-    private double bitsRating;
+    private int bitsRating;
 
-    private double textRating;
+    private int textRating;
 
     private String artist;
+
 
 }

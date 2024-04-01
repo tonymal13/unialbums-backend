@@ -33,16 +33,16 @@ public class Album {
     private String cover;
 
     @Column(name = "tracks_rating",nullable = false)
-    private double tracksRating;
+    private int tracksRating;
 
     @Column(name = "atmosphere_rating",nullable = false)
-    private double atmosphereRating;
+    private int atmosphereRating;
 
     @Column(name = "bits_rating",nullable = false)
-    private double bitsRating;
+    private int bitsRating;
 
     @Column(name = "text_rating",nullable = false)
-    private double textRating;
+    private int textRating;
 
     @Column(name="artist",nullable = false)
     private String artist;
