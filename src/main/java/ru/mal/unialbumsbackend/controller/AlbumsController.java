@@ -53,6 +53,8 @@ public class AlbumsController {
 
         long userId = ((Number) (Object) jsonObject.get("userId")).longValue();
 
+        System.out.println("userId:"+userId);
+
          List<AlbumResponse> albums= albumService.getAlbumsByUserId(userId);
 
          UniverseResponse universeResponse=new UniverseResponse();

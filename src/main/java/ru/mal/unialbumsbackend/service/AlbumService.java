@@ -47,7 +47,7 @@ public class AlbumService {
         return album;
     }
     public List<AlbumResponse> getAlbumsByUserId(Long userId) {
-        return albumRepository.getAlbumByUserId();
+        return albumRepository.getAlbumByUserId(userId);
 
     }
 
