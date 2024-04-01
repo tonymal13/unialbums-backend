@@ -66,11 +66,12 @@ public class AlbumsController {
             universeResponse.addMap(map);
             universeResponse.addData(map, "title", albums.get(i).getTitle());
             universeResponse.addData(map, "cover", albums.get(i).getCover());
-            universeResponse.addData(map, "tracksRating", Double.toString(albums.get(i).getTracksRating()));
-            universeResponse.addData(map, "atmosphereRating", Double.toString(albums.get(i).getAtmosphereRating()));
-            universeResponse.addData(map, "bitsRating", Double.toString(albums.get(i).getBitsRating()));
-            universeResponse.addData(map, "textRating", Double.toString(albums.get(i).getTextRating()));
+            universeResponse.addData(map, "tracksRating", Integer.toString(albums.get(i).getTracksRating()));
+            universeResponse.addData(map, "atmosphereRating", Integer.toString(albums.get(i).getAtmosphereRating()));
+            universeResponse.addData(map, "bitsRating", Integer.toString(albums.get(i).getBitsRating()));
+            universeResponse.addData(map, "textRating", Integer.toString(albums.get(i).getTextRating()));
             universeResponse.addData(map, "artist", albums.get(i).getArtist());
+            universeResponse.addData(map,"albumId",Long.toString(albums.get(i).getId()));
         }
          return ResponseEntity.ok(universeResponse);
 
