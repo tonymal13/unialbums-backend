@@ -16,8 +16,7 @@ CREATE TABLE albums(
                        title varchar(100) NOT NULL,
                        artist varchar(100) NOT NULL,
                        cover varchar(100) NOT NULL,
-                       tracks_rating double precision NOT NULL,
-                       atmosphere_rating double precision NOT NULL,
-                       bits_rating double precision NOT NULL,
-                       text_rating double precision NOT NULL
-);
+                       tracks_rating int NOT NULL,
+                       atmosphere_rating int NOT NULL,
+                       bits_rating int NOT NULL,
+                       text_rating int
