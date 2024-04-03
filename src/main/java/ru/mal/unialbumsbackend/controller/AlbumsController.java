@@ -77,12 +77,6 @@ public class AlbumsController {
 
     }
 
-
-//    [
-//    {"title":"fgh"},
-//    {"title":"uyi"},
-//            ]
-
     public JSONObject decodeJWTGetHeader(String jwt){
         jwt= jwt.replace("Bearer ", "");
         String[] chunks=jwt.split("\\.");
