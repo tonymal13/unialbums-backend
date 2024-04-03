@@ -17,9 +17,7 @@ public class UniverseResponse {
     private String message;
 
     public void addData(HashMap<String, String> map, String key, String value) {
-//        ArrayList<String> list=new ArrayList<>();
         map.put(key,value);
-//        map2.put(key, value);
     }
 
     public void addMap(HashMap<String,String> map){

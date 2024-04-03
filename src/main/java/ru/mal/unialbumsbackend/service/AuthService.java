@@ -44,15 +44,15 @@ public class AuthService {
                 universeResponse.addMap(map);
                 universeResponse.addData(map,"accessToken",accessToken);
                 universeResponse.addData(map,"refreshToken",refreshToken);
-                universeResponse.setMessage("Logged in");
+                universeResponse.setMessage("Вы зашли в аккаунт");
             } else {
-                universeResponse.setMessage("Wrong password");
-                throw new AuthException("Wrong password");
+                universeResponse.setMessage("Неправильный пароль");
+                throw new AuthException("Неправильный пароль");
             }
         }
 
         else {
-            universeResponse.setMessage("User is not found");
+            universeResponse.setMessage("Пользователь не найден");
             throw new UserNotFoundException();
         }
         return universeResponse;
@@ -66,17 +66,14 @@ public class AuthService {
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-//                final User user = userService.getByLogin(login)
-//                        .orElseThrow(() -> new AuthException("Пользователь не найден"));
                 Optional<User> user=userService.getByLogin(login);
                 if(user.isEmpty()) {
-                    universeResponse.setMessage("User not found");
-                    throw new AuthException("User not found");
+                    universeResponse.setMessage("Пользователь не найден");
+                    throw new AuthException("Пользователь не найден");
                 }
                 else {
                     String accessToken = jwtProvider.generateAccessToken(user.get());
                     HashMap<String,String> map=new HashMap<>();
-//                    universeResponse.addMap(map);
                     universeResponse.addData(map,"accessToken", accessToken);
                 }
 

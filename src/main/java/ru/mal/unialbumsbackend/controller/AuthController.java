@@ -42,7 +42,7 @@ public class AuthController {
         UniverseResponse universeResponse=new UniverseResponse(
                 );
         universeResponse.setData(new ArrayList<>());
-        universeResponse.setMessage("logged in");
+        universeResponse.setMessage("Вы вошли в аккаунт");
 
 
         HashMap<String,String> map = new HashMap<>();
@@ -78,7 +78,7 @@ public class AuthController {
     public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request)
     {
         UniverseResponse response=new UniverseResponse();
-        response.setMessage("added to db");
+        response.setMessage("Добавлено в БД");
         response.setData(new ArrayList<>());
 
        userService.register(request);
@@ -88,7 +88,7 @@ public class AuthController {
     @ExceptionHandler
     private ResponseEntity<UniverseResponse> handleException(UserNotFoundException e){
         UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage("User not found");
+        universeResponse.setMessage("Пользователь не найден");
         return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 

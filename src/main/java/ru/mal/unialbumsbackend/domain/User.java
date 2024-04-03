@@ -49,13 +49,11 @@ public class User {
     private String avatar;
 
     @OneToMany(mappedBy = "user")
-//    @Transient
     private List<Album> albums;
 
     public void addAlbums(Album album) {
         albums.add(album);
     }
 
-//    public void addAlbum
 
 }
