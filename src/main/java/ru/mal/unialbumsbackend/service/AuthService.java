@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.mal.unialbumsbackend.domain.*;
@@ -28,12 +29,14 @@ public class AuthService {
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UniverseResponse login(@NonNull LogInRequest authRequest) {
         Optional<User> user = userService.getByLogin(authRequest.getLogin());
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setData(new ArrayList<>());
         if(user.isPresent()) {
-            if (user.get().getPassword().equals(authRequest.getPassword())) {
+            if (passwordEncoder.matches(authRequest.getPassword() ,user.get().getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String refreshToken = jwtProvider.generateRefreshToken(user.get());
                 refreshStorage.put(user.get().getLogin(), refreshToken);

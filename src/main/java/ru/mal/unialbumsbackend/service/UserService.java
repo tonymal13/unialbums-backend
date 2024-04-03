@@ -1,6 +1,7 @@
 package ru.mal.unialbumsbackend.service;
 
 import lombok.NonNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +18,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
 
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Optional<User> getByLogin(@NonNull String login) {
@@ -35,7 +39,7 @@ public class UserService {
     private User enrich(RegRequest request) {
         User user=new User();
         user.setRole("USER");
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode( request.getPassword()));
         user.setLogin(request.getLogin());
         user.setLastName(request.getLastName());
         user.setFirstName(request.getFirstName());
