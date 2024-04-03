@@ -6,8 +6,6 @@ CREATE TABLE our_user(
                          password varchar(100) NOT NULL,
                          role varchar(100) NOT NULL,
                          avatar varchar(100) NOT NULL
---                         album_id bigint UNIQUE
-
 );
 
 CREATE TABLE albums(

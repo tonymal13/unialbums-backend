@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.service;
+package ru.mal.unialbumsbackend.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

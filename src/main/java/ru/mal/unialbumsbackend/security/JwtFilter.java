@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.filter;
+package ru.mal.unialbumsbackend.security;
 
 
 import io.jsonwebtoken.Claims;
@@ -13,8 +13,6 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import jakarta.servlet.*;
 import ru.mal.unialbumsbackend.domain.JwtAuthentication;
-import ru.mal.unialbumsbackend.service.JwtProvider;
-import ru.mal.unialbumsbackend.service.JwtUtils;
 
 import java.io.IOException;
 

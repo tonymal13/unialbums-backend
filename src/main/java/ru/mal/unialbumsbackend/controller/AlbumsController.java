@@ -10,7 +10,6 @@ import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
 import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
 import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
-import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -23,15 +22,13 @@ public class AlbumsController {
 
     private final AlbumService albumService;
 
-    private final UserService userService;
 
     @Value("{jwt.secret.access}")
     private String secret;
 
-    public AlbumsController(AlbumService albumService, UserService userService) {
+    public AlbumsController(AlbumService albumService) {
 
         this.albumService = albumService;
-        this.userService = userService;
     }
 
     @PostMapping("/create")
@@ -51,27 +48,25 @@ public class AlbumsController {
     public ResponseEntity<UniverseResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
 
-        long userId = ((Number) (Object) jsonObject.get("userId")).longValue();
-
-        System.out.println("userId:"+userId);
+        long userId = ((Number) jsonObject.get("userId")).longValue();
 
          List<AlbumResponse> albums= albumService.getAlbumsByUserId(userId);
 
          UniverseResponse universeResponse=new UniverseResponse();
          universeResponse.setData(new ArrayList<>());
-         universeResponse.setMessage("user's albums:");
+         universeResponse.setMessage("Фльбомы пользователя:");
 
-        for(int i=0;i<albums.size();i++) {
-            HashMap<String,String> map=new HashMap<>();
+        for (AlbumResponse album : albums) {
+            HashMap<String, String> map = new HashMap<>();
             universeResponse.addMap(map);
-            universeResponse.addData(map, "title", albums.get(i).getTitle());
-            universeResponse.addData(map, "cover", albums.get(i).getCover());
-            universeResponse.addData(map, "tracksRating", Integer.toString(albums.get(i).getTracksRating()));
-            universeResponse.addData(map, "atmosphereRating", Integer.toString(albums.get(i).getAtmosphereRating()));
-            universeResponse.addData(map, "bitsRating", Integer.toString(albums.get(i).getBitsRating()));
-            universeResponse.addData(map, "textRating", Integer.toString(albums.get(i).getTextRating()));
-            universeResponse.addData(map, "artist", albums.get(i).getArtist());
-            universeResponse.addData(map,"albumId",Long.toString(albums.get(i).getId()));
+            universeResponse.addData(map, "title", album.getTitle());
+            universeResponse.addData(map, "cover", album.getCover());
+            universeResponse.addData(map, "tracksRating", Integer.toString(album.getTracksRating()));
+            universeResponse.addData(map, "atmosphereRating", Integer.toString(album.getAtmosphereRating()));
+            universeResponse.addData(map, "bitsRating", Integer.toString(album.getBitsRating()));
+            universeResponse.addData(map, "textRating", Integer.toString(album.getTextRating()));
+            universeResponse.addData(map, "artist", album.getArtist());
+            universeResponse.addData(map, "albumId", Long.toString(album.getId()));
         }
          return ResponseEntity.ok(universeResponse);
 

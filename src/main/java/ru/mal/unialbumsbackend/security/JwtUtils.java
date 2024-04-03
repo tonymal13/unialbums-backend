@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.service;
+package ru.mal.unialbumsbackend.security;
 
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;

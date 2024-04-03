@@ -1,6 +1,5 @@
 package ru.mal.unialbumsbackend.controller;
 
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -8,22 +7,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.domain.requests.RegRequest;
-import ru.mal.unialbumsbackend.domain.response.TokensResponse;
 import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
-import ru.mal.unialbumsbackend.repositories.UserRepository;
+import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
-import ru.mal.unialbumsbackend.util.UserNotFoundException;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,13 +44,7 @@ public class AuthController {
 
 
         Cookie cookie=new Cookie("refreshToken",refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setDomain(null);
-        cookie.setMaxAge(30*24*60*60);
-
-        response.addCookie(cookie);
+        sendRefreshToken(cookie,response);
 
         return ResponseEntity.ok(universeResponse);
     }
@@ -68,10 +55,15 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<TokensResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
-        final TokensResponse token = authService.refresh(request.getRefreshToken());
-        return ResponseEntity.ok(token);
+    @GetMapping("/refresh")
+    public ResponseEntity<UniverseResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,HttpServletResponse response) {
+
+        final UniverseResponse universeResponse = authService.refresh(refreshToken);
+        Cookie cookie=new Cookie("refreshToken",refreshToken);
+        sendRefreshToken(cookie,response);
+
+
+        return ResponseEntity.ok(universeResponse);
     }
 
     @PostMapping("/register")
@@ -86,10 +78,21 @@ public class AuthController {
     }
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(UserNotFoundException e){
+    private ResponseEntity<UniverseResponse> handleException(AuthException e){
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setMessage("Пользователь не найден");
         return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    }
+
+    private void sendRefreshToken(Cookie cookie ,HttpServletResponse response) {
+
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setDomain(null);
+        cookie.setMaxAge(30*24*60*60);
+
+        response.addCookie(cookie);
     }
 
 }

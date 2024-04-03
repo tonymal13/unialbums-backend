@@ -1,14 +1,8 @@
 package ru.mal.unialbumsbackend.domain.response;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.mal.unialbumsbackend.domain.User;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Setter
