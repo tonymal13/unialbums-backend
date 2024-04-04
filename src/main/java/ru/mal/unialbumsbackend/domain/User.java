@@ -1,6 +1,7 @@
 package ru.mal.unialbumsbackend.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +33,8 @@ public class User {
     @Size(max = 100)
     private String lastName;
 
-    @Column(name="login",nullable = false)
-    @Size(max = 100)
+    @Column(name="login")
+    @Size(min = 1,max = 100,message = "")
     private String login;
 
     @Column(name="password",nullable = false)

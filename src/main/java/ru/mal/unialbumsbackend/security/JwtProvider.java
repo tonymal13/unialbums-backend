@@ -89,13 +89,6 @@ public class JwtProvider {
                 .getBody();
     }
 
-//    public String generateAccessToken(@NonNull User user) {
-//        return generateToken(user)
-//                .claim("role", user.getRole())
-//                .claim("firstName", user.getFirstName())
-//                .compact();
-//    }
-
     public String generateAccessTokenForLogin(@NonNull User user) {
         return generateToken(user)
                 .claim("avatar", user.getAvatar())

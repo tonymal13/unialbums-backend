@@ -26,10 +26,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<User> getByLogin(@NonNull String login) {
-        return userRepository.findByLogin(login);
-    }
-
     @Transactional
     public void register(RegRequest regRequest) {
         User user= enrich(regRequest);

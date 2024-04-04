@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClient;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
@@ -64,29 +63,25 @@ public class AuthController {
         final UniverseResponse universeResponse = authService.refresh(refreshToken);
         String newRefreshToken= universeResponse.getData().get(0).get("refreshToken");
         Cookie cookie=new Cookie("refreshToken",newRefreshToken);
-        //Класть новый рефреш токен
         sendRefreshToken(cookie,response);
         universeResponse.removeFromData("refreshToken");
         return ResponseEntity.ok(universeResponse);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request)
-    {
-        UniverseResponse response=new UniverseResponse();
-
+    public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request) {
+        UniverseResponse response = new UniverseResponse();
         response.setData(new ArrayList<>());
-        Optional<User> user=userService.findByLogin(request.getLogin());
-        if(user.isPresent()){
-            response.setMessage("Такой пользователь уже существует");
-        }else {
+        String message = validate(request);
+        if (message.equals("Добавлено в БД")){
             userService.register(request);
-            response.setMessage("Добавлено в БД");
         }
-        return ResponseEntity.ok(response);
+            response.setMessage(message);
+            return ResponseEntity.ok(response);
+
     }
 
-    @ExceptionHandler
+        @ExceptionHandler
     private ResponseEntity<UniverseResponse> handleException(AuthException e){
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setMessage("Пользователь не найден");
@@ -102,6 +97,28 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
+    }
+
+    private String validate(RegRequest request){
+        String message= "";
+        Optional<User> user=userService.findByLogin(request.getLogin());
+        if (user.isPresent()) {
+            message= ("Такой пользователь уже существует");
+        } else {
+           message= ("Добавлено в БД");
+        }
+        String regex = "\\p{Lu}\\p{L}{1,20}";
+
+
+        if(request.getPassword().length()<1||request.getPassword().length()>20)
+            message="Пароль должен быть от 1 до 20 символов :)";
+        else if(request.getLogin().length()<1)
+            message="Логин должен больше 1 до 20 символов :)";
+        else if(!request.getFirstName().matches(regex))
+            message="Имя должно быть в формате: Иван";
+        else if(!request.getLastName().matches(regex))
+            message="Фамилия должна быть в формате: Иванов";
+        return message;
     }
 
 }

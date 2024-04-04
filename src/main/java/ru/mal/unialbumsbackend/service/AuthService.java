@@ -28,7 +28,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public UniverseResponse login(@NonNull LogInRequest authRequest) {
-        Optional<User> user = userService.getByLogin(authRequest.getLogin());
+        Optional<User> user = userService.findByLogin(authRequest.getLogin());
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setData(new ArrayList<>());
         if(user.isPresent()) {
@@ -62,7 +62,7 @@ public class AuthService {
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                Optional<User> user=userService.getByLogin(login);
+                Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
                     universeResponse.setMessage("Пользователь не найден");
                     throw new AuthException("Пользователь не найден");
@@ -86,7 +86,7 @@ public class AuthService {
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                Optional<User> user=userService.getByLogin(login);
+                Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
                     universeResponse.setMessage("Пользователь не найден");
                     throw new AuthException("Пользователь не найден");
