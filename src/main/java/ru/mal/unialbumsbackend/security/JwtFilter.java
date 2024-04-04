@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import jakarta.servlet.*;
-import ru.mal.unialbumsbackend.domain.JwtAuthentication;
 
 import java.io.IOException;
 

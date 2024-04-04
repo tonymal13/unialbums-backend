@@ -50,4 +50,8 @@ public class UserService {
     public Optional<User> findById(Long userId) {
         return userRepository.findById(userId);
     }
+
+    public Optional<User> findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
 }

@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.domain;
+package ru.mal.unialbumsbackend.security;
 
 import lombok.Getter;
 import lombok.Setter;

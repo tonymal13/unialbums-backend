@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
+import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
 import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.domain.requests.RegRequest;
@@ -17,6 +19,7 @@ import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,7 +64,7 @@ public class AuthController {
         final UniverseResponse universeResponse = authService.refresh(refreshToken);
         Cookie cookie=new Cookie("refreshToken",refreshToken);
         sendRefreshToken(cookie,response);
-
+        //Добавить в токе userId, avatar
 
         return ResponseEntity.ok(universeResponse);
     }
@@ -70,10 +73,15 @@ public class AuthController {
     public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request)
     {
         UniverseResponse response=new UniverseResponse();
-        response.setMessage("Добавлено в БД");
-        response.setData(new ArrayList<>());
 
-       userService.register(request);
+        response.setData(new ArrayList<>());
+        Optional<User> user=userService.findByLogin(request.getLogin());
+        if(user.isPresent()){
+            response.setMessage("Такой пользователь уже существует");
+        }else {
+            userService.register(request);
+            response.setMessage("Добавлено в БД");
+        }
         return ResponseEntity.ok(response);
     }
 

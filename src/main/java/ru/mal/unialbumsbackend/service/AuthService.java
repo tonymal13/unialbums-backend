@@ -68,7 +68,7 @@ public class AuthService {
                     throw new AuthException("Пользователь не найден");
                 }
                 else {
-                    String accessToken = jwtProvider.generateAccessToken(user.get());
+                    String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                     HashMap<String,String> map=new HashMap<>();
                     universeResponse.addData(map,"accessToken", accessToken);
                 }
@@ -91,7 +91,7 @@ public class AuthService {
                     universeResponse.setMessage("Пользователь не найден");
                     throw new AuthException("Пользователь не найден");
                 }
-                final String accessToken = jwtProvider.generateAccessToken(user.get());
+                final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user.get());
                 refreshStorage.put(user.get().getLogin(), newRefreshToken);
                 HashMap<String,String> map=new HashMap<>();
