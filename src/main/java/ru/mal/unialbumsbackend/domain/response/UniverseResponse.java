@@ -23,4 +23,7 @@ public class UniverseResponse {
         data.add(map);
     }
 
+    public void removeFromData(String refreshToken) {
+        data.get(0).remove(refreshToken);
+    }
 }

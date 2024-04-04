@@ -62,10 +62,11 @@ public class AuthController {
     public ResponseEntity<UniverseResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,HttpServletResponse response) {
 
         final UniverseResponse universeResponse = authService.refresh(refreshToken);
-        Cookie cookie=new Cookie("refreshToken",refreshToken);
+        String newRefreshToken= universeResponse.getData().get(0).get("refreshToken");
+        Cookie cookie=new Cookie("refreshToken",newRefreshToken);
+        //Класть новый рефреш токен
         sendRefreshToken(cookie,response);
-        //Добавить в токе userId, avatar
-
+        universeResponse.removeFromData("refreshToken");
         return ResponseEntity.ok(universeResponse);
     }
 

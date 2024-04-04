@@ -98,7 +98,7 @@ public class AuthService {
                 universeResponse.setMessage("Токен обновлен");
                 universeResponse.addMap(map);
                 universeResponse.addData(map,"accessToken", accessToken);
-
+                universeResponse.addData(map,"refreshToken",newRefreshToken);
 
                 return universeResponse;
             }
@@ -106,8 +106,5 @@ public class AuthService {
         universeResponse.setMessage("Невалидный JWT токен");
         throw new AuthException("Невалидный JWT токен");
     }
-//        Optional<User> getUser(String login){
-//
-//        }
 
 }
