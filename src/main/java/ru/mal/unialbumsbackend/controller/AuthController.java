@@ -121,4 +121,9 @@ public class AuthController {
         return message;
     }
 
+    @GetMapping("/test")
+    public String test(){
+        return "It's ok";
+    }
+
 }

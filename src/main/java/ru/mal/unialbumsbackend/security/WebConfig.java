@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebMvc
-@CrossOrigin(origins = "http://localhost:3000,http://localhost:6006", allowCredentials = "true")
+@CrossOrigin(origins =  "http://localhost:3000,http://localhost:6006,http://192.168.0.103:3000", allowCredentials = "true")
 public class WebConfig {
 
     private static final Long MAX_AGE = 3600L;
