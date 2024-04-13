@@ -16,7 +16,7 @@ services:
     command: ["-p", "5432"] # Правильный синтаксис для указания порта
     restart: always
   backend:
-    image: unialbums-backend-app
+    image: tonymal13/unialbums-backend-app:latest
     container_name: unialbums-backend-app_container
     expose:
       - "8081"
@@ -28,5 +28,22 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
       - db
+#      - minio
     restart: always
-#    network_mode: bridge # Добавление параметра network_mode для контейнера с бэкендом
+#  minio:
+#    image: docker.io/bitnami/minio:2022
+#    container_name: minio_container
+#    volumes:
+#      - ./minio:/data/minio
+#    expose:
+#      - "9002"
+#      - "9000"
+#    ports:
+#      - 9000:9000
+#      - 9002:9002
+#    environment:
+#      SPRING_MINIO_URL: http://minio_container:9002
+#      SPRING_MINIO_BUCKET: images
+#      SPRING_MINIO_ACCESS_KEY: admin
+#      SPRING_MINIO_SECRET_KEY: password
+#    restart: always
