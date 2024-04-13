@@ -20,7 +20,6 @@ public class ImageService {
 
     public String upload(MultipartFile image){
         try{
-            System.out.println("Creating bucket");
             createBucket();
         }
         catch (Exception e) {
@@ -43,12 +42,9 @@ public class ImageService {
 
     @SneakyThrows
     private void createBucket(){
-        System.out.println("In create bucket method");
         boolean found=minioClient.bucketExists(BucketExistsArgs.builder()
                 .bucket("images")
                 .build());
-        System.out.println("Found:"+found);
-
         if(!found){
             minioClient.makeBucket(MakeBucketArgs.builder()
                     .bucket("images")
@@ -71,8 +67,6 @@ public class ImageService {
                         .stream(inputStream, inputStream.available(), -1)
                         .bucket("images")
                         .object(fileName)
-                .build());
-        System.out.println( response.object());
-    }
+                .build());}
 
 }

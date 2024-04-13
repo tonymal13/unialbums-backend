@@ -34,19 +34,14 @@ public class ImageController {
     ) {
 //        System.out.println("image"+image.getFile().getResource().getURL());
 
-        System.out.println("Filename:"+image.getName());
-
-//        minioClient.putObject()
-
         String filename= imageService.upload(image);
 
         Optional<User> user=userService.findByLogin("a");
-        if (user.isPresent())
-            user.get().setAvatar("http://localhost:9002/images/"+image.getName());
-        userRepository.save(user.get());
+        if (user.isPresent()) {
+            user.get().setAvatar("http://localhost:9000/images/" + filename);
+            userRepository.save(user.get());
+        }
 
-
-        System.out.println(filename);
     }
 
 
