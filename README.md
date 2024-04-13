@@ -5,7 +5,7 @@ maven clean install
 in terminal
 
 paste
-docker build -t unialbums-backend-app .
+docker build -t tonymal13/unialbums-backend-app .
 into terminal
 
 run

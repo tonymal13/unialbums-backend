@@ -30,14 +30,14 @@ public class ImageController {
 
 
     @PostMapping("/image")
-    public void uploadImage(@ModelAttribute MultipartFile image
+    public void uploadImage(@RequestParam("file") MultipartFile image
     ) {
 //        System.out.println("image"+image.getFile().getResource().getURL());
         String filename= imageService.upload(image);
 
         Optional<User> user=userService.findByLogin("a");
         if (user.isPresent())
-            user.get().setAvatar("http://localhost:9000/images/Cats.jpg");
+            user.get().setAvatar("http://localhost:9002/images/Cats.jpg");
         userRepository.save(user.get());
 
 

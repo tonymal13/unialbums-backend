@@ -30,6 +30,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+
+        System.out.println("Got a request");
+
         UniverseResponse tokens = authService.login(authRequest);
 
         String refreshToken=tokens.getData().get(0).get("refreshToken");
@@ -38,6 +41,8 @@ public class AuthController {
                 );
         universeResponse.setData(new ArrayList<>());
         universeResponse.setMessage("Вы вошли в аккаунт");
+
+
 
 
         HashMap<String,String> map = new HashMap<>();
