@@ -42,7 +42,7 @@ public class ImageController {
 
         Optional<User> user=userService.findByLogin("a");
         if (user.isPresent())
-            user.get().setAvatar("http://localhost:9002/images/"+image.getOriginalFilename());
+            user.get().setAvatar("http://localhost:9002/images/"+image.getName());
         userRepository.save(user.get());
 
 
