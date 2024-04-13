@@ -33,11 +33,16 @@ public class ImageController {
     public void uploadImage(@RequestParam("file") MultipartFile image
     ) {
 //        System.out.println("image"+image.getFile().getResource().getURL());
+
+        System.out.println("Filename:"+image.getName());
+
+//        minioClient.putObject()
+
         String filename= imageService.upload(image);
 
         Optional<User> user=userService.findByLogin("a");
         if (user.isPresent())
-            user.get().setAvatar("http://localhost:9002/images/Cats.jpg");
+            user.get().setAvatar("http://localhost:9002/images/"+image.getOriginalFilename());
         userRepository.save(user.get());
 
 
