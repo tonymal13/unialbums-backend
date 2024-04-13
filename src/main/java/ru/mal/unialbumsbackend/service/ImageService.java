@@ -2,6 +2,7 @@ package ru.mal.unialbumsbackend.service;
 
 import io.minio.*;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.exception.ImageUploadException;
@@ -11,6 +12,9 @@ import java.util.UUID;
 
 @Service
 public class ImageService {
+
+    @Value("${spring.minio.bucket}")
+    private String bucketName;
 
     private final MinioClient minioClient;
 
@@ -43,11 +47,11 @@ public class ImageService {
     @SneakyThrows
     private void createBucket(){
         boolean found=minioClient.bucketExists(BucketExistsArgs.builder()
-                .bucket("images")
+                .bucket(bucketName)
                 .build());
         if(!found){
             minioClient.makeBucket(MakeBucketArgs.builder()
-                    .bucket("images")
+                    .bucket(bucketName)
                     .build());
         }
 
@@ -65,7 +69,7 @@ public class ImageService {
     private void saveImage(InputStream inputStream,String fileName){
         ObjectWriteResponse response= minioClient.putObject(PutObjectArgs.builder()
                         .stream(inputStream, inputStream.available(), -1)
-                        .bucket("images")
+                        .bucket(bucketName)
                         .object(fileName)
                 .build());}
 

@@ -1,6 +1,7 @@
 package ru.mal.unialbumsbackend.controller;
 
 import io.minio.MinioClient;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
@@ -9,6 +10,8 @@ import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.Optional;
+
+import static ru.mal.unialbumsbackend.controller.AlbumsController.decodeJWTGetHeader;
 
 @RestController
 public class ImageController {
@@ -29,14 +32,19 @@ public class ImageController {
     }
 
 
-    @PostMapping("/image")
-    public void uploadImage(@RequestParam("file") MultipartFile image
+    @PostMapping("/addAvatar")
+    public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("file") MultipartFile image
     ) {
-//        System.out.println("image"+image.getFile().getResource().getURL());
+
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+
+        long userId = ((Number) jsonObject.get("userId")).longValue();
+
+
 
         String filename= imageService.upload(image);
 
-        Optional<User> user=userService.findByLogin("a");
+        Optional<User> user=userService.findById(userId);
         if (user.isPresent()) {
             user.get().setAvatar("http://localhost:9000/images/" + filename);
             userRepository.save(user.get());

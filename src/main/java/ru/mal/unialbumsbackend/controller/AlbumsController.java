@@ -36,7 +36,7 @@ public class AlbumsController {
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response=new UniverseResponse();
-        response.setMessage("album_created");
+        response.setMessage("Альбом создан");
         response.setData(new ArrayList<>());
         long userId = ((Number)jsonObject.get("userId")).longValue();
         albumService.create(request,userId);
@@ -72,7 +72,7 @@ public class AlbumsController {
 
     }
 
-    public JSONObject decodeJWTGetHeader(String jwt){
+    public static JSONObject decodeJWTGetHeader(String jwt){
         jwt= jwt.replace("Bearer ", "");
         String[] chunks=jwt.split("\\.");
 
