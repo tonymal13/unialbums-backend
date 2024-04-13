@@ -18,6 +18,7 @@ public class UnialbumsBackendApplication {
 		return MinioClient.builder()
 //				.endpoint("${spring.minio.url}")
 				.endpoint("http://minio:9000")
+//				.endpoint("http://localhost:9000")
 				.credentials("admin","password")
 				.build();
 	}
