@@ -18,7 +18,7 @@ jobs:
           version: v0.9.1
       - uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/unialbums-backend-app
+          image: tonymal13/unialbums-backend-app
           tags: latest
           dockerfile: Dockerfile
           registry: docker.io
