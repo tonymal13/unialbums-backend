@@ -7,7 +7,7 @@ on:
 
 jobs:
   checkstyle:
-#    runs-on: windows-10
+    runs-on: windows-10
     steps:
       - uses: actions/checkout@2
       - uses: actions/setup-java@3
