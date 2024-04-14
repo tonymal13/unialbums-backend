@@ -35,7 +35,6 @@ public class ImageController {
         this.minioClient = minioClient;
     }
 
-
     @PostMapping("/addAvatar")
     public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("avatar") MultipartFile avatar
     ) {
