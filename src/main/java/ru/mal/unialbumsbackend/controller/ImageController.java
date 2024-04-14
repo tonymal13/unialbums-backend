@@ -26,7 +26,6 @@ public class ImageController {
     private final UserService userService;
 
     private final UserRepository userRepository;
-
     private final MinioClient minioClient;
 
     public ImageController(ImageService imageService, UserService userService, UserRepository userRepository, MinioClient minioClient) {
