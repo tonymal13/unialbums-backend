@@ -2,9 +2,14 @@ package ru.mal.unialbumsbackend.controller;
 
 import io.minio.MinioClient;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
+import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.ImageUploadException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
@@ -33,7 +38,7 @@ public class ImageController {
 
 
     @PostMapping("/addAvatar")
-    public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("file") MultipartFile image
+    public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("avatar") MultipartFile avatar
     ) {
 
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
@@ -42,7 +47,7 @@ public class ImageController {
 
 
 
-        String filename= imageService.upload(image);
+        String filename= imageService.upload(avatar);
 
         Optional<User> user=userService.findById(userId);
         if (user.isPresent()) {
@@ -50,9 +55,13 @@ public class ImageController {
             userRepository.save(user.get());
         }
 
-        System.out.println(image.getName());
-        System.out.println(image.getOriginalFilename());
+    }
 
+    @ExceptionHandler
+    private ResponseEntity<UniverseResponse> handleException(ImageUploadException e){
+        UniverseResponse universeResponse=new UniverseResponse();
+        universeResponse.setMessage("Не удалось загрузить изображение");
+        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 
 
