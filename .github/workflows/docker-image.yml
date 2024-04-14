@@ -14,12 +14,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: docker/setup-buildx-action@v2
+        with: 
+          version: 7.0.0
+      - uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          version: v0.7.0
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/tasklist
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/unialbums-backend-app
           tags: 0.0.$GITHUB_RUN_NUMBER, latest
           dockerfile: Dockerfile
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      # - run: docker build -t tonymal13/unialbums-backend-app .
