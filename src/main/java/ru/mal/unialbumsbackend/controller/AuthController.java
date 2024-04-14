@@ -120,7 +120,6 @@ public class AuthController {
             message="Фамилия должна быть в формате: Иванов";
         return message;
     }
-
     @GetMapping("/test")
     public String test(){
         return "It's ok";
