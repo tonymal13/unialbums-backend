@@ -3,6 +3,7 @@ package ru.mal.unialbumsbackend.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.domain.User;
 
@@ -22,15 +23,15 @@ public class AlbumService {
     private final UserService userService;
 
     @Transactional
-    public void create(CreateAlbumRequest albumRequest,long userId) {
-        Album album = enrich(albumRequest,userId);
+    public void create(CreateAlbumRequest albumRequest, long userId, String fileName) {
+        Album album = enrich(albumRequest,userId,fileName);
         albumRepository.save(album);
     }
 
-    private Album enrich(CreateAlbumRequest albumRequest,long userId) {
+    private Album enrich(CreateAlbumRequest albumRequest,long userId,String fileName) {
         Album album=new Album();
         album.setTitle(albumRequest.getTitle());
-        album.setCover(albumRequest.getCover());
+        album.setCover("http://localhost:9000/images/"+fileName);
         album.setAtmosphereRating(albumRequest.getAtmosphereRating());
         album.setBitsRating(albumRequest.getBitsRating());
         album.setTextRating(albumRequest.getTextRating());
@@ -39,7 +40,6 @@ public class AlbumService {
         Optional<User> user=userService.findById(userId);
         if(user.isPresent()) {
             user.get().addAlbums(album);
-            System.out.println("albums:"+user.get().getAlbums().get(0).getTitle());
             album.setUser(user.get());
 
         }
