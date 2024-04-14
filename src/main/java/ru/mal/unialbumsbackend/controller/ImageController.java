@@ -2,9 +2,14 @@ package ru.mal.unialbumsbackend.controller;
 
 import io.minio.MinioClient;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
+import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.ImageUploadException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
@@ -50,9 +55,13 @@ public class ImageController {
             userRepository.save(user.get());
         }
 
-        System.out.println(avatar.getName());
-        System.out.println(avatar.getOriginalFilename());
+    }
 
+    @ExceptionHandler
+    private ResponseEntity<UniverseResponse> handleException(ImageUploadException e){
+        UniverseResponse universeResponse=new UniverseResponse();
+        universeResponse.setMessage("Не удалось загрузить изображение");
+        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 
 

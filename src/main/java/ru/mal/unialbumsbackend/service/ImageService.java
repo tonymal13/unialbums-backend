@@ -59,6 +59,9 @@ public class ImageService {
 
     private String generateFileName(MultipartFile file){
         String extension=getExtension(file);
+        if(!extension.equals("png") && !extension.equals("jpg")){
+            throw new ImageUploadException("Загрузка изображения не прошла(");
+        }
         return UUID.randomUUID()+"."+extension;
     }
     private String getExtension(MultipartFile file){

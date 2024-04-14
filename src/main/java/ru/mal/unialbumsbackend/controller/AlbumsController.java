@@ -35,19 +35,6 @@ public class AlbumsController {
         this.albumService = albumService;
         this.imageService = imageService;
     }
-
-//    @PostMapping("/create")
-//    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @RequestBody CreateAlbumRequest request)
-//    {
-//        JSONObject jsonObject = decodeJWTGetHeader(jwt);
-//        UniverseResponse response=new UniverseResponse();
-//        response.setMessage("Альбом создан");
-//        response.setData(new ArrayList<>());
-//        long userId = ((Number)jsonObject.get("userId")).longValue();
-//        albumService.create(request,userId);
-//        return ResponseEntity.ok(response);
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumRequest request
             , @RequestParam("cover") MultipartFile cover
