@@ -50,7 +50,7 @@ public class AlbumsController {
 
     @PostMapping("/create")
     public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumRequest request
-            , @RequestParam("file") MultipartFile image
+            , @RequestParam("cover") MultipartFile cover
     )
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
@@ -59,7 +59,7 @@ public class AlbumsController {
         response.setData(new ArrayList<>());
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
-        String filename= imageService.upload(image);
+        String filename= imageService.upload(cover);
         albumService.create(request,userId,filename);
         return ResponseEntity.ok(response);
     }

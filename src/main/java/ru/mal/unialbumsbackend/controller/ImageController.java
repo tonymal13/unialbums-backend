@@ -33,7 +33,7 @@ public class ImageController {
 
 
     @PostMapping("/addAvatar")
-    public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("file") MultipartFile image
+    public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("avatar") MultipartFile avatar
     ) {
 
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
@@ -42,7 +42,7 @@ public class ImageController {
 
 
 
-        String filename= imageService.upload(image);
+        String filename= imageService.upload(avatar);
 
         Optional<User> user=userService.findById(userId);
         if (user.isPresent()) {
@@ -50,8 +50,8 @@ public class ImageController {
             userRepository.save(user.get());
         }
 
-        System.out.println(image.getName());
-        System.out.println(image.getOriginalFilename());
+        System.out.println(avatar.getName());
+        System.out.println(avatar.getOriginalFilename());
 
     }
 
