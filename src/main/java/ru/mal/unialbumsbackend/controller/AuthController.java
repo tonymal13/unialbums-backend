@@ -84,7 +84,7 @@ public class AuthController {
         @ExceptionHandler
     private ResponseEntity<UniverseResponse> handleException(AuthException e){
         UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage("Пользователь не найден");
+        universeResponse.setMessage( "Пользователь не найден");
         return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 
