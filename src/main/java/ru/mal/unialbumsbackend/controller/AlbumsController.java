@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
 import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
 import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
+import ru.mal.unialbumsbackend.service.ImageService;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -22,24 +24,43 @@ public class AlbumsController {
 
     private final AlbumService albumService;
 
+    private final ImageService imageService;
+
 
     @Value("{jwt.secret.access}")
     private String secret;
 
-    public AlbumsController(AlbumService albumService) {
+    public AlbumsController(AlbumService albumService, ImageService imageService) {
 
         this.albumService = albumService;
+        this.imageService = imageService;
     }
 
+//    @PostMapping("/create")
+//    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @RequestBody CreateAlbumRequest request)
+//    {
+//        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+//        UniverseResponse response=new UniverseResponse();
+//        response.setMessage("Альбом создан");
+//        response.setData(new ArrayList<>());
+//        long userId = ((Number)jsonObject.get("userId")).longValue();
+//        albumService.create(request,userId);
+//        return ResponseEntity.ok(response);
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @RequestBody CreateAlbumRequest request)
+    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumRequest request
+            , @RequestParam("file") MultipartFile image
+    )
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response=new UniverseResponse();
         response.setMessage("Альбом создан");
         response.setData(new ArrayList<>());
         long userId = ((Number)jsonObject.get("userId")).longValue();
-        albumService.create(request,userId);
+
+        String filename= imageService.upload(image);
+        albumService.create(request,userId,filename);
         return ResponseEntity.ok(response);
     }
 

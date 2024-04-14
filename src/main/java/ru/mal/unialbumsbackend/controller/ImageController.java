@@ -50,6 +50,9 @@ public class ImageController {
             userRepository.save(user.get());
         }
 
+        System.out.println(image.getName());
+        System.out.println(image.getOriginalFilename());
+
     }
 
 
