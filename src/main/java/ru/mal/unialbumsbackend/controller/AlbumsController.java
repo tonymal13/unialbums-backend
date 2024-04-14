@@ -77,7 +77,6 @@ public class AlbumsController {
             universeResponse.addData(map, "albumId", Long.toString(album.getId()));
         }
          return ResponseEntity.ok(universeResponse);
-
     }
 
     public static JSONObject decodeJWTGetHeader(String jwt){
