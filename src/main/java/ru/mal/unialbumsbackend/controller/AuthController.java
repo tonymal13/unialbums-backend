@@ -78,7 +78,6 @@ public class AuthController {
         }
             response.setMessage(message);
             return ResponseEntity.ok(response);
-
     }
 
         @ExceptionHandler
