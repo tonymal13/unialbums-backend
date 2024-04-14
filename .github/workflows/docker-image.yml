@@ -22,4 +22,4 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - run: docker build -t tonymal13/unialbums-backend-app .
+      # - run: docker build -t tonymal13/unialbums-backend-app .
