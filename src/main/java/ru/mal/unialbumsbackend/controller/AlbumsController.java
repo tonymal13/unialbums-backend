@@ -64,7 +64,6 @@ public class AlbumsController {
          universeResponse.setData(new ArrayList<>());
          universeResponse.setMessage("Альбомы пользователя:");
 
-
         for (AlbumResponse album : albums) {
             HashMap<String, String> map = new HashMap<>();
             universeResponse.addMap(map);
