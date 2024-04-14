@@ -80,7 +80,6 @@ public class AuthController {
             return ResponseEntity.ok(response);
     }
 
-
         @ExceptionHandler
     private ResponseEntity<UniverseResponse> handleException(AuthException e){
         UniverseResponse universeResponse=new UniverseResponse();
