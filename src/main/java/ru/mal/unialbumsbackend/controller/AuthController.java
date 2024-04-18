@@ -122,7 +122,7 @@ public class AuthController {
     }
     @GetMapping("/test")
     public String test(){
-        return "It's ok";
+        return "Made by Tonymal13 and def1s";
     }
 
 }
