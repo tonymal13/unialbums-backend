@@ -50,7 +50,8 @@ public class ImageController {
 
         Optional<User> user=userService.findById(userId);
         if (user.isPresent()) {
-            user.get().setAvatar("http://localhost:9000/images/" + filename);
+//            user.get().setAvatar("http://localhost:9000/images/" + filename);
+            user.get().setAvatar("http://79.174.95.140:9000/images"+filename);
             userRepository.save(user.get());
         }
 
