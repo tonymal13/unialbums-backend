@@ -122,7 +122,7 @@ public class AuthController {
     }
     @GetMapping("/test")
     public String test(){
-        return "Ульяна привет)";
+        return "Ulya privet :)";
     }
 
 }
