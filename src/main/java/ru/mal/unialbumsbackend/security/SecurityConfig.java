@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManager->sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers("/login", "/token","/register","/refresh","/test").permitAll()
