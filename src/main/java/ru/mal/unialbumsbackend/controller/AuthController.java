@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthController {
 

@@ -19,6 +19,7 @@ import java.util.Optional;
 import static ru.mal.unialbumsbackend.controller.AlbumsController.decodeJWTGetHeader;
 
 @RestController
+@RequestMapping("/api")
 public class ImageController {
 
     private final ImageService imageService;
