@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.security;
+package ru.mal.unialbumsbackend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
