@@ -44,7 +44,6 @@ public class AlbumService {
             album.setUser(user.get());
 
         }
-
         return album;
     }
     public List<AlbumResponse> getAlbumsByUserId(Long userId) {
