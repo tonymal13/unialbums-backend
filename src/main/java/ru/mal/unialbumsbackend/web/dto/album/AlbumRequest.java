@@ -1,12 +1,11 @@
-package ru.mal.unialbumsbackend.domain.requests;
+package ru.mal.unialbumsbackend.web.dto.album;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class CreateAlbumRequest {
+public class AlbumRequest {
 
     private String title;
 

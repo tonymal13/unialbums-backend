@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.controller;
+package ru.mal.unialbumsbackend.web.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
-import ru.mal.unialbumsbackend.domain.requests.RefreshJwtRequest;
-import ru.mal.unialbumsbackend.domain.requests.RegRequest;
-import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
-import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.JwtRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
+import ru.mal.unialbumsbackend.web.exception.AuthException;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
@@ -30,48 +30,48 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<BackendResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
 
-        UniverseResponse tokens = authService.login(authRequest);
+        BackendResponse tokens = authService.login(authRequest);
 
         String refreshToken=tokens.getData().get(0).get("refreshToken");
 
-        UniverseResponse universeResponse=new UniverseResponse(
+        BackendResponse backendResponse =new BackendResponse(
                 );
-        universeResponse.setData(new ArrayList<>());
-        universeResponse.setMessage("Вы вошли в аккаунт");
+        backendResponse.setData(new ArrayList<>());
+        backendResponse.setMessage("Вы вошли в аккаунт");
 
         HashMap<String,String> map = new HashMap<>();
-        universeResponse.addMap(map);
-        universeResponse.addData(map,"accessToken",tokens.getData().get(0).get("accessToken"));
+        backendResponse.addMap(map);
+        backendResponse.addData(map,"accessToken",tokens.getData().get(0).get("accessToken"));
 
 
         Cookie cookie=new Cookie("refreshToken",refreshToken);
         sendRefreshToken(cookie,response);
 
-        return ResponseEntity.ok(universeResponse);
+        return ResponseEntity.ok(backendResponse);
     }
 
     @PostMapping("/token")
-    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
-        final UniverseResponse token = authService.getAccessToken(request.getRefreshToken());
+    public ResponseEntity<BackendResponse> getNewAccessToken(@RequestBody JwtRequest request) {
+        final BackendResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<UniverseResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,HttpServletResponse response) {
+    public ResponseEntity<BackendResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 
-        final UniverseResponse universeResponse = authService.refresh(refreshToken);
-        String newRefreshToken= universeResponse.getData().get(0).get("refreshToken");
+        final BackendResponse backendResponse = authService.refresh(refreshToken);
+        String newRefreshToken= backendResponse.getData().get(0).get("refreshToken");
         Cookie cookie=new Cookie("refreshToken",newRefreshToken);
         sendRefreshToken(cookie,response);
-        universeResponse.removeFromData("refreshToken");
-        return ResponseEntity.ok(universeResponse);
+        backendResponse.removeFromData("refreshToken");
+        return ResponseEntity.ok(backendResponse);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request) {
-        UniverseResponse response = new UniverseResponse();
+    public ResponseEntity<BackendResponse> register(@RequestBody RegRequest request) {
+        BackendResponse response = new BackendResponse();
         response.setData(new ArrayList<>());
         String message = validate(request);
         if (message.equals("Добавлено в БД")){
@@ -82,10 +82,10 @@ public class AuthController {
     }
 
         @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(AuthException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( "Пользователь не найден");
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    private ResponseEntity<BackendResponse> handleException(AuthException e){
+        BackendResponse backendResponse =new BackendResponse();
+        backendResponse.setMessage( "Пользователь не найден");
+        return new ResponseEntity<>(backendResponse, HttpStatus.NOT_FOUND);
     }
 
     private void sendRefreshToken(Cookie cookie ,HttpServletResponse response) {

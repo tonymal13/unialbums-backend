@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.domain.response;
+package ru.mal.unialbumsbackend.web.dto;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UniverseResponse {
+public class BackendResponse {
 
     private List<HashMap<String, String>> data;
 

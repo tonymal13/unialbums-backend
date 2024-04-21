@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.repositories;
+package ru.mal.unialbumsbackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.controller;
+package ru.mal.unialbumsbackend.web.controller;
 
 import io.minio.MinioClient;
 import org.json.JSONObject;
@@ -7,16 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
-import ru.mal.unialbumsbackend.exception.AuthException;
-import ru.mal.unialbumsbackend.exception.ImageUploadException;
-import ru.mal.unialbumsbackend.repositories.UserRepository;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
+import ru.mal.unialbumsbackend.web.exception.ImageUploadException;
+import ru.mal.unialbumsbackend.repository.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.Optional;
-
-import static ru.mal.unialbumsbackend.controller.AlbumsController.decodeJWTGetHeader;
 
 @RestController
 @RequestMapping("/api")
@@ -40,7 +37,7 @@ public class ImageController {
     public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("avatar") MultipartFile avatar
     ) {
 
-        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+        JSONObject jsonObject = AlbumsController.decodeJWTGetHeader(jwt);
 
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
@@ -58,10 +55,10 @@ public class ImageController {
     }
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(ImageUploadException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage("Не удалось загрузить изображение");
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    private ResponseEntity<BackendResponse> handleException(ImageUploadException e){
+        BackendResponse backendResponse =new BackendResponse();
+        backendResponse.setMessage("Не удалось загрузить изображение");
+        return new ResponseEntity<>(backendResponse, HttpStatus.NOT_FOUND);
     }
 
 

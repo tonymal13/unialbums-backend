@@ -1,13 +1,12 @@
 package ru.mal.unialbumsbackend.service;
 
-import lombok.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.domain.requests.RegRequest;
-import ru.mal.unialbumsbackend.repositories.UserRepository;
+import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.repository.UserRepository;
 
 
 import java.util.Optional;

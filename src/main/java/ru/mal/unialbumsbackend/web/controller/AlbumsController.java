@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.controller;
+package ru.mal.unialbumsbackend.web.controller;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
-import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
-import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.album.AlbumRequest;
+import ru.mal.unialbumsbackend.web.dto.album.AlbumResponse;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.ImageService;
 
@@ -36,12 +36,12 @@ public class AlbumsController {
         this.imageService = imageService;
     }
     @PostMapping("/create")
-    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumRequest request
+    public ResponseEntity<BackendResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") AlbumRequest request
             , @RequestParam("cover") MultipartFile cover
     )
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        UniverseResponse response=new UniverseResponse();
+        BackendResponse response=new BackendResponse();
         response.setMessage("Альбом создан");
         response.setData(new ArrayList<>());
         long userId = ((Number)jsonObject.get("userId")).longValue();
@@ -53,31 +53,31 @@ public class AlbumsController {
 
     @GetMapping("/getByUserId")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UniverseResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
+    public ResponseEntity<BackendResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
 
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
          List<AlbumResponse> albums= albumService.getAlbumsByUserId(userId);
 
-         UniverseResponse universeResponse=new UniverseResponse();
-         universeResponse.setData(new ArrayList<>());
-         universeResponse.setMessage("Альбомы пользователя:");
+         BackendResponse backendResponse =new BackendResponse();
+         backendResponse.setData(new ArrayList<>());
+         backendResponse.setMessage("Альбомы пользователя:");
 
 
         for (AlbumResponse album : albums) {
             HashMap<String, String> map = new HashMap<>();
-            universeResponse.addMap(map);
-            universeResponse.addData(map, "title", album.getTitle());
-            universeResponse.addData(map, "cover", album.getCover());
-            universeResponse.addData(map, "tracksRating", Integer.toString(album.getTracksRating()));
-            universeResponse.addData(map, "atmosphereRating", Integer.toString(album.getAtmosphereRating()));
-            universeResponse.addData(map, "bitsRating", Integer.toString(album.getBitsRating()));
-            universeResponse.addData(map, "textRating", Integer.toString(album.getTextRating()));
-            universeResponse.addData(map, "artist", album.getArtist());
-            universeResponse.addData(map, "albumId", Long.toString(album.getId()));
+            backendResponse.addMap(map);
+            backendResponse.addData(map, "title", album.getTitle());
+            backendResponse.addData(map, "cover", album.getCover());
+            backendResponse.addData(map, "tracksRating", Integer.toString(album.getTracksRating()));
+            backendResponse.addData(map, "atmosphereRating", Integer.toString(album.getAtmosphereRating()));
+            backendResponse.addData(map, "bitsRating", Integer.toString(album.getBitsRating()));
+            backendResponse.addData(map, "textRating", Integer.toString(album.getTextRating()));
+            backendResponse.addData(map, "artist", album.getArtist());
+            backendResponse.addData(map, "albumId", Long.toString(album.getId()));
         }
-         return ResponseEntity.ok(universeResponse);
+         return ResponseEntity.ok(backendResponse);
     }
 
     public static JSONObject decodeJWTGetHeader(String jwt){

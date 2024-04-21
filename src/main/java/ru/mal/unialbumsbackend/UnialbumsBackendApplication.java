@@ -9,20 +9,11 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class UnialbumsBackendApplication {
 
-	@Value("${spring.minio.url}")
-	private String minioUrl;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(UnialbumsBackendApplication.class, args);
 	}
 
-
-	@Bean
-	public MinioClient minioClient(){
-		return MinioClient.builder()
-				.endpoint(minioUrl)
-				.credentials("admin","password")
-				.build();
-	}
 
 }

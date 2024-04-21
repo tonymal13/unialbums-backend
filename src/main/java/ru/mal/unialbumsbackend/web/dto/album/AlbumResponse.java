@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.domain.response;
+package ru.mal.unialbumsbackend.web.dto.album;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

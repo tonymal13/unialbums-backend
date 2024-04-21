@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.exception;
+package ru.mal.unialbumsbackend.web.exception;
 
 public class ImageUploadException extends RuntimeException{
 
