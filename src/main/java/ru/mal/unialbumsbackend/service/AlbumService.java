@@ -32,8 +32,8 @@ public class AlbumService {
 
     private Album enrich(AlbumRequest albumRequest, long userId, String fileName) {
         Album album=requestMapper.toEntity(albumRequest);
-        album.setCover("http://localhost:9000/images/"+fileName);
-//        album.setCover("http://79.174.95.140:9000/images/"+fileName);
+//        album.setCover("http://localhost:9000/images/"+fileName);
+        album.setCover("http://79.174.95.140:9000/images/"+fileName);
 
         Optional<User> user=userService.findById(userId);
         if(user.isPresent()) {
