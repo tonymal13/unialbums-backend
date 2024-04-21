@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.domain.response;
+package ru.mal.unialbumsbackend.web.dto;
 
 import lombok.*;
 

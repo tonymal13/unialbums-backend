@@ -3,12 +3,11 @@ package ru.mal.unialbumsbackend.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.domain.User;
 
-import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
-import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
+import ru.mal.unialbumsbackend.web.dto.album.CreateAlbumRequest;
+import ru.mal.unialbumsbackend.web.dto.album.AlbumResponse;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 
 import java.util.*;

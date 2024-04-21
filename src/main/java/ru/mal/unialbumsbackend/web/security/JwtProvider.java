@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.security;
+package ru.mal.unialbumsbackend.web.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.service.props.JwtProperties;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -25,12 +26,13 @@ public class JwtProvider {
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
+    private final JwtProperties jwtProperties;
+
     public JwtProvider(
-            @Value("${jwt.secret.access}") String jwtAccessSecret,
-            @Value("${jwt.secret.refresh}") String jwtRefreshSecret
-    ) {
-        this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
-        this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
+            JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+        jwtAccessSecret=Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtAccessSecret()));
+        jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtRefreshSecret()));
     }
 
     public String generateRefreshToken(@NonNull User user) {

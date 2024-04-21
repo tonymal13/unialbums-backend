@@ -17,12 +17,12 @@ public class UnialbumsBackendApplication {
 	}
 
 
-	@Bean
-	public MinioClient minioClient(){
-		return MinioClient.builder()
-				.endpoint(minioUrl)
-				.credentials("admin","password")
-				.build();
-	}
+//	@Bean
+//	public MinioClient minioClient(){
+//		return MinioClient.builder()
+//				.endpoint(minioUrl)
+//				.credentials("admin","password")
+//				.build();
+//	}
 
 }

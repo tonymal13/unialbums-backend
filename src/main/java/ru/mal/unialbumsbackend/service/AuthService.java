@@ -5,11 +5,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mal.unialbumsbackend.security.JwtProvider;
+import ru.mal.unialbumsbackend.web.security.JwtProvider;
 import ru.mal.unialbumsbackend.domain.*;
 
-import ru.mal.unialbumsbackend.domain.requests.LogInRequest;
-import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
+import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.exception.AuthException;
 
 import java.util.ArrayList;

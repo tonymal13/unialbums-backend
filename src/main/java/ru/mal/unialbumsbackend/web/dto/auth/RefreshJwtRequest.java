@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.domain.requests;
+package ru.mal.unialbumsbackend.web.dto.auth;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.controller;
+package ru.mal.unialbumsbackend.web.controller;
 
 import io.minio.MinioClient;
 import org.json.JSONObject;
@@ -7,8 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
-import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.exception.ImageUploadException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
@@ -16,7 +15,7 @@ import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.Optional;
 
-import static ru.mal.unialbumsbackend.controller.AlbumsController.decodeJWTGetHeader;
+import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
 
 @RestController
 @RequestMapping("/api")

@@ -1,14 +1,19 @@
-package ru.mal.unialbumsbackend.domain.requests;
+package ru.mal.unialbumsbackend.web.dto.album;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class CreateAlbumRequest {
+@AllArgsConstructor
+public class AlbumResponse {
+
+    private Long id;
 
     private String title;
+
+    private String cover;
 
     private int tracksRating;
 
@@ -19,5 +24,6 @@ public class CreateAlbumRequest {
     private int textRating;
 
     private String artist;
+
 
 }

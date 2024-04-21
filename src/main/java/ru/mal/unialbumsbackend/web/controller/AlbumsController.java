@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.controller;
+package ru.mal.unialbumsbackend.web.controller;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.mal.unialbumsbackend.domain.requests.CreateAlbumRequest;
-import ru.mal.unialbumsbackend.domain.response.AlbumResponse;
-import ru.mal.unialbumsbackend.domain.response.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.album.CreateAlbumRequest;
+import ru.mal.unialbumsbackend.web.dto.album.AlbumResponse;
+import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.ImageService;
 
