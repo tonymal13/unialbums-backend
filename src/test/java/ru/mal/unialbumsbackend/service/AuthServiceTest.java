@@ -35,9 +35,6 @@ import java.util.*;
 public class AuthServiceTest {
 
     @MockBean
-    private AuthenticationManager authenticationManager;
-
-    @MockBean
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @MockBean

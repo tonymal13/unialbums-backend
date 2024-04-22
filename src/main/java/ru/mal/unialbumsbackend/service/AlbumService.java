@@ -30,8 +30,8 @@ public class AlbumService {
     private Album enrich(CreateAlbumRequest albumRequest,long userId,String fileName) {
         Album album=new Album();
         album.setTitle(albumRequest.getTitle());
-//        album.setCover("http://localhost:9000/images/"+fileName);
-        album.setCover("http://79.174.95.140:9000/images/"+fileName);
+        album.setCover("http://localhost:9000/images/"+fileName);
+//            album.setCover("http://79.174.95.140:9000/images/"+fileName);
         album.setAtmosphereRating(albumRequest.getAtmosphereRating());
         album.setBitsRating(albumRequest.getBitsRating());
         album.setTextRating(albumRequest.getTextRating());
