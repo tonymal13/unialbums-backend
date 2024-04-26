@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtRequest;
 import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
@@ -24,6 +25,8 @@ import java.util.Optional;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthController {
+
+    private final UserValidator userValidator;
 
     private final AuthService authService;
 
@@ -73,7 +76,7 @@ public class AuthController {
     public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request) {
         UniverseResponse response = new UniverseResponse();
         response.setData(new ArrayList<>());
-        String message = validate(request);
+        String message =userValidator.validate(request);
         if (message.equals("Добавлено в БД")){
             userService.register(request);
         }
@@ -97,28 +100,6 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
-    }
-
-    private String validate(RegRequest request){
-        String message= "";
-        Optional<User> user=userService.findByLogin(request.getLogin());
-        if (user.isPresent()) {
-            message= ("Такой пользователь уже существует");
-        } else {
-           message= ("Добавлено в БД");
-        }
-        String regex = "\\p{Lu}\\p{L}{1,20}";
-
-
-        if(request.getPassword().length()<1||request.getPassword().length()>20)
-            message="Пароль должен быть от 1 до 20 символов :)";
-        else if(request.getLogin().length()<1)
-            message="Логин должен больше 1 до 20 символов :)";
-        else if(!request.getFirstName().matches(regex))
-            message="Имя должно быть в формате: Иван";
-        else if(!request.getLastName().matches(regex))
-            message="Фамилия должна быть в формате: Иванов";
-        return message;
     }
     @GetMapping("/test")
     public String test(){
