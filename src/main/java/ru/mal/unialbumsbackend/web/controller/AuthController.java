@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtRequest;
@@ -19,7 +18,6 @@ import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")

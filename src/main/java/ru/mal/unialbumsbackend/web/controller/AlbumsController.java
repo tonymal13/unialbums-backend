@@ -2,7 +2,6 @@ package ru.mal.unialbumsbackend.web.controller;
 
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +13,7 @@ import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.ImageService;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RequestMapping("/api/albums")
 @RestController
@@ -59,16 +55,8 @@ public class AlbumsController {
 
 
         for (AlbumResponse album : albums) {
-            HashMap<String, String> map = new HashMap<>();
-            universeResponse.addMap(map);
-            universeResponse.addData(map, "title", album.getTitle());
-            universeResponse.addData(map, "cover", album.getCover());
-            universeResponse.addData(map, "tracksRating", Integer.toString(album.getTracksRating()));
-            universeResponse.addData(map, "atmosphereRating", Integer.toString(album.getAtmosphereRating()));
-            universeResponse.addData(map, "bitsRating", Integer.toString(album.getBitsRating()));
-            universeResponse.addData(map, "textRating", Integer.toString(album.getTextRating()));
-            universeResponse.addData(map, "artist", album.getArtist());
-            universeResponse.addData(map, "albumId", Long.toString(album.getId()));
+            addData(universeResponse,album);
+
         }
          return ResponseEntity.ok(universeResponse);
     }
@@ -80,6 +68,49 @@ public class AlbumsController {
         Base64.Decoder decoder=Base64.getUrlDecoder();
         String payload=new String(decoder.decode(chunks[1]));
         return new JSONObject(payload);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UniverseResponse> getAlbumInfo(@PathVariable("id") long albumId,@RequestHeader(name = "Authorization") String jwt){
+
+        UniverseResponse universeResponse = new UniverseResponse();
+        universeResponse.setData(new ArrayList<>());
+
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+
+        long userId = ((Number) jsonObject.get("userId")).longValue();
+
+        List<AlbumResponse> albums=albumService.getAlbumsByUserId(userId);
+
+        AlbumResponse albumResponse=null;
+        for(AlbumResponse album:albums){
+            if(album.getId()==albumId)
+                albumResponse=album;
+        }
+
+        if(albumResponse!=null){
+
+            addData(universeResponse,albumResponse);
+            universeResponse.setMessage("Информация об альбоме:");
+        }
+        else{
+            universeResponse = new UniverseResponse();
+            universeResponse.setMessage("Вы не можете получить доступ к этому альбому:");
+        }
+        return ResponseEntity.ok(universeResponse);
+    }
+
+    public void addData(UniverseResponse universeResponse, AlbumResponse albumResponse){
+        HashMap<String, String> map = new HashMap<>();
+        universeResponse.addMap(map);
+        universeResponse.addData(map, "title", albumResponse.getTitle());
+        universeResponse.addData(map, "cover", albumResponse.getCover());
+        universeResponse.addData(map, "tracksRating", Integer.toString(albumResponse.getTracksRating()));
+        universeResponse.addData(map, "atmosphereRating", Integer.toString(albumResponse.getAtmosphereRating()));
+        universeResponse.addData(map, "bitsRating", Integer.toString(albumResponse.getBitsRating()));
+        universeResponse.addData(map, "textRating", Integer.toString(albumResponse.getTextRating()));
+        universeResponse.addData(map, "artist", albumResponse.getArtist());
+        universeResponse.addData(map, "albumId", Long.toString(albumResponse.getId()));
     }
 
 }

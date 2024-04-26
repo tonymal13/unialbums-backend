@@ -10,6 +10,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,11 +24,16 @@ public class UserService {
 
     @Transactional
     public void register(RegRequest regRequest) {
-        User user= enrich(regRequest);
+        User user= toEntity(regRequest);
+        save(user);
+    }
+
+    @Transactional
+    public void save(User user) {
         userRepository.save(user);
     }
 
-    private User enrich(RegRequest request) {
+    public User toEntity(RegRequest request) {
         User user=new User();
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode( request.getPassword()));
@@ -38,6 +44,12 @@ public class UserService {
         return user;
     }
 
+    public void edit(User user,RegRequest request){
+        user.setUsername(request.getUsername());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+    }
+
     public Optional<User> findById(Long userId) {
         return userRepository.findById(userId);
     }
@@ -45,4 +57,5 @@ public class UserService {
     public Optional<User> findByLogin(String username) {
         return userRepository.findByUsername(username);
     }
+
 }

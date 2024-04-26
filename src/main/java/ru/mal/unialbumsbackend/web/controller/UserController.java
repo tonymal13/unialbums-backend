@@ -12,10 +12,13 @@ import ru.mal.unialbumsbackend.exception.ImageUploadException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
+import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
@@ -31,6 +34,8 @@ public class UserController {
 
     private final UserRepository userRepository;
 
+    private final UserValidator userValidator;
+
     @GetMapping("/myProfile")
     public ResponseEntity<UniverseResponse> getProfile(@RequestHeader(name = "Authorization") String jwt){
 
@@ -39,8 +44,6 @@ public class UserController {
 
         response.setData(new ArrayList<>());
         long userId = ((Number)jsonObject.get("userId")).longValue();
-
-        response.setData(new ArrayList<>());
 
         HashMap<String,String> map = new HashMap<>();
         response.addMap(map);
@@ -65,6 +68,27 @@ public class UserController {
 
     }
 
+    @PutMapping("/edit")
+    public ResponseEntity<UniverseResponse> edit(@RequestHeader("Authorization") String jwt,@RequestBody RegRequest request) {
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+        UniverseResponse response=new UniverseResponse();
+
+        response.setData(new ArrayList<>());
+
+        long userId = ((Number)jsonObject.get("userId")).longValue();
+
+        Optional<User> user=userService.findById(userId);
+
+        userService.edit(user.get(),request);
+
+        String message =userValidator.validate(request);
+        if (message.equals("Данные успешно обновлены")){
+            userService.save(user.get());
+        }
+        response.setMessage(message);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/addAvatar")
     public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("avatar") MultipartFile avatar
     ) {
@@ -72,8 +96,6 @@ public class UserController {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
 
         long userId = ((Number) jsonObject.get("userId")).longValue();
-
-
 
         String filename= imageService.upload(avatar);
 

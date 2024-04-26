@@ -18,15 +18,21 @@ public class UserValidator {
         String message= "";
         Optional<User> user=userService.findByLogin(request.getUsername());
         if (user.isPresent()) {
-            message= ("Такой пользователь уже существует");
+            if(!user.get().getUsername().equals(request.getUsername()))
+                message= ("Такой пользователь уже существует");
+            else{
+                message= ("Данные успешно обновлены");
+            }
         } else {
             message= ("Добавлено в БД");
         }
         String regex = "\\p{Lu}\\p{L}{1,20}";
 
+        if (request.getPassword()!=null) {
 
-        if(request.getPassword().length()<1||request.getPassword().length()>20)
-            message="Пароль должен быть от 1 до 20 символов :)";
+            if (request.getPassword().length() < 1 || request.getPassword().length() > 20)
+                message = "Пароль должен быть от 1 до 20 символов :)";
+        }
         else if(request.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
         else if(!request.getFirstName().matches(regex))
