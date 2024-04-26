@@ -13,7 +13,7 @@ public class RegRequest {
     private String lastName;
 
 
-    private String login;
+    private String username;
 
     private String password;
 }

@@ -57,22 +57,22 @@ public class AuthServiceTest {
 
     @Test
     void login() {
-        String login = "a";
+        String username = "a";
         String password = "a";
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
         LogInRequest request = new LogInRequest();
-        request.setLogin(login);
+        request.setUsername(username);
         request.setPassword( password);
         User user = new User();
-        user.setLogin(login);
+        user.setUsername(username);
 
         user.setPassword(bCryptPasswordEncoder.encode(password));
 
         Mockito.when( bCryptPasswordEncoder.matches(password,bCryptPasswordEncoder.encode(password)))
                 .thenReturn(true);
 
-        Mockito.when(userService.findByLogin(login))
+        Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.of(user));
 
         Mockito.when(jwtProviderMock.generateAccessTokenForLogin(user))
@@ -91,10 +91,10 @@ public class AuthServiceTest {
         String username = "a";
         String password = "a";
         LogInRequest request = new LogInRequest();
-        request.setLogin(username);
+        request.setUsername(username);
         request.setPassword(password);
         User user = new User();
-        user.setLogin(username);
+        user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
         Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.empty());
@@ -108,10 +108,10 @@ public class AuthServiceTest {
         String username = "a";
         String password = "a";
         LogInRequest request = new LogInRequest();
-        request.setLogin(username);
+        request.setUsername(username);
         request.setPassword(password);
         User user = new User();
-        user.setLogin(username);
+        user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
         Mockito.when( bCryptPasswordEncoder.matches(password,bCryptPasswordEncoder.encode(password)))
                         .thenReturn(false);

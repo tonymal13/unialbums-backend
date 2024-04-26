@@ -35,7 +35,7 @@ public class User {
 
     @Column(name="login")
     @Size(min = 1,max = 100,message = "")
-    private String login;
+    private String username;
 
     @Column(name="password",nullable = false)
     @Size(max = 100)

@@ -31,7 +31,7 @@ public class UserService {
         User user=new User();
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode( request.getPassword()));
-        user.setLogin(request.getLogin());
+        user.setUsername(request.getUsername());
         user.setLastName(request.getLastName());
         user.setFirstName(request.getFirstName());
         user.setAvatar("");
@@ -42,7 +42,7 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public Optional<User> findByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public Optional<User> findByLogin(String username) {
+        return userRepository.findByUsername(username);
     }
 }

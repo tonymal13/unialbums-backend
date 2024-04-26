@@ -43,7 +43,7 @@ public class UserController {
         Optional<User> user=userService.findById(userId);
 
         if (user.isPresent()){
-            response.addData(map, "login", user.get().getLogin());
+            response.addData(map, "username", user.get().getUsername());
             response.addData(map, "firstName",user.get().getFirstName());
             response.addData(map,"lastName",user.get().getLastName());
             response.addData(map,"avatar",user.get().getAvatar());

@@ -16,7 +16,7 @@ public class UserValidator {
 
     public String validate(RegRequest request){
         String message= "";
-        Optional<User> user=userService.findByLogin(request.getLogin());
+        Optional<User> user=userService.findByLogin(request.getUsername());
         if (user.isPresent()) {
             message= ("Такой пользователь уже существует");
         } else {
@@ -27,7 +27,7 @@ public class UserValidator {
 
         if(request.getPassword().length()<1||request.getPassword().length()>20)
             message="Пароль должен быть от 1 до 20 символов :)";
-        else if(request.getLogin().length()<1)
+        else if(request.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
         else if(!request.getFirstName().matches(regex))
             message="Имя должно быть в формате: Иван";

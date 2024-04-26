@@ -28,14 +28,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public UniverseResponse login(@NonNull LogInRequest authRequest) {
-        Optional<User> user = userService.findByLogin(authRequest.getLogin());
+        Optional<User> user = userService.findByLogin(authRequest.getUsername());
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setData(new ArrayList<>());
         if(user.isPresent()) {
             if (passwordEncoder.matches(authRequest.getPassword() ,user.get().getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String refreshToken = jwtProvider.generateRefreshToken(user.get());
-                refreshStorage.put(user.get().getLogin(), refreshToken);
+                refreshStorage.put(user.get().getUsername(), refreshToken);
                 HashMap<String,String> map=new HashMap<>();
                 universeResponse.addMap(map);
                 universeResponse.addData(map,"accessToken",accessToken);
@@ -93,7 +93,7 @@ public class AuthService {
                 }
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user.get());
-                refreshStorage.put(user.get().getLogin(), newRefreshToken);
+                refreshStorage.put(user.get().getUsername(), newRefreshToken);
                 HashMap<String,String> map=new HashMap<>();
                 universeResponse.setMessage("Токен обновлен");
                 universeResponse.addMap(map);
