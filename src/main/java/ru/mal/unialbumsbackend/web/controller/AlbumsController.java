@@ -1,5 +1,6 @@
 package ru.mal.unialbumsbackend.web.controller;
 
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,21 +21,13 @@ import java.util.List;
 
 @RequestMapping("/api/albums")
 @RestController
+@AllArgsConstructor
 public class AlbumsController {
 
     private final AlbumService albumService;
 
     private final ImageService imageService;
 
-
-    @Value("{jwt.secret.access}")
-    private String secret;
-
-    public AlbumsController(AlbumService albumService, ImageService imageService) {
-
-        this.albumService = albumService;
-        this.imageService = imageService;
-    }
     @PostMapping("/create")
     public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumRequest request
             , @RequestParam("cover") MultipartFile cover

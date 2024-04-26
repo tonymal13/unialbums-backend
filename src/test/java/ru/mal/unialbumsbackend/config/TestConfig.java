@@ -54,7 +54,7 @@ public class TestConfig {
     @Bean
     @Primary
     public ImageService imageService() {
-        return new ImageService(minioClient());
+        return new ImageService(minioProperties(),minioClient());
     }
 
     @Bean

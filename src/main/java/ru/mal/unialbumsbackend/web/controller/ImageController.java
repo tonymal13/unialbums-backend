@@ -1,6 +1,7 @@
 package ru.mal.unialbumsbackend.web.controller;
 
 import io.minio.MinioClient;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api")
 public class ImageController {
 
@@ -26,14 +28,6 @@ public class ImageController {
     private final UserService userService;
 
     private final UserRepository userRepository;
-    private final MinioClient minioClient;
-
-    public ImageController(ImageService imageService, UserService userService, UserRepository userRepository, MinioClient minioClient) {
-        this.imageService = imageService;
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.minioClient = minioClient;
-    }
 
     @PostMapping("/addAvatar")
     public void addAvatar(@RequestHeader("Authorization") String jwt ,@RequestParam("avatar") MultipartFile avatar

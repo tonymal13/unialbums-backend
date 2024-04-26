@@ -1,18 +1,18 @@
 package ru.mal.unialbumsbackend.util;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.service.UserService;
 import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
 
 import java.util.Optional;
 
+@Component
+@AllArgsConstructor
 public class UserValidator {
 
     private final UserService userService;
-
-    public UserValidator(UserService userService) {
-        this.userService = userService;
-    }
 
     public String validate(RegRequest request){
         String message= "";
