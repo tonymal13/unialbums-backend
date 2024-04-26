@@ -68,7 +68,7 @@ public class UserController {
 
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/myProfile")
     public ResponseEntity<UniverseResponse> edit(@RequestHeader("Authorization") String jwt,@RequestBody RegRequest request) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response=new UniverseResponse();
