@@ -50,6 +50,15 @@ public class UserService {
         user.setLastName(request.getLastName());
     }
 
+    public RegRequest toDto(User user) {
+        RegRequest request=new RegRequest();
+//        request.setPassword(passwordEncoder.encode( user.getPassword()));
+        request.setUsername(request.getUsername());
+        request.setLastName(request.getLastName());
+        request.setFirstName(request.getFirstName());
+        return request;
+    }
+
     public Optional<User> findById(Long userId) {
         return userRepository.findById(userId);
     }

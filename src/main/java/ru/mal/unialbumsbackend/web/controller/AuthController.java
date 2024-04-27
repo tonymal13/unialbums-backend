@@ -74,7 +74,7 @@ public class AuthController {
     public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request) {
         UniverseResponse response = new UniverseResponse();
         response.setData(new ArrayList<>());
-        String message =userValidator.validate(request);
+        String message =userValidator.validateForRegister(request);
         if (message.equals("Добавлено в БД")){
             userService.register(request);
         }

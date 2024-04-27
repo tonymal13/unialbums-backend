@@ -18,7 +18,6 @@ import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
@@ -69,7 +68,7 @@ public class UserController {
     }
 
     @PutMapping("/myProfile")
-    public ResponseEntity<UniverseResponse> edit(@RequestHeader("Authorization") String jwt,@RequestBody RegRequest request) {
+    public ResponseEntity<UniverseResponse> edit(@RequestHeader("Authorization") String jwt, @RequestBody RegRequest request) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response=new UniverseResponse();
 
@@ -79,14 +78,19 @@ public class UserController {
 
         Optional<User> user=userService.findById(userId);
 
-        userService.edit(user.get(),request);
+        String message= userValidator.validateForEdit(request);
 
-        String message =userValidator.validate(request);
         if (message.equals("Данные успешно обновлены")){
+            response.setMessage(message);
+            userService.edit(user.get(),request);
             userService.save(user.get());
+            return ResponseEntity.ok(response);
         }
-        response.setMessage(message);
-        return ResponseEntity.ok(response);
+        else{
+            response.setMessage(message);
+            return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PostMapping("/addAvatar")

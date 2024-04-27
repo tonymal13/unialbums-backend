@@ -14,19 +14,33 @@ public class UserValidator {
 
     private final UserService userService;
 
-    public String validate(RegRequest request){
+    public String validateForRegister(RegRequest request){
         String message= "";
+
         Optional<User> user=userService.findByLogin(request.getUsername());
         if (user.isPresent()) {
-            if(!user.get().getUsername().equals(request.getUsername()))
                 message= ("Такой пользователь уже существует");
-            else{
-                message= ("Данные успешно обновлены");
-            }
         } else {
             message= ("Добавлено в БД");
         }
         String regex = "\\p{Lu}\\p{L}{1,20}";
+
+        if (request.getPassword().length() < 1 || request.getPassword().length() > 20)
+            message = "Пароль должен быть от 1 до 20 символов :)";
+        else if(request.getUsername().length()<1)
+            message="Логин должен больше 1 до 20 символов :)";
+        else if(!request.getFirstName().matches(regex))
+            message="Имя должно быть в формате: Иван";
+//        else if(!request.getLastName().matches(regex))
+//            message="Фамилия должна быть в формате: Иванов";
+        return message;
+    }
+
+    public String validateForEdit(RegRequest request){
+        String message= "";
+
+        String regex = "\\p{Lu}\\p{L}{1,20}";
+
 
         if (request.getPassword()!=null) {
 
@@ -37,8 +51,11 @@ public class UserValidator {
             message="Логин должен больше 1 до 20 символов :)";
         else if(!request.getFirstName().matches(regex))
             message="Имя должно быть в формате: Иван";
-        else if(!request.getLastName().matches(regex))
-            message="Фамилия должна быть в формате: Иванов";
+//        else if(!request.getLastName().matches(regex))
+//            message="Фамилия должна быть в формате: Иванов";
+        else{
+            message="Данные успешно обновлены";
+        }
         return message;
     }
 
