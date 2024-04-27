@@ -2,6 +2,7 @@ package ru.mal.unialbumsbackend.web.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -82,6 +83,19 @@ public class AuthController {
         }
             response.setMessage(message);
             return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/logout")
+    public void getNewRefreshToken(HttpServletRequest req,HttpServletResponse resp) {
+
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null)
+            for (Cookie cookie : cookies) {
+                cookie.setValue("");
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                resp.addCookie(cookie);
+            }
     }
 
     private void sendRefreshToken(Cookie cookie ,HttpServletResponse response) {
