@@ -1,5 +1,6 @@
 package ru.mal.unialbumsbackend.web.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.util.UserValidator;
-import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
-import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtRequest;
-import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
+import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtDto;
+import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.service.AuthService;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Tag(name = "Auth Controller",description = "Auth API")
 public class AuthController {
 
     private final UserValidator userValidator;
@@ -31,7 +33,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<UniverseResponse> login(@RequestBody LogInDto authRequest, HttpServletResponse response) {
 
         UniverseResponse tokens = authService.login(authRequest);
 
@@ -54,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
+    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtDto request) {
         final UniverseResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
@@ -71,7 +73,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request) {
+    public ResponseEntity<UniverseResponse> register(@RequestBody UserDto request) {
         UniverseResponse response = new UniverseResponse();
         response.setData(new ArrayList<>());
         String message =userValidator.validateForRegister(request);
@@ -80,13 +82,6 @@ public class AuthController {
         }
             response.setMessage(message);
             return ResponseEntity.ok(response);
-    }
-
-        @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(AuthException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( "Пользователь не найден");
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 
     private void sendRefreshToken(Cookie cookie ,HttpServletResponse response) {
@@ -102,6 +97,13 @@ public class AuthController {
     @GetMapping("/test")
     public String test(){
         return "Made by Tonymal13 and def1s";
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<UniverseResponse> handleException(AuthException e){
+        UniverseResponse universeResponse=new UniverseResponse();
+        universeResponse.setMessage( "Пользователь не найден");
+        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 
 }

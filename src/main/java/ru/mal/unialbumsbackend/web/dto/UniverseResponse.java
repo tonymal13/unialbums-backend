@@ -1,5 +1,6 @@
 package ru.mal.unialbumsbackend.web.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.HashMap;

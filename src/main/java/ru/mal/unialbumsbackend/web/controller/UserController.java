@@ -1,5 +1,7 @@
 package ru.mal.unialbumsbackend.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,7 @@ import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
-import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTG
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
+@Tag(name = "User Controller",description = "User API")
 public class UserController {
 
     private final UserService userService;
@@ -63,12 +66,13 @@ public class UserController {
         }
 
 
+
         return ResponseEntity.ok(response);
 
     }
 
     @PutMapping("/myProfile")
-    public ResponseEntity<UniverseResponse> edit(@RequestHeader("Authorization") String jwt, @RequestBody RegRequest request) {
+    public ResponseEntity<UniverseResponse> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto request) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response=new UniverseResponse();
 
@@ -91,6 +95,9 @@ public class UserController {
             return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
         }
 
+        //Вынести строки в сервис
+
+
     }
 
     @PostMapping("/addAvatar")
@@ -109,6 +116,8 @@ public class UserController {
 //            user.get().setAvatar("http://79.174.95.140:9000/images/"+filename);
             userRepository.save(user.get());
         }
+
+        //Вынести строки в сервис
 
     }
 

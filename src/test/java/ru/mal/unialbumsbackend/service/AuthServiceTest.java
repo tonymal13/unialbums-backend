@@ -8,12 +8,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.mal.unialbumsbackend.config.TestConfig;
@@ -23,7 +19,7 @@ import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
-import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 
 import java.util.*;
@@ -61,7 +57,7 @@ public class AuthServiceTest {
         String password = "a";
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
-        LogInRequest request = new LogInRequest();
+        LogInDto request = new LogInDto();
         request.setUsername(username);
         request.setPassword( password);
         User user = new User();
@@ -90,7 +86,7 @@ public class AuthServiceTest {
     void loginWithIncorrectUsername() {
         String username = "a";
         String password = "a";
-        LogInRequest request = new LogInRequest();
+        LogInDto request = new LogInDto();
         request.setUsername(username);
         request.setPassword(password);
         User user = new User();
@@ -107,7 +103,7 @@ public class AuthServiceTest {
     void loginWithIncorrectPassword() {
         String username = "a";
         String password = "a";
-        LogInRequest request = new LogInRequest();
+        LogInDto request = new LogInDto();
         request.setUsername(username);
         request.setPassword(password);
         User user = new User();

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.service.UserService;
-import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.Optional;
 
@@ -14,10 +14,10 @@ public class UserValidator {
 
     private final UserService userService;
 
-    public String validateForRegister(RegRequest request){
+    public String validateForRegister(UserDto userDto){
         String message= "";
 
-        Optional<User> user=userService.findByLogin(request.getUsername());
+        Optional<User> user=userService.findByLogin(userDto.getUsername());
         if (user.isPresent()) {
                 message= ("Такой пользователь уже существует");
         } else {
@@ -25,34 +25,33 @@ public class UserValidator {
         }
         String regex = "\\p{Lu}\\p{L}{1,20}";
 
-        if (request.getPassword().length() < 1 || request.getPassword().length() > 20)
+        if (userDto.getPassword().length() < 1 || userDto.getPassword().length() > 20)
             message = "Пароль должен быть от 1 до 20 символов :)";
-        else if(request.getUsername().length()<1)
+        else if(userDto.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
-        else if(!request.getFirstName().matches(regex))
+        else if(!userDto.getFirstName().matches(regex))
             message="Имя должно быть в формате: Иван";
-//        else if(!request.getLastName().matches(regex))
-//            message="Фамилия должна быть в формате: Иванов";
+        else if(!userDto.getLastName().matches(regex))
+            message="Фамилия должна быть в формате: Иванов";
         return message;
     }
 
-    public String validateForEdit(RegRequest request){
+    public String validateForEdit(UserDto userDto){
         String message= "";
 
         String regex = "\\p{Lu}\\p{L}{1,20}";
 
+        if (userDto.getPassword()!=null) {
 
-        if (request.getPassword()!=null) {
-
-            if (request.getPassword().length() < 1 || request.getPassword().length() > 20)
+            if (userDto.getPassword().length() < 1 || userDto.getPassword().length() > 20)
                 message = "Пароль должен быть от 1 до 20 символов :)";
         }
-        else if(request.getUsername().length()<1)
+        else if(userDto.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
-        else if(!request.getFirstName().matches(regex))
+        else if(!userDto.getFirstName().matches(regex))
             message="Имя должно быть в формате: Иван";
-//        else if(!request.getLastName().matches(regex))
-//            message="Фамилия должна быть в формате: Иванов";
+        else if(!userDto.getLastName().matches(regex))
+            message="Фамилия должна быть в формате: Иванов";
         else{
             message="Данные успешно обновлены";
         }

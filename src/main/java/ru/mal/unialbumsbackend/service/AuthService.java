@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 import ru.mal.unialbumsbackend.domain.*;
 
-import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.exception.AuthException;
 
@@ -27,7 +27,7 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UniverseResponse login(@NonNull LogInRequest authRequest) {
+    public UniverseResponse login(@NonNull LogInDto authRequest) {
         Optional<User> user = userService.findByLogin(authRequest.getUsername());
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setData(new ArrayList<>());

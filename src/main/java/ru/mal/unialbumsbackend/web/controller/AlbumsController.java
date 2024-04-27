@@ -1,5 +1,6 @@
 package ru.mal.unialbumsbackend.web.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.*;
 @RequestMapping("/api/albums")
 @RestController
 @AllArgsConstructor
+@Tag(name = "Albums Controller",description = "Albums API")
 public class AlbumsController {
 
     private final AlbumService albumService;

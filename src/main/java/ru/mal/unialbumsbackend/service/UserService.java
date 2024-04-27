@@ -6,11 +6,10 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,8 +22,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void register(RegRequest regRequest) {
-        User user= toEntity(regRequest);
+    public void register(UserDto userDto) {
+        User user= toEntity(userDto);
         save(user);
     }
 
@@ -33,7 +32,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User toEntity(RegRequest request) {
+    public User toEntity(UserDto request) {
         User user=new User();
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode( request.getPassword()));
@@ -44,19 +43,10 @@ public class UserService {
         return user;
     }
 
-    public void edit(User user,RegRequest request){
+    public void edit(User user, UserDto request){
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-    }
-
-    public RegRequest toDto(User user) {
-        RegRequest request=new RegRequest();
-//        request.setPassword(passwordEncoder.encode( user.getPassword()));
-        request.setUsername(request.getUsername());
-        request.setLastName(request.getLastName());
-        request.setFirstName(request.getFirstName());
-        return request;
     }
 
     public Optional<User> findById(Long userId) {
