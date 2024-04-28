@@ -71,7 +71,7 @@ public class UserController {
 
         Optional<User> user=userService.findById(userId);
 
-        String message= userValidator.validateForRegister(request);
+        String message= userValidator.validateForEdit(request,userId);
 
         if (message.equals("Данные успешно обновлены")){
             response.setMessage(message);

@@ -25,9 +25,33 @@ public class UserValidator {
         }
         String regex = "\\p{Lu}\\p{L}{1,20}";
 
+        if (userDto.getPassword().length() < 1 || userDto.getPassword().length() > 20)
+            message = "Пароль должен быть от 1 до 20 символов :)";
+        else if(userDto.getUsername().length()<1)
+            message="Логин должен больше 1 до 20 символов :)";
+        else if(!userDto.getFirstName().matches(regex))
+            message="Имя должно быть в формате: Иван";
+        else if(!userDto.getLastName().matches(regex))
+            message="Фамилия должна быть в формате: Иванов";
+        return message;
+    }
+
+    public String validateForEdit(UserDto userDto,long userId){
+        String message= "";
+        String regex = "\\p{Lu}\\p{L}{1,20}";
+        Optional<User> user=userService.findByLogin(userDto.getUsername());
+        if (user.isPresent()) {
+            if(user.get().getId()==userId){
+                message= ("Данные успешно обновлены");
+            }
+            else{
+                message= ("Такой пользователь уже существует");
+            }
+
+        }
         if (userDto.getPassword()!=null) {
             if (userDto.getPassword().length() < 1 || userDto.getPassword().length() > 20)
-            message = "Пароль должен быть от 1 до 20 символов :)";
+                message = "Пароль должен быть от 1 до 20 символов :)";
         }
         else if(userDto.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
@@ -35,6 +59,7 @@ public class UserValidator {
             message="Имя должно быть в формате: Иван";
         else if(!userDto.getLastName().matches(regex))
             message="Фамилия должна быть в формате: Иванов";
+
         return message;
     }
 
