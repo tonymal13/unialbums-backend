@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.service.props.JwtProperties;
@@ -93,10 +92,8 @@ public class JwtProvider {
 
     public String generateAccessTokenForLogin(@NonNull User user) {
         return generateToken(user)
-                .claim("avatar", user.getAvatar())
-                .claim("role", user.getRole())
-                .claim("firstName", user.getFirstName())
                 .claim("userId",user.getId())
+                .claim("role", user.getRole())
                 .compact();
     }
 
@@ -106,7 +103,6 @@ public class JwtProvider {
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder()
-                .setSubject(user.getUsername())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret);
     }

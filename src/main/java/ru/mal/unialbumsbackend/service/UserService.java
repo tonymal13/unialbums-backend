@@ -1,16 +1,24 @@
 package ru.mal.unialbumsbackend.service;
 
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.util.UserValidator;
+import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 
 
+import java.util.ArrayList;
 import java.util.Optional;
+
+import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
 
 @Service
 @AllArgsConstructor
@@ -43,7 +51,7 @@ public class UserService {
         return user;
     }
 
-    public void edit(User user, UserDto request){
+    public void toDto(User user, UserDto request){
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());

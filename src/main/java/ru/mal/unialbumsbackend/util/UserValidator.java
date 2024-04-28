@@ -21,7 +21,7 @@ public class UserValidator {
         if (user.isPresent()) {
                 message= ("Такой пользователь уже существует");
         } else {
-            message= ("Добавлено в БД");
+            message= ("Вы успешно зарегестрировались");
         }
         String regex = "\\p{Lu}\\p{L}{1,20}";
 

@@ -78,11 +78,16 @@ public class AuthController {
         UniverseResponse response = new UniverseResponse();
         response.setData(new ArrayList<>());
         String message =userValidator.validateForRegister(request);
-        if (message.equals("Добавлено в БД")){
+        if (message.equals("Вы успешно зарегестрировались")){
             userService.register(request);
-        }
             response.setMessage(message);
             return ResponseEntity.ok(response);
+        }
+        else {
+            response.setMessage(message);
+            return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/logout")

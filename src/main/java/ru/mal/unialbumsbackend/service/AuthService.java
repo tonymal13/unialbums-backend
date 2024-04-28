@@ -70,6 +70,7 @@ public class AuthService {
                 else {
                     String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                     HashMap<String,String> map=new HashMap<>();
+                    universeResponse.setMessage("Токен: ");
                     universeResponse.addData(map,"accessToken", accessToken);
                 }
 

@@ -1,6 +1,5 @@
 package ru.mal.unialbumsbackend.web.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.exception.ImageUploadException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
@@ -40,34 +38,25 @@ public class UserController {
 
     @GetMapping("/myProfile")
     public ResponseEntity<UniverseResponse> getProfile(@RequestHeader(name = "Authorization") String jwt){
-
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response=new UniverseResponse();
 
         response.setData(new ArrayList<>());
-        long userId = ((Number)jsonObject.get("userId")).longValue();
-
-        HashMap<String,String> map = new HashMap<>();
+        HashMap<String,String> map= new HashMap<>();
         response.addMap(map);
 
+        long userId = ((Number)jsonObject.get("userId")).longValue();
+
         Optional<User> user=userService.findById(userId);
-
-        if (user.isPresent()){
-            response.addData(map, "username", user.get().getUsername());
-            response.addData(map, "firstName",user.get().getFirstName());
-            response.addData(map,"lastName",user.get().getLastName());
-            response.addData(map,"avatar",user.get().getAvatar());
-            response.setMessage("Данные пользователя");
+        getInfo(response,map,user);
+        response.addData(map, "firstName",user.get().getFirstName());
+        response.addData(map,"lastName",user.get().getLastName());
+        if(response.getMessage().equals("Данные пользователя")){
+            return ResponseEntity.ok(response);
         }
-
         else{
-            response.setMessage("Пользователь не найден");
-            throw new AuthException("Пользователь не найден");
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
-
-
-
-        return ResponseEntity.ok(response);
 
     }
 
@@ -86,7 +75,7 @@ public class UserController {
 
         if (message.equals("Данные успешно обновлены")){
             response.setMessage(message);
-            userService.edit(user.get(),request);
+            userService.toDto(user.get(),request);
             userService.save(user.get());
             return ResponseEntity.ok(response);
         }
@@ -94,9 +83,6 @@ public class UserController {
             response.setMessage(message);
             return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
         }
-
-        //Вынести строки в сервис
-
 
     }
 
@@ -117,8 +103,40 @@ public class UserController {
             userRepository.save(user.get());
         }
 
-        //Вынести строки в сервис
+    }
 
+    @GetMapping("/getUserInfo")
+    public ResponseEntity<UniverseResponse> getUserInfo(@RequestHeader("Authorization") String jwt){
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+        UniverseResponse response=new UniverseResponse();
+
+        response.setData(new ArrayList<>());
+
+        long userId = ((Number)jsonObject.get("userId")).longValue();
+
+        Optional<User> user=userService.findById(userId);
+        HashMap<String,String> map= new HashMap<>();
+        response.addMap(map);
+        getInfo(response,map,user);
+        if(response.getMessage().equals("Данные пользователя")){
+            return ResponseEntity.ok(response);
+        }
+        else{
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    public void getInfo(UniverseResponse response, HashMap<String,String> map, Optional<User> user){
+
+        if (user.isPresent()){
+            response.addData(map, "username", user.get().getUsername());
+            response.addData(map,"avatar",user.get().getAvatar());
+            response.setMessage("Данные пользователя");
+        }
+        else{
+            response.setMessage("Пользователь не найден");
+        }
     }
 
     @ExceptionHandler
