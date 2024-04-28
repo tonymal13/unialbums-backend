@@ -129,8 +129,8 @@ public class AuthController {
     @ExceptionHandler
     private ResponseEntity<UniverseResponse> handleException(AuthException e){
         UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( "Неправильый JWT токен");
-        return new ResponseEntity<>(universeResponse, HttpStatus.UNAUTHORIZED);
+        universeResponse.setMessage( "Неправильный JWT токен");
+        return new ResponseEntity<>(universeResponse, HttpStatus.FORBIDDEN);
     }
 
 }
