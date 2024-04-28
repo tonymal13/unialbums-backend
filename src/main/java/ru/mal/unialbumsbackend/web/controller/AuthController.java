@@ -9,12 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtDto;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
-import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
@@ -119,10 +120,17 @@ public class AuthController {
     }
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(AuthException e){
+    private ResponseEntity<UniverseResponse> handleException(UserNotFoundException e){
         UniverseResponse universeResponse=new UniverseResponse();
         universeResponse.setMessage( "Пользователь не найден");
         return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<UniverseResponse> handleException(AuthException e){
+        UniverseResponse universeResponse=new UniverseResponse();
+        universeResponse.setMessage( "Неправильый JWT токен");
+        return new ResponseEntity<>(universeResponse, HttpStatus.UNAUTHORIZED);
     }
 
 }

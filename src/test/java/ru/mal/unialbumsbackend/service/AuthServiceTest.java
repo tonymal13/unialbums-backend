@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.mal.unialbumsbackend.config.TestConfig;
 import ru.mal.unialbumsbackend.domain.User;
 
-import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
@@ -95,7 +95,7 @@ public class AuthServiceTest {
         Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AuthException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> authService.login(request));
     }
 
@@ -114,7 +114,7 @@ public class AuthServiceTest {
         Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(AuthException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> authService.login(request));
     }
 

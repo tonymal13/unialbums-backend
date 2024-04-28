@@ -5,12 +5,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 import ru.mal.unialbumsbackend.domain.*;
 
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
-import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,13 +44,13 @@ public class AuthService {
                 universeResponse.setMessage("Вы зашли в аккаунт");
             } else {
                 universeResponse.setMessage("Неправильный пароль");
-                throw new AuthException("Неправильный пароль");
+                throw new UserNotFoundException("Неправильный пароль");
             }
         }
 
         else {
             universeResponse.setMessage("Пользователь не найден");
-            throw new AuthException("Пользователь не найден");
+            throw new UserNotFoundException("Пользователь не найден");
         }
         return universeResponse;
     }
@@ -65,7 +66,7 @@ public class AuthService {
                 Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
                     universeResponse.setMessage("Пользователь не найден");
-                    throw new AuthException("Пользователь не найден");
+                    throw new UserNotFoundException("Пользователь не найден");
                 }
                 else {
                     String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
@@ -90,7 +91,7 @@ public class AuthService {
                 Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
                     universeResponse.setMessage("Пользователь не найден");
-                    throw new AuthException("Пользователь не найден");
+                    throw new UserNotFoundException("Пользователь не найден");
                 }
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user.get());
