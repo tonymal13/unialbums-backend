@@ -60,7 +60,7 @@ public class SecurityConfig {
 //                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/login","/api/logout", "/api/token","/api/register","/api/refresh","/api/test").permitAll()
+                                .requestMatchers("/api/v1/login","/api/v1/logout", "/api/v1/token","/api/v1/register","/api/v1/refresh","/api/v1/test").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()
 //                                .anyRequest().permitAll()

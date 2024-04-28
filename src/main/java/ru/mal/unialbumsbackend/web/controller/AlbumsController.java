@@ -16,7 +16,7 @@ import ru.mal.unialbumsbackend.service.ImageService;
 
 import java.util.*;
 
-@RequestMapping("/api/albums")
+@RequestMapping("/api/v1/albums")
 @RestController
 @AllArgsConstructor
 @Tag(name = "Albums Controller",description = "Albums API")

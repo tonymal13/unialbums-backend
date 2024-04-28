@@ -23,7 +23,7 @@ import java.util.Optional;
 import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @AllArgsConstructor
 @Tag(name = "User Controller",description = "User API")
 public class UserController {
