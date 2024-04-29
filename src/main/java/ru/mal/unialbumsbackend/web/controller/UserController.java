@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.exception.ImageUploadException;
+import ru.mal.unialbumsbackend.exception.ValidationException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
@@ -79,6 +80,10 @@ public class UserController {
             userService.save(user.get());
             return ResponseEntity.ok(response);
         }
+        else if(message.equals("Пароль должен быть от 1 до 20 символов :)")||message.equals("Логин должен быть от 1 до 20 символов :)")) {
+            response.setMessage(message);
+            return new ResponseEntity<UniverseResponse>(response,HttpStatus.BAD_REQUEST);
+        }
         else{
             response.setMessage(message);
             return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
@@ -137,13 +142,6 @@ public class UserController {
         else{
             response.setMessage("Пользователь не найден");
         }
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(ImageUploadException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage("Не удалось загрузить изображение");
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
     }
 
 }

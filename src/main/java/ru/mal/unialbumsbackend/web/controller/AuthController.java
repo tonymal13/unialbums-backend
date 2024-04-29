@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.ValidationException;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtDto;
@@ -117,20 +118,6 @@ public class AuthController {
     @GetMapping("/test")
     public String test(){
         return "Made by Tonymal13 and def1s";
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(UserNotFoundException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( "Пользователь не найден");
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(AuthException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( "Неправильный JWT токен");
-        return new ResponseEntity<>(universeResponse, HttpStatus.FORBIDDEN);
     }
 
 }

@@ -43,13 +43,11 @@ public class AuthService {
                 universeResponse.addData(map,"refreshToken",refreshToken);
                 universeResponse.setMessage("Вы зашли в аккаунт");
             } else {
-                universeResponse.setMessage("Неправильный пароль");
-                throw new UserNotFoundException("Неправильный пароль");
+                throw new UserNotFoundException("Пользователь не найден");
             }
         }
 
         else {
-            universeResponse.setMessage("Пользователь не найден");
             throw new UserNotFoundException("Пользователь не найден");
         }
         return universeResponse;
@@ -65,7 +63,6 @@ public class AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
-                    universeResponse.setMessage("Пользователь не найден");
                     throw new UserNotFoundException("Пользователь не найден");
                 }
                 else {
@@ -90,7 +87,6 @@ public class AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
-                    universeResponse.setMessage("Пользователь не найден");
                     throw new UserNotFoundException("Пользователь не найден");
                 }
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
@@ -105,7 +101,6 @@ public class AuthService {
                 return universeResponse;
             }
         }
-        universeResponse.setMessage("Невалидный JWT токен");
         throw new AuthException("Невалидный JWT токен");
     }
 
