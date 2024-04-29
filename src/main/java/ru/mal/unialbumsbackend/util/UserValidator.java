@@ -23,42 +23,39 @@ public class UserValidator {
         } else {
             message= ("Вы успешно зарегестрировались");
         }
-        String regex = "\\p{Lu}\\p{L}{1,20}";
 
-        if (userDto.getPassword().length() < 1 || userDto.getPassword().length() > 20)
-            message = "Пароль должен быть от 1 до 20 символов :)";
-        else if(userDto.getUsername().length()<1)
-            message="Логин должен больше 1 до 20 символов :)";
-//        else if(!userDto.getFirstName().matches(regex))
-//            message="Имя должно быть в формате: Иван";
-//        else if(!userDto.getLastName().matches(regex))
-//            message="Фамилия должна быть в формате: Иванов";
+        message=validatePassword(message,userDto.getPassword());
+        message=validateUsername(message,userDto.getUsername());
+
         return message;
     }
 
     public String validateForEdit(UserDto userDto,long userId){
         String message= "";
-        String regex = "\\p{Lu}\\p{L}{1,20}";
         Optional<User> user=userService.findByLogin(userDto.getUsername());
         message= ("Данные успешно обновлены");
         if (user.isPresent()) {
             if(user.get().getId()!=userId){
                 message= ("Такой пользователь уже существует");
             }
-
         }
-        if (userDto.getPassword()!=null) {
-            if (userDto.getPassword().length() < 1 || userDto.getPassword().length() > 20)
-                message = "Пароль должен быть от 1 до 20 символов :)";
-        }
-        else if(userDto.getUsername().length()<1)
-            message="Логин должен больше 1 до 20 символов :)";
-//        else if(!userDto.getFirstName().matches(regex))
-//            message="Имя должно быть в формате: Иван";
-//        else if(!userDto.getLastName().matches(regex))
-//            message="Фамилия должна быть в формате: Иванов";
-
+        message=validatePassword(message,userDto.getPassword());
+        message=validateUsername(message,userDto.getUsername());
         return message;
+    }
+
+    private String validatePassword(String currentMessage,String password){
+        if (password!=null) {
+            if (password.length() < 1 || password.length() > 20)
+                currentMessage = "Пароль должен быть от 1 до 20 символов :)";
+        }
+        return currentMessage;
+    }
+
+    private String validateUsername(String currentMessage,String username){
+        if(username.length()<1 || username.length()>20)
+            currentMessage="Логин должен быть от 1 до 20 символов :)";
+        return currentMessage;
     }
 
 }

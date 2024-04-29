@@ -23,14 +23,4 @@ public class UserDto {
     @Schema(description = "password",example = "123")
     private String password;
 
-    public UserDto(String firstName, String lastName, String username) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-    }
-
-    public UserDto(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }
