@@ -29,10 +29,10 @@ public class UserValidator {
             message = "Пароль должен быть от 1 до 20 символов :)";
         else if(userDto.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
-        else if(!userDto.getFirstName().matches(regex))
-            message="Имя должно быть в формате: Иван";
-        else if(!userDto.getLastName().matches(regex))
-            message="Фамилия должна быть в формате: Иванов";
+//        else if(!userDto.getFirstName().matches(regex))
+//            message="Имя должно быть в формате: Иван";
+//        else if(!userDto.getLastName().matches(regex))
+//            message="Фамилия должна быть в формате: Иванов";
         return message;
     }
 
@@ -40,11 +40,9 @@ public class UserValidator {
         String message= "";
         String regex = "\\p{Lu}\\p{L}{1,20}";
         Optional<User> user=userService.findByLogin(userDto.getUsername());
+        message= ("Данные успешно обновлены");
         if (user.isPresent()) {
-            if(user.get().getId()==userId){
-                message= ("Данные успешно обновлены");
-            }
-            else{
+            if(user.get().getId()!=userId){
                 message= ("Такой пользователь уже существует");
             }
 
@@ -55,10 +53,10 @@ public class UserValidator {
         }
         else if(userDto.getUsername().length()<1)
             message="Логин должен больше 1 до 20 символов :)";
-        else if(!userDto.getFirstName().matches(regex))
-            message="Имя должно быть в формате: Иван";
-        else if(!userDto.getLastName().matches(regex))
-            message="Фамилия должна быть в формате: Иванов";
+//        else if(!userDto.getFirstName().matches(regex))
+//            message="Имя должно быть в формате: Иван";
+//        else if(!userDto.getLastName().matches(regex))
+//            message="Фамилия должна быть в формате: Иванов";
 
         return message;
     }

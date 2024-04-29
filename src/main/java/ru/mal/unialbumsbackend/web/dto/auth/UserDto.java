@@ -28,4 +28,9 @@ public class UserDto {
         this.lastName = lastName;
         this.username = username;
     }
+
+    public UserDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
