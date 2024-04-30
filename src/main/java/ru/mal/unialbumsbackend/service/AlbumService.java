@@ -47,24 +47,6 @@ public class AlbumService {
         return album;
     }
 
-    private Album edit(AlbumDto albumDto, long userId){
-        Album album=new Album();
-        album.setTitle(albumDto.getTitle());
-        album.setCover(albumDto.getCover());
-//            album.setCover("http://79.174.95.140:9000/images/"+fileName);
-        album.setAtmosphereRating(albumDto.getAtmosphereRating());
-        album.setBitsRating(albumDto.getBitsRating());
-        album.setTextRating(albumDto.getTextRating());
-        album.setTracksRating(albumDto.getTracksRating());
-        album.setArtist(albumDto.getArtist());
-        Optional<User> user=userService.findById(userId);
-        if(user.isPresent()) {
-            user.get().addAlbums(album);
-            album.setUser(user.get());
-
-        }
-        return album;
-    }
     public List<AlbumDto> getAlbumsByUserId(Long userId) {
         return albumRepository.getAlbumByUserId(userId);
 
