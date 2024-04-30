@@ -17,8 +17,9 @@ import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
+import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,9 +40,7 @@ public class AuthController {
 
         String refreshToken=tokens.getData().get(0).get("refreshToken");
 
-        UniverseResponse universeResponse=new UniverseResponse(
-                );
-        universeResponse.setData(new ArrayList<>());
+        UniverseResponse universeResponse = initializeResponse();
         universeResponse.setMessage("Вы вошли в аккаунт");
 
         HashMap<String,String> map = new HashMap<>();
@@ -74,8 +73,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UniverseResponse> register(@RequestBody UserDto request) {
-        UniverseResponse response = new UniverseResponse();
-        response.setData(new ArrayList<>());
+        UniverseResponse response = initializeResponse();
         String message =userValidator.validateForRegister(request);
         if (message.equals("Вы успешно зарегестрировались")){
             userService.register(request);
@@ -95,9 +93,11 @@ public class AuthController {
         Cookie[] cookies = req.getCookies();
         if (cookies != null)
             for (Cookie cookie : cookies) {
-                cookie.setValue("");
-                cookie.setPath("/");
-                cookie.setMaxAge(0);
+                if(cookie.getName().equals("refreshToken")) {
+                    cookie.setValue("");
+                    cookie.setPath("/");
+                    cookie.setMaxAge(0);
+                }
                 resp.addCookie(cookie);
             }
     }
