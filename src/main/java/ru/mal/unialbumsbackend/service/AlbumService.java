@@ -18,8 +18,8 @@ import java.util.*;
 @AllArgsConstructor
 public class AlbumService {
 
-    @Value("${host}")
-    private String host;
+//    @Value("${host}")
+//    private String host;
     private final AlbumRepository albumRepository;
 
     private final UserService userService;

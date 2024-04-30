@@ -28,8 +28,8 @@ import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 @Tag(name = "User Controller",description = "User API")
 public class UserController {
 
-    @Value("${host}")
-    private String host;
+//    @Value("${host}")
+//    private String host;
 
     private final UserService userService;
 
