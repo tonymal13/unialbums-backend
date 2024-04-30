@@ -3,17 +3,15 @@ package ru.mal.unialbumsbackend.web.dto.album;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class AlbumResponse {
-
-    private Long id;
+@ToString
+public class CreateAlbumDto {
 
     private String title;
-
-    private String cover;
 
     private int tracksRating;
 
@@ -24,6 +22,5 @@ public class AlbumResponse {
     private int textRating;
 
     private String artist;
-
 
 }

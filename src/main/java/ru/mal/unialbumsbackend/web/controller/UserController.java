@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.exception.ImageUploadException;
-import ru.mal.unialbumsbackend.exception.ValidationException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.service.ImageService;
 import ru.mal.unialbumsbackend.service.UserService;
@@ -17,11 +15,11 @@ import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static ru.mal.unialbumsbackend.web.controller.AlbumsController.decodeJWTGetHeader;
+import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
+import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -40,9 +38,7 @@ public class UserController {
     @GetMapping("/myProfile")
     public ResponseEntity<UniverseResponse> getProfile(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        UniverseResponse response=new UniverseResponse();
-
-        response.setData(new ArrayList<>());
+        UniverseResponse response = initializeResponse();
         HashMap<String,String> map= new HashMap<>();
         response.addMap(map);
 
@@ -64,9 +60,7 @@ public class UserController {
     @PutMapping("/myProfile")
     public ResponseEntity<UniverseResponse> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto request) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        UniverseResponse response=new UniverseResponse();
-
-        response.setData(new ArrayList<>());
+        UniverseResponse response = initializeResponse();
 
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
@@ -113,9 +107,7 @@ public class UserController {
     @GetMapping("/getUserInfo")
     public ResponseEntity<UniverseResponse> getUserInfo(@RequestHeader("Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        UniverseResponse response=new UniverseResponse();
-
-        response.setData(new ArrayList<>());
+        UniverseResponse response = initializeResponse();
 
         long userId = ((Number)jsonObject.get("userId")).longValue();
 

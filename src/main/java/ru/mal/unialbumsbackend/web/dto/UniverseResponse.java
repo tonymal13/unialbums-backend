@@ -3,6 +3,7 @@ package ru.mal.unialbumsbackend.web.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,5 +27,11 @@ public class UniverseResponse {
 
     public void removeFromData(String refreshToken) {
         data.get(0).remove(refreshToken);
+    }
+
+    public static UniverseResponse initializeResponse() {
+        UniverseResponse universeResponse=new UniverseResponse();
+        universeResponse.setData(new ArrayList<>());
+        return universeResponse;
     }
 }
