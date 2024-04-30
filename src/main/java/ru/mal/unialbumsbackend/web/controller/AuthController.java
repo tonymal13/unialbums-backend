@@ -1,36 +1,39 @@
 package ru.mal.unialbumsbackend.web.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
-import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtRequest;
-import ru.mal.unialbumsbackend.web.dto.auth.RegRequest;
+import ru.mal.unialbumsbackend.util.UserValidator;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
+import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtDto;
+import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
-import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Tag(name = "Auth Controller",description = "Auth API")
 public class AuthController {
+
+    private final UserValidator userValidator;
 
     private final AuthService authService;
 
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UniverseResponse> login(@RequestBody LogInRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<UniverseResponse> login(@RequestBody LogInDto authRequest, HttpServletResponse response) {
 
         UniverseResponse tokens = authService.login(authRequest);
 
@@ -53,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
+    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtDto request) {
         final UniverseResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
@@ -70,22 +73,33 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UniverseResponse> register(@RequestBody RegRequest request) {
+    public ResponseEntity<UniverseResponse> register(@RequestBody UserDto request) {
         UniverseResponse response = new UniverseResponse();
         response.setData(new ArrayList<>());
-        String message = validate(request);
-        if (message.equals("Добавлено в БД")){
+        String message =userValidator.validateForRegister(request);
+        if (message.equals("Вы успешно зарегестрировались")){
             userService.register(request);
-        }
             response.setMessage(message);
             return ResponseEntity.ok(response);
+        }
+        else {
+            response.setMessage(message);
+            return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
+        }
+
     }
 
-        @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(AuthException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( "Пользователь не найден");
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    @GetMapping("/logout")
+    public void getNewRefreshToken(HttpServletRequest req,HttpServletResponse resp) {
+
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null)
+            for (Cookie cookie : cookies) {
+                cookie.setValue("");
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                resp.addCookie(cookie);
+            }
     }
 
     private void sendRefreshToken(Cookie cookie ,HttpServletResponse response) {
@@ -97,28 +111,6 @@ public class AuthController {
         cookie.setMaxAge(30*24*60*60);
 
         response.addCookie(cookie);
-    }
-
-    private String validate(RegRequest request){
-        String message= "";
-        Optional<User> user=userService.findByLogin(request.getLogin());
-        if (user.isPresent()) {
-            message= ("Такой пользователь уже существует");
-        } else {
-           message= ("Добавлено в БД");
-        }
-        String regex = "\\p{Lu}\\p{L}{1,20}";
-
-
-        if(request.getPassword().length()<1||request.getPassword().length()>20)
-            message="Пароль должен быть от 1 до 20 символов :)";
-        else if(request.getLogin().length()<1)
-            message="Логин должен больше 1 до 20 символов :)";
-        else if(!request.getFirstName().matches(regex))
-            message="Имя должно быть в формате: Иван";
-        else if(!request.getLastName().matches(regex))
-            message="Фамилия должна быть в формате: Иванов";
-        return message;
     }
     @GetMapping("/test")
     public String test(){

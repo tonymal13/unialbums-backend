@@ -8,22 +8,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.mal.unialbumsbackend.config.TestConfig;
 import ru.mal.unialbumsbackend.domain.User;
 
-import ru.mal.unialbumsbackend.exception.AuthException;
+import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
-import ru.mal.unialbumsbackend.web.dto.auth.LogInRequest;
+import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 
 import java.util.*;
@@ -57,22 +53,22 @@ public class AuthServiceTest {
 
     @Test
     void login() {
-        String login = "a";
+        String username = "a";
         String password = "a";
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
-        LogInRequest request = new LogInRequest();
-        request.setLogin(login);
+        LogInDto request = new LogInDto();
+        request.setUsername(username);
         request.setPassword( password);
         User user = new User();
-        user.setLogin(login);
+        user.setUsername(username);
 
         user.setPassword(bCryptPasswordEncoder.encode(password));
 
         Mockito.when( bCryptPasswordEncoder.matches(password,bCryptPasswordEncoder.encode(password)))
                 .thenReturn(true);
 
-        Mockito.when(userService.findByLogin(login))
+        Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.of(user));
 
         Mockito.when(jwtProviderMock.generateAccessTokenForLogin(user))
@@ -90,16 +86,16 @@ public class AuthServiceTest {
     void loginWithIncorrectUsername() {
         String username = "a";
         String password = "a";
-        LogInRequest request = new LogInRequest();
-        request.setLogin(username);
+        LogInDto request = new LogInDto();
+        request.setUsername(username);
         request.setPassword(password);
         User user = new User();
-        user.setLogin(username);
+        user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
         Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AuthException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> authService.login(request));
     }
 
@@ -107,18 +103,18 @@ public class AuthServiceTest {
     void loginWithIncorrectPassword() {
         String username = "a";
         String password = "a";
-        LogInRequest request = new LogInRequest();
-        request.setLogin(username);
+        LogInDto request = new LogInDto();
+        request.setUsername(username);
         request.setPassword(password);
         User user = new User();
-        user.setLogin(username);
+        user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
         Mockito.when( bCryptPasswordEncoder.matches(password,bCryptPasswordEncoder.encode(password)))
                         .thenReturn(false);
         Mockito.when(userService.findByLogin(username))
                 .thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(AuthException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> authService.login(request));
     }
 
