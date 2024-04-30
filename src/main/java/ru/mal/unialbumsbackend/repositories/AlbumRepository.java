@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface AlbumRepository extends JpaRepository<Album,Long> {
-    @Query("SELECT new ru.mal.unialbumsbackend.web.dto.album .AlbumResponse(albums.id,albums.title, albums.cover,albums.tracksRating,albums.atmosphereRating,albums.bitsRating,albums.textRating,albums.artist) FROM User user JOIN user.albums albums where user.id=:userId")
+    @Query("SELECT new ru.mal.unialbumsbackend.web.dto.album .AlbumDto(albums.id,albums.title, albums.cover,albums.tracksRating,albums.atmosphereRating,albums.bitsRating,albums.textRating,albums.artist) FROM User user JOIN user.albums albums where user.id=:userId")
     List<AlbumDto> getAlbumByUserId(@Param("userId")Long userId);
 
-    @Query("SELECT new ru.mal.unialbumsbackend.web.dto.album .AlbumResponse(id,title,cover,tracksRating,atmosphereRating,bitsRating,textRating,artist) FROM Album where id =:albumId")
+    @Query("SELECT new ru.mal.unialbumsbackend.web.dto.album .AlbumDto(id,title,cover,tracksRating,atmosphereRating,bitsRating,textRating,artist) FROM Album where id =:albumId")
     AlbumDto getAlbumById(@Param("albumId") Long albumId);
 }

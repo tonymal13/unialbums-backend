@@ -10,5 +10,5 @@ RUN mvn -f /pom.xml clean package
 
 FROM openjdk:17-jdk-slim
 COPY --from=build /target/*.jar unialbums-backend-app.jar
-EXPOSE 8082
+EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "unialbums-backend-app.jar"]
