@@ -15,7 +15,6 @@ import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,7 +22,6 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserService userService;
-    private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
 
     private final PasswordEncoder passwordEncoder;
@@ -36,7 +34,6 @@ public class AuthService {
             if (passwordEncoder.matches(authRequest.getPassword() ,user.get().getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String refreshToken = jwtProvider.generateRefreshToken(user.get());
-                refreshStorage.put(user.get().getUsername(), refreshToken);
                 HashMap<String,String> map=new HashMap<>();
                 universeResponse.addMap(map);
                 universeResponse.addData(map,"accessToken",accessToken);
@@ -59,8 +56,7 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
+            if (jwtProvider.validateRefreshToken(refreshToken)) {
                 Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
                     throw new UserNotFoundException("Пользователь не найден");
@@ -83,15 +79,13 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
+            if (jwtProvider.validateRefreshToken(refreshToken)) {
                 Optional<User> user=userService.findByLogin(login);
                 if(user.isEmpty()) {
                     throw new UserNotFoundException("Пользователь не найден");
                 }
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user.get());
-                refreshStorage.put(user.get().getUsername(), newRefreshToken);
                 HashMap<String,String> map=new HashMap<>();
                 universeResponse.setMessage("Токен обновлен");
                 universeResponse.addMap(map);
