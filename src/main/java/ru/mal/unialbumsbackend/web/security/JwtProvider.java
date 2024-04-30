@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.service.props.JwtProperties;
+//import ru.mal.unialbumsbackend.service.props.JwtProperties;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -27,8 +28,16 @@ public class JwtProvider {
 
     private final JwtProperties jwtProperties;
 
-    public JwtProvider(
-            JwtProperties jwtProperties) {
+
+//    public JwtProvider(
+//            @Value("${jwt.secret.access}") String jwtAccessSecretString,
+//    @Value("${jwt.secret.refresh}") String jwtRefreshSecretString
+//            ) {
+//        jwtAccessSecret=Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecretString));
+//        jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecretString));
+//    }
+
+    public JwtProvider(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
         jwtAccessSecret=Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtAccessSecret()));
         jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtRefreshSecret()));
