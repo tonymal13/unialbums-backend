@@ -19,7 +19,7 @@ public class JwtAuthentication implements Authentication {
 
     private String role;
 
-    private String login;
+    private String username;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return Collections.singletonList(new SimpleGrantedAuthority(role)); }
@@ -32,7 +32,7 @@ public class JwtAuthentication implements Authentication {
     public Object getDetails() { return null; }
 
     @Override
-    public Object getPrincipal() { return login; }
+    public Object getPrincipal() { return username; }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -54,6 +54,6 @@ public class JwtAuthentication implements Authentication {
     }
 
     public void setUsername(String subject) {
-        login=subject;
+        username=subject;
     }
 }

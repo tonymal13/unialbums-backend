@@ -7,10 +7,10 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.service.props.JwtProperties;
+//import ru.mal.unialbumsbackend.service.props.JwtProperties;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -28,8 +28,16 @@ public class JwtProvider {
 
     private final JwtProperties jwtProperties;
 
-    public JwtProvider(
-            JwtProperties jwtProperties) {
+
+//    public JwtProvider(
+//            @Value("${jwt.secret.access}") String jwtAccessSecretString,
+//    @Value("${jwt.secret.refresh}") String jwtRefreshSecretString
+//            ) {
+//        jwtAccessSecret=Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecretString));
+//        jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecretString));
+//    }
+
+    public JwtProvider(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
         jwtAccessSecret=Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtAccessSecret()));
         jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtRefreshSecret()));
@@ -40,7 +48,7 @@ public class JwtProvider {
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getLogin())
+                .setSubject(user.getUsername())
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
                 .compact();
@@ -93,10 +101,8 @@ public class JwtProvider {
 
     public String generateAccessTokenForLogin(@NonNull User user) {
         return generateToken(user)
-                .claim("avatar", user.getAvatar())
-                .claim("role", user.getRole())
-                .claim("firstName", user.getFirstName())
                 .claim("userId",user.getId())
+                .claim("role", user.getRole())
                 .compact();
     }
 
@@ -106,7 +112,6 @@ public class JwtProvider {
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder()
-                .setSubject(user.getLogin())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret);
     }

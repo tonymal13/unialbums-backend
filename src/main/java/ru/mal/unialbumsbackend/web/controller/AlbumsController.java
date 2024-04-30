@@ -1,42 +1,37 @@
 package ru.mal.unialbumsbackend.web.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.mal.unialbumsbackend.web.dto.album.CreateAlbumRequest;
-import ru.mal.unialbumsbackend.web.dto.album.AlbumResponse;
+import ru.mal.unialbumsbackend.domain.Album;
+import ru.mal.unialbumsbackend.web.dto.album.CreateAlbumDto;
+import ru.mal.unialbumsbackend.web.dto.album.AlbumDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.ImageService;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-@RequestMapping("/api/albums")
+import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
+import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
+
+@RequestMapping("/api/v1/albums")
 @RestController
+@AllArgsConstructor
+@Tag(name = "Albums Controller",description = "Albums API")
 public class AlbumsController {
 
     private final AlbumService albumService;
 
     private final ImageService imageService;
 
-
-    @Value("{jwt.secret.access}")
-    private String secret;
-
-    public AlbumsController(AlbumService albumService, ImageService imageService) {
-
-        this.albumService = albumService;
-        this.imageService = imageService;
-    }
     @PostMapping("/create")
-    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumRequest request
+    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumDto request
             , @RequestParam("cover") MultipartFile cover
     )
     {
@@ -58,35 +53,92 @@ public class AlbumsController {
 
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
-         List<AlbumResponse> albums= albumService.getAlbumsByUserId(userId);
+         List<AlbumDto> albums= albumService.getAlbumsByUserId(userId);
 
-         UniverseResponse universeResponse=new UniverseResponse();
-         universeResponse.setData(new ArrayList<>());
+         UniverseResponse universeResponse=initializeResponse();
          universeResponse.setMessage("Альбомы пользователя:");
 
 
-        for (AlbumResponse album : albums) {
-            HashMap<String, String> map = new HashMap<>();
-            universeResponse.addMap(map);
-            universeResponse.addData(map, "title", album.getTitle());
-            universeResponse.addData(map, "cover", album.getCover());
-            universeResponse.addData(map, "tracksRating", Integer.toString(album.getTracksRating()));
-            universeResponse.addData(map, "atmosphereRating", Integer.toString(album.getAtmosphereRating()));
-            universeResponse.addData(map, "bitsRating", Integer.toString(album.getBitsRating()));
-            universeResponse.addData(map, "textRating", Integer.toString(album.getTextRating()));
-            universeResponse.addData(map, "artist", album.getArtist());
-            universeResponse.addData(map, "albumId", Long.toString(album.getId()));
+        for (AlbumDto album : albums) {
+            addData(universeResponse,album);
+
         }
          return ResponseEntity.ok(universeResponse);
     }
 
-    public static JSONObject decodeJWTGetHeader(String jwt){
-        jwt= jwt.replace("Bearer ", "");
-        String[] chunks=jwt.split("\\.");
+    @PutMapping("/{id}")
+    public ResponseEntity editAlbumInfo(@PathVariable("id") long albumId, @RequestBody CreateAlbumDto req, @RequestHeader(name = "Authorization") String jwt){
 
-        Base64.Decoder decoder=Base64.getUrlDecoder();
-        String payload=new String(decoder.decode(chunks[1]));
-        return new JSONObject(payload);
+        AlbumDto albumDto = findAlbum(jwt, albumId);
+
+        if(albumDto !=null){
+            UniverseResponse universeResponse = initializeResponse();
+            Optional<Album> album =albumService.findById(albumId);
+            edit(album.get(),req);
+            albumService.save(album.get());
+            universeResponse.setMessage("Данные успешно обновлены");
+            return ResponseEntity.ok(universeResponse);
+        }
+        else{
+            UniverseResponse universeResponse = new UniverseResponse();
+            universeResponse.setMessage("Вы не можете получить доступ к этому альбому:");
+            return new ResponseEntity(universeResponse,HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    private Album edit(Album album, CreateAlbumDto req){
+        album.setTitle(req.getTitle());
+        album.setArtist(req.getArtist());
+        return album;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UniverseResponse> getAlbumInfo(@PathVariable("id") long albumId,@RequestHeader(name = "Authorization") String jwt){
+
+        UniverseResponse universeResponse = initializeResponse();
+
+        AlbumDto albumDto = findAlbum(jwt, albumId);
+
+        if(albumDto !=null){
+
+            addData(universeResponse, albumDto);
+            universeResponse.setMessage("Информация об альбоме:");
+        }
+        else{
+            universeResponse = new UniverseResponse();
+            universeResponse.setMessage("Вы не можете получить доступ к этому альбому:");
+        }
+        return ResponseEntity.ok(universeResponse);
+    }
+
+    private AlbumDto findAlbum(String jwt, long albumId) {
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
+
+        long userId = ((Number) jsonObject.get("userId")).longValue();
+
+        List<AlbumDto> albums=albumService.getAlbumsByUserId(userId);
+
+        AlbumDto albumDto =null;
+        for(AlbumDto album:albums){
+            if(album.getId()==albumId)
+                albumDto =album;
+        }
+
+        return albumDto;
+    }
+
+    public void addData(UniverseResponse universeResponse, AlbumDto albumDto){
+        HashMap<String, String> map = new HashMap<>();
+        universeResponse.addMap(map);
+        universeResponse.addData(map, "title", albumDto.getTitle());
+        universeResponse.addData(map, "cover", albumDto.getCover());
+        universeResponse.addData(map, "tracksRating", Integer.toString(albumDto.getTracksRating()));
+        universeResponse.addData(map, "atmosphereRating", Integer.toString(albumDto.getAtmosphereRating()));
+        universeResponse.addData(map, "bitsRating", Integer.toString(albumDto.getBitsRating()));
+        universeResponse.addData(map, "textRating", Integer.toString(albumDto.getTextRating()));
+        universeResponse.addData(map, "artist", albumDto.getArtist());
+        universeResponse.addData(map, "albumId", Long.toString(albumDto.getId()));
     }
 
 }
