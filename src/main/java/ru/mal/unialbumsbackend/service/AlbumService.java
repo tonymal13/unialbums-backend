@@ -1,6 +1,7 @@
 package ru.mal.unialbumsbackend.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.Album;
@@ -17,6 +18,8 @@ import java.util.*;
 @AllArgsConstructor
 public class AlbumService {
 
+    @Value("${host}")
+    private String host;
     private final AlbumRepository albumRepository;
 
     private final UserService userService;
@@ -30,7 +33,8 @@ public class AlbumService {
     private Album enrich(CreateAlbumDto albumRequest, long userId, String fileName) {
         Album album=new Album();
         album.setTitle(albumRequest.getTitle());
-        album.setCover("http://localhost:9000/images/"+fileName);
+//        album.setCover("http://"+host+":9000/images/"+fileName);
+            album.setCover("http://89.111.172.174:9000/images/"+fileName);
 
 //            album.setCover("http://89.111.172.174:9000/images/"+fileName);
         album.setAtmosphereRating(albumRequest.getAtmosphereRating());

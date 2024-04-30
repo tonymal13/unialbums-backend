@@ -15,7 +15,9 @@ import java.util.Arrays;
 @Configuration
 @EnableWebMvc
 @CrossOrigin(origins ="http://localhost:3000,http://localhost:6006," +
-        "http://89.111.172.174:3000,http://89.111.172.174", allowCredentials = "true")
+        "http://89.111.172.174:3000," +
+        "http://89.111.172.174:9000,"+
+        "http://89.111.172.174:9002", allowCredentials = "true")
 public class WebConfig {
 
     private static final Long MAX_AGE = 3600L;
@@ -30,6 +32,8 @@ public class WebConfig {
         config.addAllowedOrigin("http://localhost:6006");
         config.addAllowedOrigin("http://89.111.172.174:3000");
         config.addAllowedOrigin("http://89.111.172.174");
+        config.addAllowedOrigin("http://89.111.172.174:9000");
+        config.addAllowedOrigin("http://89.111.172.174:9002");
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,

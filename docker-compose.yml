@@ -16,7 +16,7 @@ services:
     command: ["-p", "5432"]
     restart: always
   backend:
-    image: tonymal13/unialbums-backend-app:working_version
+    image: tonymal13/unialbums-backend-app:deploy_version
     container_name: unialbums-backend-app_container
     expose:
       - "8081"
@@ -37,6 +37,7 @@ services:
     environment:
       - MINIO_ROOT_USER=admin
       - MINIO_ROOT_PASSWORD=password
+#      - MINIO_URL=http://minio:9000
     volumes:
       - minio_data:/data
     ports:

@@ -3,6 +3,7 @@ package ru.mal.unialbumsbackend.web.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 @AllArgsConstructor
 @Tag(name = "User Controller",description = "User API")
 public class UserController {
+
+    @Value("${host}")
+    private String host;
 
     private final UserService userService;
 
@@ -97,8 +101,8 @@ public class UserController {
 
         Optional<User> user=userService.findById(userId);
         if (user.isPresent()) {
-            user.get().setAvatar("http://localhost:9000/images/" + filename);
-//            user.get().setAvatar("http://89.111.172.174:9000/images/"+filename);
+//            user.get().setAvatar("http://"+host+":9000/images/" + filename);
+            user.get().setAvatar("http://89.111.172.174:9000/images/"+filename);
             userRepository.save(user.get());
         }
 
