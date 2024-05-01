@@ -101,8 +101,8 @@ public class UserController {
 
         Optional<User> user=userService.findById(userId);
         if (user.isPresent()) {
-//            user.get().setAvatar("http://"+host+":9000/images/" + filename);
-            user.get().setAvatar("http://89.111.172.174:9000/images/"+filename);
+            user.get().setAvatar("http://localhost:9000/images/" + filename);
+//            user.get().setAvatar("http://89.111.172.174:9000/images/"+filename);
             userRepository.save(user.get());
         }
 

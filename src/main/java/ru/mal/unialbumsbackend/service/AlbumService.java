@@ -17,9 +17,6 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class AlbumService {
-
-//    @Value("${host}")
-//    private String host;
     private final AlbumRepository albumRepository;
 
     private final UserService userService;
@@ -34,9 +31,9 @@ public class AlbumService {
         Album album=new Album();
         album.setTitle(albumRequest.getTitle());
 //        album.setCover("http://"+host+":9000/images/"+fileName);
-            album.setCover("http://89.111.172.174:9000/images/"+fileName);
-
 //            album.setCover("http://89.111.172.174:9000/images/"+fileName);
+
+            album.setCover("http://localhost:9000/images/"+fileName);
         album.setAtmosphereRating(albumRequest.getAtmosphereRating());
         album.setBitsRating(albumRequest.getBitsRating());
         album.setTextRating(albumRequest.getTextRating());

@@ -16,7 +16,7 @@ services:
     command: ["-p", "5432"]
     restart: always
   backend:
-    image: tonymal13/unialbums-backend-app:deploy_version
+    image: tonymal13/unialbums-backend-app:working_version
     container_name: unialbums-backend-app_container
     expose:
       - "8081"

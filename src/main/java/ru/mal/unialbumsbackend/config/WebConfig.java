@@ -31,7 +31,6 @@ public class WebConfig {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:6006");
         config.addAllowedOrigin("http://89.111.172.174:3000");
-        config.addAllowedOrigin("http://89.111.172.174");
         config.addAllowedOrigin("http://89.111.172.174:9000");
         config.addAllowedOrigin("http://89.111.172.174:9002");
         config.setAllowedHeaders(Arrays.asList(
