@@ -58,7 +58,6 @@ public class AlbumsController {
          UniverseResponse universeResponse=initializeResponse();
          universeResponse.setMessage("Альбомы пользователя:");
 
-
         for (AlbumDto album : albums) {
             addData(universeResponse,album);
 
@@ -87,10 +86,9 @@ public class AlbumsController {
 
     }
 
-    private Album edit(Album album, CreateAlbumDto req){
+    private void edit(Album album, CreateAlbumDto req){
         album.setTitle(req.getTitle());
         album.setArtist(req.getArtist());
-        return album;
     }
 
     @GetMapping("/{id}")

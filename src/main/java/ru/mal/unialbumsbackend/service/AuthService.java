@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 import ru.mal.unialbumsbackend.domain.*;
-
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
+
+import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +27,7 @@ public class AuthService {
 
     public UniverseResponse login(@NonNull LogInDto authRequest) {
         Optional<User> user = userService.findByLogin(authRequest.getUsername());
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setData(new ArrayList<>());
+        UniverseResponse universeResponse=initializeResponse();
         if(user.isPresent()) {
             if (passwordEncoder.matches(authRequest.getPassword() ,user.get().getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user.get());
@@ -51,8 +49,7 @@ public class AuthService {
     }
 
     public UniverseResponse getAccessToken(@NonNull String refreshToken) {
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setData(new ArrayList<>());
+        UniverseResponse universeResponse=initializeResponse();
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
@@ -74,8 +71,7 @@ public class AuthService {
     }
 
     public UniverseResponse refresh(@NonNull String refreshToken) {
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setData(new ArrayList<>());
+        UniverseResponse universeResponse=initializeResponse();
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();

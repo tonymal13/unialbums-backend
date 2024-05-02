@@ -3,7 +3,6 @@ package ru.mal.unialbumsbackend.service;
 import io.minio.*;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.exception.ImageUploadException;

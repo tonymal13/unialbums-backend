@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.web.dto.album.AlbumDto;
-
 import java.util.List;
 
 @Repository

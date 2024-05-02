@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.mal.unialbumsbackend.service.props.MinioProperties;
 
-
 @Configuration
 @Getter
 @Setter

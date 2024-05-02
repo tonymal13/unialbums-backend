@@ -1,12 +1,11 @@
 services:
   db:
-    image: postgres:latest
     container_name: postgresql_container
+    image: postgres:latest
     environment:
       POSTGRES_DB: unialbums-backend
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      PGDATA: /data/postgres
     volumes:
       - ./db:/data/postgres
     expose:

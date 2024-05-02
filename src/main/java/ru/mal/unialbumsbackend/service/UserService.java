@@ -14,7 +14,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
 
-
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -30,21 +29,21 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User toEntity(UserDto request) {
+    public User toEntity(UserDto userDto) {
         User user=new User();
         user.setRole("USER");
-        user.setPassword(passwordEncoder.encode( request.getPassword()));
-        user.setUsername(request.getUsername());
-        user.setLastName(request.getLastName());
-        user.setFirstName(request.getFirstName());
+        user.setPassword(passwordEncoder.encode( userDto.getPassword()));
+        user.setUsername(userDto.getUsername());
+        user.setLastName(userDto.getLastName());
+        user.setFirstName(userDto.getFirstName());
         user.setAvatar("");
         return user;
     }
 
-    public void toDto(User user, UserDto request){
-        user.setUsername(request.getUsername());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+    public void toDto(User user, UserDto userDto){
+        user.setUsername(userDto.getUsername());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
     }
 
     public Optional<User> findById(Long userId) {
