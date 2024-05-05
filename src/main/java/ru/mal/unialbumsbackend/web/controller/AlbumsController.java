@@ -36,9 +36,8 @@ public class AlbumsController {
     )
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        UniverseResponse response=new UniverseResponse();
+        UniverseResponse response=initializeResponse();
         response.setMessage("Альбом создан");
-        response.setData(new ArrayList<>());
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
         String filename= imageService.upload(cover);
