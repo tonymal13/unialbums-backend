@@ -24,22 +24,20 @@ public class AlbumService {
         albumRepository.save(album);
     }
 
-    private Album enrich(CreateAlbumDto albumRequest, long userId, String fileName) {
+    private Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
         Album album=new Album();
-        album.setTitle(albumRequest.getTitle());
-            album.setCover("http://89.111.172.174:9000/images/"+fileName);
+        album.setTitle(createAlbumDto.getTitle());
+//            album.setCover("http://89.111.172.174:9000/images/"+fileName);
 
-//            album.setCover("http://localhost:9000/images/"+fileName);
-        album.setAtmosphereRating(albumRequest.getAtmosphereRating());
-        album.setBitsRating(albumRequest.getBitsRating());
-        album.setTextRating(albumRequest.getTextRating());
-        album.setTracksRating(albumRequest.getTracksRating());
-        album.setArtist(albumRequest.getArtist());
-        Optional<User> user=userService.findById(userId);
-        if(user.isPresent()) {
-            user.get().addAlbums(album);
-            album.setUser(user.get());
-        }
+        album.setCover("http://localhost:9000/images/"+fileName);
+        album.setAtmosphereRating(createAlbumDto.getAtmosphereRating());
+        album.setBitsRating(createAlbumDto.getBitsRating());
+        album.setTextRating(createAlbumDto.getTextRating());
+        album.setTracksRating(createAlbumDto.getTracksRating());
+        album.setArtist(createAlbumDto.getArtist());
+        User user=userService.findById(userId);
+        user.addAlbums(album);
+        album.setUser(user);
         return album;
     }
 
@@ -52,9 +50,8 @@ public class AlbumService {
     public void save(Album album) {
         albumRepository.save(album);
     }
-    @Transactional
-    public Optional<Album> findById(long albumId) {
-       return albumRepository.findById(albumId);
+    public Album findById(long albumId) {
+       return albumRepository.findById(albumId).orElseThrow(()->new RuntimeException("Альбом не найден"));
     }
 }
 

@@ -5,10 +5,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.User;
+import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -46,12 +45,12 @@ public class UserService {
         user.setLastName(userDto.getLastName());
     }
 
-    public Optional<User> findById(Long userId) {
-        return userRepository.findById(userId);
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("Пользователь не найден"));
     }
 
-    public Optional<User> findByLogin(String username) {
-        return userRepository.findByUsername(username);
+    public User findByLogin(String username) {
+        return userRepository.findByUsername(username).orElseThrow(()->new UserNotFoundException("Пользователь не найден"));
     }
 
 }

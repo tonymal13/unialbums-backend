@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.service.props.JwtProperties;
-//import ru.mal.unialbumsbackend.service.props.JwtProperties;
-
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.time.Instant;

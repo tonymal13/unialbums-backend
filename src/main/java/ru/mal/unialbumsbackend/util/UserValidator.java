@@ -3,11 +3,10 @@ package ru.mal.unialbumsbackend.util;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.exception.ValidationException;
+import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.service.UserService;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
-import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -17,28 +16,27 @@ public class UserValidator {
 
     public String validateForRegister(UserDto userDto){
         String message= "";
-
-        Optional<User> user=userService.findByLogin(userDto.getUsername());
-        if (user.isPresent()) {
-                message= ("Такой пользователь уже существует");
-        } else {
+        try {
+            User user = userService.findByLogin(userDto.getUsername());
+        }
+        catch (UserNotFoundException e){
             message= ("Вы успешно зарегестрировались");
+            message=validatePassword(message,userDto.getPassword());
+            message=validateUsername(message,userDto.getUsername());
+            return message;
         }
 
-        message=validatePassword(message,userDto.getPassword());
-        message=validateUsername(message,userDto.getUsername());
+        message= ("Такой пользователь уже существует");
 
         return message;
     }
 
     public String validateForEdit(UserDto userDto,long userId){
         String message= "";
-        Optional<User> user=userService.findByLogin(userDto.getUsername());
+        User user=userService.findByLogin(userDto.getUsername());
         message= ("Данные успешно обновлены");
-        if (user.isPresent()) {
-            if(user.get().getId()!=userId){
-                message= ("Такой пользователь уже существует");
-            }
+        if(user.getId()!=userId){
+            message= ("Такой пользователь уже существует");
         }
         message=validatePassword(message,userDto.getPassword());
         message=validateUsername(message,userDto.getUsername());

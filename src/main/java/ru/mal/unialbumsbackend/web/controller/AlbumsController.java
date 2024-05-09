@@ -71,9 +71,9 @@ public class AlbumsController {
 
         if(albumDto !=null){
             UniverseResponse universeResponse = initializeResponse();
-            Optional<Album> album =albumService.findById(albumId);
-            edit(album.get(),req);
-            albumService.save(album.get());
+            Album album =albumService.findById(albumId);
+            edit(album,req);
+            albumService.save(album);
             universeResponse.setMessage("Данные успешно обновлены");
             return ResponseEntity.ok(universeResponse);
         }
