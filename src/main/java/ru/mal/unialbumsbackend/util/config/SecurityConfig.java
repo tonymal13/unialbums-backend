@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.config;
+package ru.mal.unialbumsbackend.util.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -19,17 +19,17 @@ public class AlbumService {
     private final UserService userService;
 
     @Transactional
-    public void create(CreateAlbumDto albumRequest, long userId, String fileName) {
-        Album album = enrich(albumRequest,userId,fileName);
+    public void create(CreateAlbumDto createAlbumDto, long userId, String fileName) {
+        Album album = enrich(createAlbumDto,userId,fileName);
         albumRepository.save(album);
     }
 
     private Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
         Album album=new Album();
         album.setTitle(createAlbumDto.getTitle());
-//            album.setCover("http://89.111.172.174:9000/images/"+fileName);
+            album.setCover("http://89.111.172.174:9000/images/"+fileName);
 
-        album.setCover("http://localhost:9000/images/"+fileName);
+//        album.setCover("http://localhost:9000/images/"+fileName);
         album.setAtmosphereRating(createAlbumDto.getAtmosphereRating());
         album.setBitsRating(createAlbumDto.getBitsRating());
         album.setTextRating(createAlbumDto.getTextRating());
