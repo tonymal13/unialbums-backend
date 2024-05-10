@@ -43,7 +43,7 @@ public class UserController {
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
         User user=userService.findById(userId);
-        getInfo(response,map,user);
+        addInfo(response,map,user);
         response.addData(map, "firstName",user.getFirstName());
         response.addData(map,"lastName",user.getLastName());
         if(response.getMessage().equals("Данные пользователя")){
@@ -109,7 +109,7 @@ public class UserController {
         User user=userService.findById(userId);
         HashMap<String,String> map= new HashMap<>();
         response.addMap(map);
-        getInfo(response,map,user);
+        addInfo(response,map,user);
         if(response.getMessage().equals("Данные пользователя")){
             return ResponseEntity.ok(response);
         }
@@ -118,7 +118,7 @@ public class UserController {
         }
     }
 
-    public void getInfo(UniverseResponse response, HashMap<String,String> map, User user){
+    public void addInfo(UniverseResponse response, HashMap<String,String> map, User user){
 
             response.addData(map, "username", user.getUsername());
             response.addData(map,"avatar",user.getAvatar());
