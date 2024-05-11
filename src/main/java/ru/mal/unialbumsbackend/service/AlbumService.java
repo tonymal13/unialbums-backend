@@ -27,9 +27,9 @@ public class AlbumService {
     private Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
         Album album=new Album();
         album.setTitle(createAlbumDto.getTitle());
-            album.setCover("http://89.111.172.174:9000/images/"+fileName);
+//            album.setCover("http://89.111.172.174:9000/images/"+fileName);
 
-//        album.setCover("http://localhost:9000/images/"+fileName);
+        album.setCover("http://localhost:9000/images/"+fileName);
         album.setAtmosphereRating(createAlbumDto.getAtmosphereRating());
         album.setBitsRating(createAlbumDto.getBitsRating());
         album.setTextRating(createAlbumDto.getTextRating());

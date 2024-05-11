@@ -3,9 +3,9 @@ services:
     container_name: postgresql_container
     image: postgres:latest
     environment:
-      POSTGRES_DB: unialbums-backend
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${SPRING_POSTGRES_DB}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     volumes:
       - ./db:/data/postgres
     expose:
@@ -15,16 +15,16 @@ services:
     command: ["-p", "5432"]
     restart: always
   backend:
-    image: tonymal13/unialbums-backend-app:deploy_version
+    image: tonymal13/unialbums-backend-app:working_version
     container_name: unialbums-backend-app_container
     expose:
       - "8081"
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql_container:5432/unialbums-backend
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_USERNAME}
     depends_on:
       - db
       - minio
@@ -34,9 +34,8 @@ services:
     image: quay.io/minio/minio
     command: server /data --console-address ":9002"
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password
-#      - MINIO_URL=http://minio:9000
+      - MINIO_ROOT_USER=${SPRING_MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${SPRING_MINIO_SECRET_KEY}
     volumes:
       - minio_data:/data
     ports:

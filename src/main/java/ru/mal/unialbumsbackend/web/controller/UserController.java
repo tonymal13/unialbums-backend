@@ -94,8 +94,8 @@ public class UserController {
         String filename= imageService.upload(avatar);
 
         User user=userService.findById(userId);
-//            user.setAvatar("http://localhost:9000/images/" + filename);
-            user.setAvatar("http://89.111.172.174:9000/images/"+filename);
+            user.setAvatar("http://localhost:9000/images/" + filename);
+//            user.setAvatar("http://89.111.172.174:9000/images/"+filename);
             userRepository.save(user);
     }
 

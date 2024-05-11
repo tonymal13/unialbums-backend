@@ -24,10 +24,10 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UniverseResponse login(@NonNull LogInDto authRequest) {
-        User user = userService.findByLogin(authRequest.getUsername());
+    public UniverseResponse login(LogInDto logInDto) {
+        User user = userService.findByLogin(logInDto.getUsername());
         UniverseResponse universeResponse=initializeResponse();
-            if (passwordEncoder.matches(authRequest.getPassword() ,user.getPassword())){
+            if (passwordEncoder.matches(logInDto.getPassword() ,user.getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
                 final String refreshToken = jwtProvider.generateRefreshToken(user);
                 HashMap<String,String> map=new HashMap<>();
@@ -41,7 +41,7 @@ public class AuthService {
         return universeResponse;
     }
 
-    public UniverseResponse getAccessToken(@NonNull String refreshToken) {
+    public UniverseResponse getAccessToken(String refreshToken) {
         UniverseResponse universeResponse=initializeResponse();
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
@@ -57,7 +57,7 @@ public class AuthService {
         return universeResponse;
     }
 
-    public UniverseResponse refresh(@NonNull String refreshToken) {
+    public UniverseResponse refresh(String refreshToken) {
         UniverseResponse universeResponse=initializeResponse();
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);

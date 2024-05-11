@@ -33,13 +33,16 @@ public class UserValidator {
 
     public String validateForEdit(UserDto userDto,long userId){
         String message= "";
-        User user=userService.findByLogin(userDto.getUsername());
-        message= ("Данные успешно обновлены");
-        if(user.getId()!=userId){
-            message= ("Такой пользователь уже существует");
+        try {
+            User user = userService.findByLogin(userDto.getUsername());
         }
-        message=validatePassword(message,userDto.getPassword());
-        message=validateUsername(message,userDto.getUsername());
+        catch (UserNotFoundException e){
+            message= ("Данные успешно обновлены");
+            message=validatePassword(message,userDto.getPassword());
+            message=validateUsername(message,userDto.getUsername());
+            return message;
+        }
+            message= ("Такой пользователь уже существует");
         return message;
     }
 

@@ -114,7 +114,7 @@ public class AuthController {
     }
     @GetMapping("/test")
     public String test(){
-        return "Made by Tonymal13 and def1s";
+        return "Test";
     }
 
 }
