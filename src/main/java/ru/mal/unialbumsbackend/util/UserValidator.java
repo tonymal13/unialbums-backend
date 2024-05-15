@@ -31,6 +31,8 @@ public class UserValidator {
         return message;
     }
 
+    // TODO: 14.05.2024 Написать метод с Optional и валидировать по нормальному 
+
     public String validateForEdit(UserDto userDto,long userId){
         String message= "";
         try {
@@ -42,7 +44,6 @@ public class UserValidator {
             message=validateUsername(message,userDto.getUsername());
             return message;
         }
-            message= ("Такой пользователь уже существует");
         return message;
     }
 
