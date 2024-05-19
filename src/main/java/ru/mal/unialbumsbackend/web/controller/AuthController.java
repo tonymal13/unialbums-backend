@@ -72,7 +72,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UniverseResponse> register(@RequestBody UserDto request) {
+    public ResponseEntity<?> register(@RequestBody UserDto request) {
         UniverseResponse response = initializeResponse();
         String message =userValidator.validateForRegister(request);
         if (message.equals("Вы успешно зарегестрировались")){
@@ -82,7 +82,7 @@ public class AuthController {
         }
         else {
             response.setMessage(message);
-            return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
 
     }
@@ -114,7 +114,7 @@ public class AuthController {
     }
     @GetMapping("/test")
     public String test(){
-        return "Test";
+        return "Test1";
     }
 
 }

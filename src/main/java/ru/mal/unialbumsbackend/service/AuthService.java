@@ -59,20 +59,20 @@ public class AuthService {
 
     public UniverseResponse refresh(String refreshToken) {
         UniverseResponse universeResponse=initializeResponse();
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            User user = userService.findByLogin(login);
-            final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
-            final String newRefreshToken = jwtProvider.generateRefreshToken(user);
-            HashMap<String, String> map = new HashMap<>();
-            universeResponse.setMessage("Токен обновлен");
-            universeResponse.addMap(map);
-            universeResponse.addData(map, "accessToken", accessToken);
-            universeResponse.addData(map, "refreshToken", newRefreshToken);
+            if (jwtProvider.validateRefreshToken(refreshToken)) {
+                final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
+                final String login = claims.getSubject();
+                User user = userService.findByLogin(login);
+                final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
+                final String newRefreshToken = jwtProvider.generateRefreshToken(user);
+                HashMap<String, String> map = new HashMap<>();
+                universeResponse.setMessage("Токен обновлен");
+                universeResponse.addMap(map);
+                universeResponse.addData(map, "accessToken", accessToken);
+                universeResponse.addData(map, "refreshToken", newRefreshToken);
 
-            return universeResponse;
-        }
+                return universeResponse;
+            }
         throw new AuthException("Невалидный JWT токен");
     }
 

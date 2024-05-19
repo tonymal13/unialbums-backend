@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PutMapping("/myProfile")
-    public ResponseEntity<UniverseResponse> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto request) {
+    public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto request) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         UniverseResponse response = initializeResponse();
 
@@ -74,11 +74,11 @@ public class UserController {
         }
         else if(message.equals("Пароль должен быть от 1 до 20 символов :)")||message.equals("Логин должен быть от 1 до 20 символов :)")) {
             response.setMessage(message);
-            return new ResponseEntity<UniverseResponse>(response,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
         }
         else{
             response.setMessage(message);
-            return new ResponseEntity<UniverseResponse>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
 
     }
@@ -94,8 +94,9 @@ public class UserController {
         String filename= imageService.upload(avatar);
 
         User user=userService.findById(userId);
-            user.setAvatar("http://localhost:9000/images/" + filename);
+//            user.setAvatar("http://localhost:9000/images/" + filename);
 //            user.setAvatar("http://89.111.172.174:9000/images/"+filename);
+        user.setAvatar("http://45.89.188.56:9000/images/"+filename);
             userRepository.save(user);
     }
 
