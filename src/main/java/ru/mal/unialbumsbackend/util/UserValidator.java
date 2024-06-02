@@ -3,9 +3,10 @@ package ru.mal.unialbumsbackend.util;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.mal.unialbumsbackend.domain.User;
-import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.service.UserService;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
+
+import java.util.Optional;
 
 
 @Component
@@ -16,33 +17,30 @@ public class UserValidator {
 
     public String validateForRegister(UserDto userDto){
         String message= "";
-        try {
-            User user = userService.findByLogin(userDto.getUsername());
-        }
-        catch (UserNotFoundException e){
+
+        Optional<User> user = userService.findByUsernameOptional(userDto.getUsername());
+
+        if(user.isEmpty()){
             message= ("Вы успешно зарегестрировались");
             message=validatePassword(message,userDto.getPassword());
             message=validateUsername(message,userDto.getUsername());
-            return message;
         }
+        else {
 
-        message= ("Такой пользователь уже существует");
-
+            message = ("Такой пользователь уже существует");
+        }
         return message;
     }
 
-    // TODO: 14.05.2024 Написать метод с Optional и валидировать по нормальному 
-
-    public String validateForEdit(UserDto userDto,long userId){
+    public String validateForEdit(UserDto userDto){
         String message= "";
-        try {
-            User user = userService.findByLogin(userDto.getUsername());
-        }
-        catch (UserNotFoundException e){
+
+        Optional <User> user = userService.findByUsernameOptional(userDto.getUsername());
+
+        if(user.isEmpty()){
             message= ("Данные успешно обновлены");
             message=validatePassword(message,userDto.getPassword());
             message=validateUsername(message,userDto.getUsername());
-            return message;
         }
         return message;
     }

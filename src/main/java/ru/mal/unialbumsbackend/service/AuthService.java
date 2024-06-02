@@ -24,7 +24,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public BackendResponse login(LogInDto logInDto) {
-        User user = userService.findByLogin(logInDto.getUsername());
+        User user = userService.findByUsername(logInDto.getUsername());
         BackendResponse universeResponse=initializeResponse();
             if (passwordEncoder.matches(logInDto.getPassword() ,user.getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
@@ -45,13 +45,11 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            if (jwtProvider.validateRefreshToken(refreshToken)) {
-                User user=userService.findByLogin(login);
-                String accessToken = jwtProvider.generateAccessTokenForLogin(user);
-                HashMap<String,String> map=new HashMap<>();
-                universeResponse.setMessage("Токен: ");
-                universeResponse.addData(map,"accessToken", accessToken);
-            }
+            User user=userService.findByUsername(login);
+            String accessToken = jwtProvider.generateAccessTokenForLogin(user);
+            HashMap<String,String> map=new HashMap<>();
+            universeResponse.setMessage("Токен: ");
+            universeResponse.addData(map,"accessToken", accessToken);
         }
         return universeResponse;
     }
@@ -61,7 +59,7 @@ public class AuthService {
             if (jwtProvider.validateRefreshToken(refreshToken)) {
                 final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
                 final String login = claims.getSubject();
-                User user = userService.findByLogin(login);
+                User user = userService.findByUsername(login);
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 HashMap<String, String> map = new HashMap<>();

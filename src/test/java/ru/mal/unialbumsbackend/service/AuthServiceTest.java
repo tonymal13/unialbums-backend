@@ -66,7 +66,7 @@ public class AuthServiceTest {
         Mockito.when( bCryptPasswordEncoder.matches(password,bCryptPasswordEncoder.encode(password)))
                 .thenReturn(true);
 
-        Mockito.when(userService.findByLogin(username))
+        Mockito.when(userService.findByUsername(username))
                 .thenReturn(user);
 
         Mockito.when(jwtProviderMock.generateAccessTokenForLogin(user))
@@ -90,7 +90,7 @@ public class AuthServiceTest {
         User user = new User();
         user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        Mockito.when(userService.findByLogin(username))
+        Mockito.when(userService.findByUsername(username))
                 .thenThrow(UserNotFoundException.class);
 
         Assertions.assertThrows(UserNotFoundException.class,
@@ -109,7 +109,7 @@ public class AuthServiceTest {
         user.setPassword(bCryptPasswordEncoder.encode(password));
         Mockito.when( bCryptPasswordEncoder.matches(password,bCryptPasswordEncoder.encode(password)))
                         .thenReturn(false);
-        Mockito.when(userService.findByLogin(username))
+        Mockito.when(userService.findByUsername(username))
                 .thenReturn(user);
 
         Assertions.assertThrows(UserNotFoundException.class,

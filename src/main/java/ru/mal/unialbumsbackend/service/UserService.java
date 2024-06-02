@@ -4,10 +4,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
+
+import java.util.Optional;
+
+import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
 
 @Service
 @AllArgsConstructor
@@ -16,6 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ImageService imageService;
 
     @Transactional
     public void register(UserDto userDto) {
@@ -43,14 +50,27 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
+
     }
 
     public User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("Пользователь не найден"));
     }
 
-    public User findByLogin(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(()->new UserNotFoundException("Пользователь не найден"));
     }
 
+    public Optional<User> findByUsernameOptional(String username){
+        return userRepository.findByUsername(username);
+    }
+
+    public void addAvatarToUser(User user,MultipartFile avatar) {
+
+        if(!avatar.isEmpty()){
+            String filename= imageService.upload(avatar);
+            user.setAvatar(host+":9000/images/"+filename);
+        }
+
+    }
 }

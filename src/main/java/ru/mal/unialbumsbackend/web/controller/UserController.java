@@ -57,7 +57,8 @@ public class UserController {
     }
 
     @PutMapping("/myProfile")
-    public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto request) {
+    public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto userDto,
+            @RequestParam("avatar") MultipartFile avatar) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         BackendResponse response = initializeResponse();
 
@@ -65,11 +66,12 @@ public class UserController {
 
         User user=userService.findById(userId);
 
-        String message= userValidator.validateForEdit(request,userId);
+        String message= userValidator.validateForEdit(userDto);
 
         if (message.equals("Данные успешно обновлены")){
             response.setMessage(message);
-            userService.toDto(user,request);
+            userService.toDto(user,userDto);
+            userService.addAvatarToUser(user,avatar);
             userService.save(user);
             return ResponseEntity.ok(response);
         }
@@ -96,7 +98,7 @@ public class UserController {
 
         User user=userService.findById(userId);
         user.setAvatar(host+":9000/images/"+filename);
-            userRepository.save(user);
+        userRepository.save(user);
     }
 
     @GetMapping("/getUserInfo")
