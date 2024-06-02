@@ -65,16 +65,18 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void addAvatarToUser(User user,MultipartFile avatar) {
+    public void addAvatarToUser(User user,Object avatar){
+
         if(avatar!=null) {
-            if (!avatar.isEmpty()) {
-                user.setAvatar("");
-            } else {
-                System.out.println("not null");
-                String filename = imageService.upload(avatar);
-                user.setAvatar(host + ":9000/images/" + filename);
-            }
+                if(avatar.getClass()!=String.class) {
+                    String filename = imageService.upload((MultipartFile) avatar);
+                    user.setAvatar(host + ":9000/images/" + filename);
+                }
+                else{
+                    user.setAvatar("");
+                }
         }
 
     }
+
 }

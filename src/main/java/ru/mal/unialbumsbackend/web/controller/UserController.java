@@ -14,6 +14,7 @@ import ru.mal.unialbumsbackend.service.UserService;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
+
 import java.util.HashMap;
 
 import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
@@ -58,7 +59,7 @@ public class UserController {
 
     @PutMapping("/myProfile")
     public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @ModelAttribute("request") UserDto userDto,
-            @RequestParam(value = "avatar",required = false) MultipartFile avatar) {
+            @RequestParam(value = "avatar",required = false) Object avatar){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         BackendResponse response = initializeResponse();
 
