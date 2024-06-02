@@ -16,6 +16,7 @@ import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import java.util.HashMap;
 
+import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
 import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
 import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 
@@ -94,9 +95,7 @@ public class UserController {
         String filename= imageService.upload(avatar);
 
         User user=userService.findById(userId);
-//            user.setAvatar("http://localhost:9000/images/" + filename);
-//            user.setAvatar("http://89.111.172.174:9000/images/"+filename);
-        user.setAvatar("http://45.89.188.56:9000/images/"+filename);
+        user.setAvatar(host+":9000/images/"+filename);
             userRepository.save(user);
     }
 

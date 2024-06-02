@@ -11,6 +11,8 @@ import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 
 import java.util.*;
 
+import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
+
 @Service
 @AllArgsConstructor
 public class AlbumService {
@@ -27,10 +29,7 @@ public class AlbumService {
     private Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
         Album album=new Album();
         album.setTitle(createAlbumDto.getTitle());
-//            album.setCover("http://89.111.172.174:9000/images/"+fileName);
-        album.setCover("http://45.89.188.56:9000/images/"+fileName);
-
-//        album.setCover("http://localhost:9000/images/"+fileName);
+        album.setCover(host+":9000/images/"+fileName);
         album.setAtmosphereRating(createAlbumDto.getAtmosphereRating());
         album.setBitsRating(createAlbumDto.getBitsRating());
         album.setTextRating(createAlbumDto.getTextRating());
