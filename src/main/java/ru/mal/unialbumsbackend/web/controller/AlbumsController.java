@@ -11,13 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.web.dto.album.CreateAlbumDto;
 import ru.mal.unialbumsbackend.web.dto.album.AlbumDto;
-import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.service.AlbumService;
 import ru.mal.unialbumsbackend.service.ImageService;
 
 import java.util.*;
 
-import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
+import static ru.mal.unialbumsbackend.web.dto.BackendResponse.initializeResponse;
 import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 
 @RequestMapping("/api/v1/albums")
@@ -31,12 +31,12 @@ public class AlbumsController {
     private final ImageService imageService;
 
     @PostMapping("/create")
-    public ResponseEntity<UniverseResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumDto request
+    public ResponseEntity<BackendResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumDto request
             , @RequestParam("cover") MultipartFile cover
     )
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        UniverseResponse response=initializeResponse();
+        BackendResponse response=initializeResponse();
         response.setMessage("Альбом создан");
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
@@ -47,14 +47,14 @@ public class AlbumsController {
 
     @GetMapping("/getByUserId")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UniverseResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
+    public ResponseEntity<BackendResponse> getAllAlbums(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
 
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
          List<AlbumDto> albums= albumService.getAlbumsByUserId(userId);
 
-         UniverseResponse universeResponse=initializeResponse();
+         BackendResponse universeResponse=initializeResponse();
          universeResponse.setMessage("Альбомы пользователя:");
 
         for (AlbumDto album : albums) {
@@ -70,7 +70,7 @@ public class AlbumsController {
         AlbumDto albumDto = findAlbum(jwt, albumId);
 
         if(albumDto !=null){
-            UniverseResponse universeResponse = initializeResponse();
+            BackendResponse universeResponse = initializeResponse();
             Album album =albumService.findById(albumId);
             edit(album,req);
             albumService.save(album);
@@ -78,7 +78,7 @@ public class AlbumsController {
             return ResponseEntity.ok(universeResponse);
         }
         else{
-            UniverseResponse universeResponse = new UniverseResponse();
+            BackendResponse universeResponse = new BackendResponse();
             universeResponse.setMessage("Вы не можете получить доступ к этому альбому:");
             return new ResponseEntity(universeResponse,HttpStatus.BAD_REQUEST);
         }
@@ -91,9 +91,9 @@ public class AlbumsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UniverseResponse> getAlbumInfo(@PathVariable("id") long albumId,@RequestHeader(name = "Authorization") String jwt){
+    public ResponseEntity<BackendResponse> getAlbumInfo(@PathVariable("id") long albumId, @RequestHeader(name = "Authorization") String jwt){
 
-        UniverseResponse universeResponse = initializeResponse();
+        BackendResponse universeResponse = initializeResponse();
 
         AlbumDto albumDto = findAlbum(jwt, albumId);
 
@@ -103,7 +103,7 @@ public class AlbumsController {
             universeResponse.setMessage("Информация об альбоме:");
         }
         else{
-            universeResponse = new UniverseResponse();
+            universeResponse = new BackendResponse();
             universeResponse.setMessage("Вы не можете получить доступ к этому альбому:");
         }
         return ResponseEntity.ok(universeResponse);
@@ -125,7 +125,7 @@ public class AlbumsController {
         return albumDto;
     }
 
-    public void addData(UniverseResponse universeResponse, AlbumDto albumDto){
+    public void addData(BackendResponse universeResponse, AlbumDto albumDto){
         HashMap<String, String> map = new HashMap<>();
         universeResponse.addMap(map);
         universeResponse.addData(map, "title", albumDto.getTitle());

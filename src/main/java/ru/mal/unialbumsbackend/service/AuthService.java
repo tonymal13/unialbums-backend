@@ -1,7 +1,6 @@
 package ru.mal.unialbumsbackend.service;
 
 import io.jsonwebtoken.Claims;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,11 +8,11 @@ import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
-import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import java.util.HashMap;
 
-import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
+import static ru.mal.unialbumsbackend.web.dto.BackendResponse.initializeResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +23,9 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UniverseResponse login(LogInDto logInDto) {
+    public BackendResponse login(LogInDto logInDto) {
         User user = userService.findByLogin(logInDto.getUsername());
-        UniverseResponse universeResponse=initializeResponse();
+        BackendResponse universeResponse=initializeResponse();
             if (passwordEncoder.matches(logInDto.getPassword() ,user.getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
                 final String refreshToken = jwtProvider.generateRefreshToken(user);
@@ -41,8 +40,8 @@ public class AuthService {
         return universeResponse;
     }
 
-    public UniverseResponse getAccessToken(String refreshToken) {
-        UniverseResponse universeResponse=initializeResponse();
+    public BackendResponse getAccessToken(String refreshToken) {
+        BackendResponse universeResponse=initializeResponse();
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
@@ -57,8 +56,8 @@ public class AuthService {
         return universeResponse;
     }
 
-    public UniverseResponse refresh(String refreshToken) {
-        UniverseResponse universeResponse=initializeResponse();
+    public BackendResponse refresh(String refreshToken) {
+        BackendResponse universeResponse=initializeResponse();
             if (jwtProvider.validateRefreshToken(refreshToken)) {
                 final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
                 final String login = claims.getSubject();

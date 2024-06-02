@@ -1,6 +1,5 @@
 package ru.mal.unialbumsbackend.web.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UniverseResponse {
+public class BackendResponse {
 
     private List<HashMap<String, String>> data;
 
@@ -29,8 +28,8 @@ public class UniverseResponse {
         data.get(0).remove(refreshToken);
     }
 
-    public static UniverseResponse initializeResponse() {
-        UniverseResponse universeResponse=new UniverseResponse();
+    public static BackendResponse initializeResponse() {
+        BackendResponse universeResponse=new BackendResponse();
         universeResponse.setData(new ArrayList<>());
         return universeResponse;
     }

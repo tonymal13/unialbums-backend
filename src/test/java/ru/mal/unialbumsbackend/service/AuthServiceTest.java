@@ -18,13 +18,9 @@ import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
-import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
-
-import java.util.*;
-
-import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -78,7 +74,7 @@ public class AuthServiceTest {
         Mockito.when(jwtProviderMock.generateRefreshToken(user))
                 .thenReturn(refreshToken);
 
-        UniverseResponse response = authService.login(request);
+        BackendResponse response = authService.login(request);
 
         Assertions.assertEquals(response.getData().get(0).get("accessToken"), accessToken);
         Assertions.assertEquals(response.getData().get(0).get("refreshToken"), refreshToken);

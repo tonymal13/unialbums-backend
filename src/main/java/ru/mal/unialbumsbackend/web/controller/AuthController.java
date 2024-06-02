@@ -13,13 +13,13 @@ import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtDto;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
-import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
 
 import java.util.HashMap;
 
-import static ru.mal.unialbumsbackend.web.dto.UniverseResponse.initializeResponse;
+import static ru.mal.unialbumsbackend.web.dto.BackendResponse.initializeResponse;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -34,13 +34,13 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UniverseResponse> login(@RequestBody LogInDto authRequest, HttpServletResponse response) {
+    public ResponseEntity<BackendResponse> login(@RequestBody LogInDto authRequest, HttpServletResponse response) {
 
-        UniverseResponse tokens = authService.login(authRequest);
+        BackendResponse tokens = authService.login(authRequest);
 
         String refreshToken=tokens.getData().get(0).get("refreshToken");
 
-        UniverseResponse universeResponse = initializeResponse();
+        BackendResponse universeResponse = initializeResponse();
         universeResponse.setMessage("Вы вошли в аккаунт");
 
         HashMap<String,String> map = new HashMap<>();
@@ -55,15 +55,15 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<UniverseResponse> getNewAccessToken(@RequestBody RefreshJwtDto request) {
-        final UniverseResponse token = authService.getAccessToken(request.getRefreshToken());
+    public ResponseEntity<BackendResponse> getNewAccessToken(@RequestBody RefreshJwtDto request) {
+        final BackendResponse token = authService.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<UniverseResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,HttpServletResponse response) {
+    public ResponseEntity<BackendResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 
-        final UniverseResponse universeResponse = authService.refresh(refreshToken);
+        final BackendResponse universeResponse = authService.refresh(refreshToken);
         String newRefreshToken= universeResponse.getData().get(0).get("refreshToken");
         Cookie cookie=new Cookie("refreshToken",newRefreshToken);
         sendRefreshToken(cookie,response);
@@ -73,7 +73,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDto request) {
-        UniverseResponse response = initializeResponse();
+        BackendResponse response = initializeResponse();
         String message =userValidator.validateForRegister(request);
         if (message.equals("Вы успешно зарегестрировались")){
             userService.register(request);
