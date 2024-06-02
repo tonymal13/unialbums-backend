@@ -37,9 +37,8 @@ public class UserValidator {
 
         Optional <User> user = userService.findByUsernameOptional(userDto.getUsername());
 
-        if(user.isEmpty()){
+        if(user.isPresent()){
             message= ("Данные успешно обновлены");
-            message=validatePassword(message,userDto.getPassword());
             message=validateUsername(message,userDto.getUsername());
         }
         return message;

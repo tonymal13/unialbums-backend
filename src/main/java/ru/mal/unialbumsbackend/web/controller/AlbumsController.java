@@ -31,7 +31,7 @@ public class AlbumsController {
     private final ImageService imageService;
 
     @PostMapping("/create")
-    public ResponseEntity<BackendResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumDto request
+    public ResponseEntity<BackendResponse> create(@RequestHeader(name = "Authorization") String jwt, @ModelAttribute("request") CreateAlbumDto createAlbumDto
             , @RequestParam("cover") MultipartFile cover
     )
     {
@@ -41,7 +41,7 @@ public class AlbumsController {
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
         String filename= imageService.upload(cover);
-        albumService.create(request,userId,filename);
+        albumService.create(createAlbumDto,userId,filename);
         return ResponseEntity.ok(response);
     }
 
@@ -65,7 +65,7 @@ public class AlbumsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity editAlbumInfo(@PathVariable("id") long albumId, @RequestBody CreateAlbumDto req, @RequestHeader(name = "Authorization") String jwt){
+    public ResponseEntity<?> editAlbumInfo(@PathVariable("id") long albumId, @RequestBody CreateAlbumDto req, @RequestHeader(name = "Authorization") String jwt){
 
         AlbumDto albumDto = findAlbum(jwt, albumId);
 
@@ -80,7 +80,7 @@ public class AlbumsController {
         else{
             BackendResponse universeResponse = new BackendResponse();
             universeResponse.setMessage("Вы не можете получить доступ к этому альбому:");
-            return new ResponseEntity(universeResponse,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(universeResponse,HttpStatus.BAD_REQUEST);
         }
 
     }

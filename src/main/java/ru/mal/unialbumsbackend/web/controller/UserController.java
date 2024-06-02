@@ -57,8 +57,8 @@ public class UserController {
     }
 
     @PutMapping("/myProfile")
-    public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @RequestBody UserDto userDto,
-            @RequestParam("avatar") MultipartFile avatar) {
+    public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @ModelAttribute("request") UserDto userDto,
+            @RequestParam(value = "avatar",required = false) MultipartFile avatar) {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
         BackendResponse response = initializeResponse();
 

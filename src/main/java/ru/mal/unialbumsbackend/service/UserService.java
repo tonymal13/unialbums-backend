@@ -66,10 +66,14 @@ public class UserService {
     }
 
     public void addAvatarToUser(User user,MultipartFile avatar) {
-
-        if(!avatar.isEmpty()){
-            String filename= imageService.upload(avatar);
-            user.setAvatar(host+":9000/images/"+filename);
+        if(avatar!=null) {
+            if (!avatar.isEmpty()) {
+                user.setAvatar("");
+            } else {
+                System.out.println("not null");
+                String filename = imageService.upload(avatar);
+                user.setAvatar(host + ":9000/images/" + filename);
+            }
         }
 
     }

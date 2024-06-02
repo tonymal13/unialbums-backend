@@ -29,7 +29,9 @@ public class WebConfig {
 
     private static final Long MAX_AGE = 3600L;
 
-    public static final String host="http://45.89.188.224";
+//    public static final String host="http://45.89.188.224";
+
+    public static final String host="http://localhost";
 
     @Bean
     public CorsFilter corsFilter() {

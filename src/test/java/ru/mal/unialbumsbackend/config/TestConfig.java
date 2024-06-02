@@ -68,7 +68,7 @@ public class TestConfig {
             final UserRepository userRepository) {
         return new UserService(
                 userRepository,
-                testPasswordEncoder());
+                testPasswordEncoder(),imageService());
     }
 
     @Bean
