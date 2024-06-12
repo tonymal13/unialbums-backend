@@ -15,30 +15,30 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     private ResponseEntity<BackendResponse> handleException(ImageUploadException e){
-        BackendResponse universeResponse=new BackendResponse();
-        universeResponse.setMessage(e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BackendResponse> handleException(ValidationException e){
-        BackendResponse universeResponse=new BackendResponse();
-        universeResponse.setMessage( e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.BAD_REQUEST);
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage( e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     private ResponseEntity<BackendResponse> handleException(UserNotFoundException e){
-        BackendResponse universeResponse=new BackendResponse();
-        universeResponse.setMessage( e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage( e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     private ResponseEntity<BackendResponse> handleException(AuthException e){
-        BackendResponse universeResponse=new BackendResponse();
-        universeResponse.setMessage( e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.FORBIDDEN);
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage( e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.FORBIDDEN);
     }
 
 }

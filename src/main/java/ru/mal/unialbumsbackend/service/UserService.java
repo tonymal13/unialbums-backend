@@ -12,7 +12,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.Optional;
 
-import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 
 @Service
 @AllArgsConstructor

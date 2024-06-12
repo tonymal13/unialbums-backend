@@ -17,7 +17,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.HashMap;
 
-import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 import static ru.mal.unialbumsbackend.web.dto.BackendResponse.initializeResponse;
 import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 
@@ -38,21 +38,21 @@ public class UserController {
     @GetMapping("/myProfile")
     public ResponseEntity<BackendResponse> getProfile(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        BackendResponse response = initializeResponse();
+        BackendResponse backendResponse = initializeResponse();
         HashMap<String,String> map= new HashMap<>();
-        response.addMap(map);
+        backendResponse.addMap(map);
 
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
         User user=userService.findById(userId);
-        addInfo(response,map,user);
-        response.addData(map, "firstName",user.getFirstName());
-        response.addData(map,"lastName",user.getLastName());
-        if(response.getMessage().equals("Данные пользователя")){
-            return ResponseEntity.ok(response);
+        addInfo(backendResponse,map,user);
+        backendResponse.addData(map, "firstName",user.getFirstName());
+        backendResponse.addData(map,"lastName",user.getLastName());
+        if(backendResponse.getMessage().equals("Данные пользователя")){
+            return ResponseEntity.ok(backendResponse);
         }
         else{
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
         }
 
     }
@@ -61,7 +61,7 @@ public class UserController {
     public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @ModelAttribute("request") UserDto userDto,
             @RequestParam(value = "avatar",required = false) Object avatar){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        BackendResponse response = initializeResponse();
+        BackendResponse backendResponse = initializeResponse();
 
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
@@ -70,19 +70,19 @@ public class UserController {
         String message= userValidator.validateForEdit(userDto);
 
         if (message.equals("Данные успешно обновлены")){
-            response.setMessage(message);
+            backendResponse.setMessage(message);
             userService.toDto(user,userDto);
             userService.addAvatarToUser(user,avatar);
             userService.save(user);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(backendResponse);
         }
         else if(message.equals("Пароль должен быть от 1 до 20 символов :)")||message.equals("Логин должен быть от 1 до 20 символов :)")) {
-            response.setMessage(message);
-            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+            backendResponse.setMessage(message);
+            return new ResponseEntity<>(backendResponse,HttpStatus.BAD_REQUEST);
         }
         else{
-            response.setMessage(message);
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+            backendResponse.setMessage(message);
+            return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
         }
 
     }
@@ -105,19 +105,19 @@ public class UserController {
     @GetMapping("/getUserInfo")
     public ResponseEntity<BackendResponse> getUserInfo(@RequestHeader("Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        BackendResponse response = initializeResponse();
+        BackendResponse backendResponse = initializeResponse();
 
         long userId = ((Number)jsonObject.get("userId")).longValue();
 
         User user=userService.findById(userId);
         HashMap<String,String> map= new HashMap<>();
-        response.addMap(map);
-        addInfo(response,map,user);
-        if(response.getMessage().equals("Данные пользователя")){
-            return ResponseEntity.ok(response);
+        backendResponse.addMap(map);
+        addInfo(backendResponse,map,user);
+        if(backendResponse.getMessage().equals("Данные пользователя")){
+            return ResponseEntity.ok(backendResponse);
         }
         else{
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
         }
     }
 

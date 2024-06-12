@@ -34,3 +34,16 @@ public class BackendResponse {
         return universeResponse;
     }
 }
+
+// TODO: 09.06.2024 try to replace BackendResponse with ResponseEntity 
+
+//} else {
+//        Product product = this.productService.createProduct(payload.title(), payload.details());
+//        return ResponseEntity
+//        .created(uriComponentsBuilder
+//        .replacePath("/catalogue-api/products/{productId}")
+//        .build(Map.of("productId", product.getId())))
+//        .body(
+//        Map.of("data",List.of())
+//        product);
+//        }

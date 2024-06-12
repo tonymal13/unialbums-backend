@@ -11,7 +11,7 @@ import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 
 import java.util.*;
 
-import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 
 @Service
 @AllArgsConstructor
@@ -52,6 +52,11 @@ public class AlbumService {
     }
     public Album findById(long albumId) {
        return albumRepository.findById(albumId).orElseThrow(()->new RuntimeException("Альбом не найден"));
+    }
+
+    @Transactional
+    public void deleteAlbumById(long albumId) {
+        albumRepository.deleteById(albumId);
     }
 }
 

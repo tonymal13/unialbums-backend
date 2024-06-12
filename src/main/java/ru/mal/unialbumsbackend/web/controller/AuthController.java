@@ -40,18 +40,18 @@ public class AuthController {
 
         String refreshToken=tokens.getData().get(0).get("refreshToken");
 
-        BackendResponse universeResponse = initializeResponse();
-        universeResponse.setMessage("Вы вошли в аккаунт");
+        BackendResponse backendResponse = initializeResponse();
+        backendResponse.setMessage("Вы вошли в аккаунт");
 
         HashMap<String,String> map = new HashMap<>();
-        universeResponse.addMap(map);
-        universeResponse.addData(map,"accessToken",tokens.getData().get(0).get("accessToken"));
+        backendResponse.addMap(map);
+        backendResponse.addData(map,"accessToken",tokens.getData().get(0).get("accessToken"));
 
 
         Cookie cookie=new Cookie("refreshToken",refreshToken);
         sendRefreshToken(cookie,response);
 
-        return ResponseEntity.ok(universeResponse);
+        return ResponseEntity.ok(backendResponse);
     }
 
     @PostMapping("/token")
@@ -63,26 +63,26 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResponseEntity<BackendResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 
-        final BackendResponse universeResponse = authService.refresh(refreshToken);
-        String newRefreshToken= universeResponse.getData().get(0).get("refreshToken");
+        final BackendResponse backendResponse = authService.refresh(refreshToken);
+        String newRefreshToken= backendResponse.getData().get(0).get("refreshToken");
         Cookie cookie=new Cookie("refreshToken",newRefreshToken);
         sendRefreshToken(cookie,response);
-        universeResponse.removeFromData("refreshToken");
-        return ResponseEntity.ok(universeResponse);
+        backendResponse.removeFromData("refreshToken");
+        return ResponseEntity.ok(backendResponse);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDto request) {
-        BackendResponse response = initializeResponse();
+        BackendResponse backendResponse = initializeResponse();
         String message =userValidator.validateForRegister(request);
         if (message.equals("Вы успешно зарегестрировались")){
             userService.register(request);
-            response.setMessage(message);
-            return ResponseEntity.ok(response);
+            backendResponse.setMessage(message);
+            return ResponseEntity.ok(backendResponse);
         }
         else {
-            response.setMessage(message);
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+            backendResponse.setMessage(message);
+            return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
         }
 
     }

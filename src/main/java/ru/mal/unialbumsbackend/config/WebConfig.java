@@ -1,7 +1,5 @@
-package ru.mal.unialbumsbackend.util.config;
+package ru.mal.unialbumsbackend.config;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 
-import static ru.mal.unialbumsbackend.util.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 
 @Configuration
 @EnableWebMvc
@@ -29,9 +27,9 @@ public class WebConfig {
 
     private static final Long MAX_AGE = 3600L;
 
-    public static final String host="http://45.89.188.224";
+//    public static final String host="http://45.89.188.224";
 
-//    public static final String host="http://localhost";
+    public static final String host="http://localhost";
 
     @Bean
     public CorsFilter corsFilter() {

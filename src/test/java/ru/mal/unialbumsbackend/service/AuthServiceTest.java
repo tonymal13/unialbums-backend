@@ -55,9 +55,9 @@ public class AuthServiceTest {
         String password = "a";
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
-        LogInDto request = new LogInDto();
-        request.setUsername(username);
-        request.setPassword( password);
+        LogInDto logInDto = new LogInDto();
+        logInDto.setUsername(username);
+        logInDto.setPassword( password);
         User user = new User();
         user.setUsername(username);
 
@@ -74,7 +74,7 @@ public class AuthServiceTest {
         Mockito.when(jwtProviderMock.generateRefreshToken(user))
                 .thenReturn(refreshToken);
 
-        BackendResponse response = authService.login(request);
+        BackendResponse response = authService.login(logInDto);
 
         Assertions.assertEquals(response.getData().get(0).get("accessToken"), accessToken);
         Assertions.assertEquals(response.getData().get(0).get("refreshToken"), refreshToken);
@@ -84,9 +84,9 @@ public class AuthServiceTest {
     void loginWithIncorrectUsername() {
         String username = "a";
         String password = "a";
-        LogInDto request = new LogInDto();
-        request.setUsername(username);
-        request.setPassword(password);
+        LogInDto logInDto = new LogInDto();
+        logInDto.setUsername(username);
+        logInDto.setPassword(password);
         User user = new User();
         user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
@@ -94,16 +94,16 @@ public class AuthServiceTest {
                 .thenThrow(UserNotFoundException.class);
 
         Assertions.assertThrows(UserNotFoundException.class,
-                () -> authService.login(request));
+                () -> authService.login(logInDto));
     }
 
     @Test
     void loginWithIncorrectPassword() {
         String username = "a";
         String password = "a";
-        LogInDto request = new LogInDto();
-        request.setUsername(username);
-        request.setPassword(password);
+        LogInDto logInDto = new LogInDto();
+        logInDto.setUsername(username);
+        logInDto.setPassword(password);
         User user = new User();
         user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
@@ -113,7 +113,7 @@ public class AuthServiceTest {
                 .thenReturn(user);
 
         Assertions.assertThrows(UserNotFoundException.class,
-                () -> authService.login(request));
+                () -> authService.login(logInDto));
     }
 
 }
