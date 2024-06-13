@@ -8,37 +8,37 @@ import ru.mal.unialbumsbackend.exception.AuthException;
 import ru.mal.unialbumsbackend.exception.ImageUploadException;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.exception.ValidationException;
-import ru.mal.unialbumsbackend.web.dto.UniverseResponse;
+import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(ImageUploadException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage(e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    private ResponseEntity<BackendResponse> handleException(ImageUploadException e){
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage(e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(ValidationException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.BAD_REQUEST);
+    private ResponseEntity<BackendResponse> handleException(ValidationException e){
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage( e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(UserNotFoundException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.NOT_FOUND);
+    private ResponseEntity<BackendResponse> handleException(UserNotFoundException e){
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage( e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    private ResponseEntity<UniverseResponse> handleException(AuthException e){
-        UniverseResponse universeResponse=new UniverseResponse();
-        universeResponse.setMessage( e.getMessage());
-        return new ResponseEntity<>(universeResponse, HttpStatus.FORBIDDEN);
+    private ResponseEntity<BackendResponse> handleException(AuthException e){
+        BackendResponse backendResponse=new BackendResponse();
+        backendResponse.setMessage( e.getMessage());
+        return new ResponseEntity<>(backendResponse, HttpStatus.FORBIDDEN);
     }
 
 }
