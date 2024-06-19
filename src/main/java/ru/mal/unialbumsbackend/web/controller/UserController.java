@@ -70,9 +70,11 @@ public class UserController {
         String message= userValidator.validateForEdit(userDto);
 
         if (message.equals("Данные успешно обновлены")){
+            System.out.println("saving...");
             backendResponse.setMessage(message);
             userService.toDto(user,userDto);
             userService.addAvatarToUser(user,avatar);
+            System.out.println(user.getAvatar()+user.getUsername()+user.getId()+user.getFirstName()+user.getLastName()+user.getRole()+user.getPassword());
             userService.save(user);
             return ResponseEntity.ok(backendResponse);
         }

@@ -81,7 +81,7 @@ public class AlbumsController {
         }
         else{
             backendResponse = new BackendResponse();
-            backendResponse.setMessage("Вы не можете получить доступ к этому альбому:");
+            backendResponse.setMessage("Вы не можете получить доступ к этому альбому");
         }
         return ResponseEntity.ok(backendResponse);
     }

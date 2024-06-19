@@ -1,6 +1,8 @@
 package ru.mal.unialbumsbackend.service;
 
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.Album;
@@ -20,24 +22,23 @@ public class AlbumService {
 
     private final UserService userService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Transactional
     public void create(CreateAlbumDto createAlbumDto, long userId, String fileName) {
         Album album = enrich(createAlbumDto,userId,fileName);
         albumRepository.save(album);
     }
 
-    private Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
-        Album album=new Album();
-        album.setTitle(createAlbumDto.getTitle());
-        album.setCover(host+":9000/images/"+fileName);
-        album.setAtmosphereRating(createAlbumDto.getAtmosphereRating());
-        album.setBitsRating(createAlbumDto.getBitsRating());
-        album.setTextRating(createAlbumDto.getTextRating());
-        album.setTracksRating(createAlbumDto.getTracksRating());
-        album.setArtist(createAlbumDto.getArtist());
-        User user=userService.findById(userId);
+    public Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
+        Album album = modelMapper.map(createAlbumDto, Album.class);
+        album.setCover(host + ":9000/images/" + fileName);
+
+        User user = userService.findById(userId);
         user.addAlbums(album);
         album.setUser(user);
+
         return album;
     }
 

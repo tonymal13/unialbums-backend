@@ -11,7 +11,6 @@ public class GenerateKeys {
     public static void main(String[] args) {
 
     }
-
     @Bean
     private SecretKey generateKey() {
         return Keys.secretKeyFor(SignatureAlgorithm.HS512);

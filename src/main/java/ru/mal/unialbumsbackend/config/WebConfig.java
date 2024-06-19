@@ -16,8 +16,8 @@ import static ru.mal.unialbumsbackend.config.WebConfig.host;
 
 @Configuration
 @EnableWebMvc
-@CrossOrigin(origins ="http://localhost:3000,http://localhost:6006,"
-        +host+","
+@CrossOrigin(origins =
+        host+","
         +host+":3000,"
         +host+":9000,"
         +host+":9002,"

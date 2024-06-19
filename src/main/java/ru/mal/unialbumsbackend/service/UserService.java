@@ -1,10 +1,12 @@
 package ru.mal.unialbumsbackend.service;
 
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
@@ -24,6 +26,8 @@ public class UserService {
 
     private final ImageService imageService;
 
+    private final ModelMapper modelMapper;
+
     @Transactional
     public void register(UserDto userDto) {
         User user= toEntity(userDto);
@@ -36,17 +40,17 @@ public class UserService {
     }
 
     public User toEntity(UserDto userDto) {
-        User user=new User();
+
+        User user = modelMapper.map(userDto, User.class);
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode( userDto.getPassword()));
-        user.setUsername(userDto.getUsername());
-        user.setLastName(userDto.getLastName());
-        user.setFirstName(userDto.getFirstName());
         user.setAvatar("");
+
         return user;
     }
 
     public void toDto(User user, UserDto userDto){
+
         user.setUsername(userDto.getUsername());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());

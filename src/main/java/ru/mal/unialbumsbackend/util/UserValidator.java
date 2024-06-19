@@ -15,47 +15,39 @@ public class UserValidator {
 
     private final UserService userService;
 
-    public String validateForRegister(UserDto userDto){
-        String message= "";
-
+    public String validateForRegister(UserDto userDto) {
         Optional<User> user = userService.findByUsernameOptional(userDto.getUsername());
 
-        if(user.isEmpty()){
-            message= ("Вы успешно зарегестрировались");
-            message=validatePassword(message,userDto.getPassword());
-            message=validateUsername(message,userDto.getUsername());
+        if (user.isEmpty()) {
+            String message = "Вы успешно зарегистрировались";
+            message = validatePassword(message, userDto.getPassword());
+            return validateUsername(message, userDto.getUsername());
+        } else {
+            return "Такой пользователь уже существует";
         }
-        else {
-
-            message = ("Такой пользователь уже существует");
-        }
-        return message;
     }
 
-    public String validateForEdit(UserDto userDto){
-        String message= "";
+    public String validateForEdit(UserDto userDto) {
+        Optional<User> user = userService.findByUsernameOptional(userDto.getUsername());
 
-        Optional <User> user = userService.findByUsernameOptional(userDto.getUsername());
-
-        if(user.isPresent()){
-            message= ("Данные успешно обновлены");
-            message=validateUsername(message,userDto.getUsername());
+        if (user.isPresent()) {
+            String message = "Пользователь с таким ником уже существует";
+            return validateUsername(message, userDto.getUsername());
+        } else {
+            return "Данные успешно обновлены";
         }
-        return message;
     }
 
-    private String validatePassword(String currentMessage,String password){
-        if (password!=null) {
-            if (password.length() < 1 || password.length() > 20) {
-                currentMessage = "Пароль должен быть от 1 до 20 символов :)";
-            }
+    private String validatePassword(String currentMessage, String password) {
+        if (password != null && (password.length() < 1 || password.length() > 20)) {
+            return "Пароль должен быть от 1 до 20 символов :)";
         }
         return currentMessage;
     }
 
-    private String validateUsername(String currentMessage,String username){
-        if(username.length()<1 || username.length()>20) {
-            currentMessage = "Логин должен быть от 1 до 20 символов :)";
+    private String validateUsername(String currentMessage, String username) {
+        if (username.length() < 1 || username.length() > 20) {
+            return "Логин должен быть от 1 до 20 символов :)";
         }
         return currentMessage;
     }

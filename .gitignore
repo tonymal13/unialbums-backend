@@ -6,6 +6,7 @@ target/
 /db
 /postgres-data
 /src/main/resources/application.properties
+/src/main/java/ru/mal/unialbumsbackend/TestSpotifyAPIlient.java
 
 ### STS ###
 .apt_generated
