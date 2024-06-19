@@ -22,7 +22,6 @@ public class AlbumService {
 
     private final UserService userService;
 
-    @Autowired
     private ModelMapper modelMapper;
 
     @Transactional

@@ -6,9 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name="albums")
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 @ToString
 public class Album {

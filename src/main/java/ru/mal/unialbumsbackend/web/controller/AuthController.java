@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
+import ru.mal.unialbumsbackend.web.dto.auth.RefreshAndAccessDto;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshJwtDto;
 import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.web.dto.BackendResponse;
@@ -36,16 +37,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<BackendResponse> login(@RequestBody LogInDto authRequest, HttpServletResponse response) {
 
-        BackendResponse tokens = authService.login(authRequest);
+        RefreshAndAccessDto tokens= authService.login(authRequest);
 
-        String refreshToken=tokens.getData().get(0).get("refreshToken");
+        String refreshToken=tokens.getRefreshToken();
 
         BackendResponse backendResponse = initializeResponse();
         backendResponse.setMessage("Вы вошли в аккаунт");
 
         HashMap<String,String> map = new HashMap<>();
         backendResponse.addMap(map);
-        backendResponse.addData(map,"accessToken",tokens.getData().get(0).get("accessToken"));
+        backendResponse.addData(map,"accessToken",tokens.getAccessToken());
 
 
         Cookie cookie=new Cookie("refreshToken",refreshToken);
@@ -55,28 +56,33 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<BackendResponse> getNewAccessToken(@RequestBody RefreshJwtDto request) {
-        final BackendResponse token = authService.getAccessToken(request.getRefreshToken());
-        return ResponseEntity.ok(token);
+    public ResponseEntity<BackendResponse> getNewAccessToken(@RequestBody RefreshJwtDto refreshJwtDto) {
+        final RefreshAndAccessDto tokens = authService.getAccessToken(refreshJwtDto.getRefreshToken());
+        BackendResponse backendResponse=initializeResponse();
+        HashMap<String,String> map=new HashMap<>();
+        backendResponse.addData(map,"accessToken", tokens.getAccessToken());
+        backendResponse.setMessage("Токен обновлен");
+        return ResponseEntity.ok(backendResponse);
     }
 
     @GetMapping("/refresh")
     public ResponseEntity<BackendResponse> getNewRefreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
 
-        final BackendResponse backendResponse = authService.refresh(refreshToken);
-        String newRefreshToken= backendResponse.getData().get(0).get("refreshToken");
+        final RefreshAndAccessDto tokens = authService.refresh(refreshToken);
+        String newRefreshToken= tokens.getRefreshToken();
         Cookie cookie=new Cookie("refreshToken",newRefreshToken);
         sendRefreshToken(cookie,response);
-        backendResponse.removeFromData("refreshToken");
+        BackendResponse backendResponse=initializeResponse();
+        backendResponse.setMessage("Токен обновлен");
         return ResponseEntity.ok(backendResponse);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDto request) {
+    public ResponseEntity<?> register(@RequestBody UserDto userDto) {
         BackendResponse backendResponse = initializeResponse();
-        String message =userValidator.validateForRegister(request);
-        if (message.equals("Вы успешно зарегестрировались")){
-            userService.register(request);
+        String message =userValidator.validateForRegister(userDto);
+        if (message.equals("Вы успешно зарегистрировались")){
+            userService.register(userDto);
             backendResponse.setMessage(message);
             return ResponseEntity.ok(backendResponse);
         }

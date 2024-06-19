@@ -20,6 +20,7 @@ import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
 import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
+import ru.mal.unialbumsbackend.web.dto.auth.RefreshAndAccessDto;
 import ru.mal.unialbumsbackend.web.security.JwtProvider;
 
 @ExtendWith(SpringExtension.class)
@@ -74,10 +75,10 @@ public class AuthServiceTest {
         Mockito.when(jwtProviderMock.generateRefreshToken(user))
                 .thenReturn(refreshToken);
 
-        BackendResponse response = authService.login(logInDto);
+        RefreshAndAccessDto tokens = authService.login(logInDto);
 
-        Assertions.assertEquals(response.getData().get(0).get("accessToken"), accessToken);
-        Assertions.assertEquals(response.getData().get(0).get("refreshToken"), refreshToken);
+        Assertions.assertEquals(tokens.getAccessToken(), accessToken);
+        Assertions.assertEquals(tokens.getRefreshToken(), refreshToken);
     }
 
     @Test

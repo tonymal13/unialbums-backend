@@ -1,17 +1,13 @@
 package ru.mal.unialbumsbackend.config;
 
 import io.minio.MinioClient;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.mal.unialbumsbackend.service.props.MinioProperties;
 
 @Configuration
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 public class MinioConfig {
 
     private MinioProperties minioProperties;

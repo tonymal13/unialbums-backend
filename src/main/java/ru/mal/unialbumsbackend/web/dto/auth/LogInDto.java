@@ -1,11 +1,9 @@
 package ru.mal.unialbumsbackend.web.dto.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class LogInDto {
 
     @Schema(description="username",example = "ivan123")

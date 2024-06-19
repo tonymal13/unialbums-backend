@@ -38,14 +38,14 @@ public class UserController {
     @GetMapping("/myProfile")
     public ResponseEntity<BackendResponse> getProfile(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
+        long userId = ((Number)jsonObject.get("userId")).longValue();
+
         BackendResponse backendResponse = initializeResponse();
         HashMap<String,String> map= new HashMap<>();
         backendResponse.addMap(map);
 
-        long userId = ((Number)jsonObject.get("userId")).longValue();
-
         User user=userService.findById(userId);
-        addInfo(backendResponse,map,user);
+        addInfoToResponse(backendResponse,map,user);
         backendResponse.addData(map, "firstName",user.getFirstName());
         backendResponse.addData(map,"lastName",user.getLastName());
         if(backendResponse.getMessage().equals("Данные пользователя")){
@@ -61,20 +61,18 @@ public class UserController {
     public ResponseEntity<?> editProfile(@RequestHeader("Authorization") String jwt, @ModelAttribute("request") UserDto userDto,
             @RequestParam(value = "avatar",required = false) Object avatar){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-        BackendResponse backendResponse = initializeResponse();
-
         long userId = ((Number)jsonObject.get("userId")).longValue();
+
+        BackendResponse backendResponse = initializeResponse();
 
         User user=userService.findById(userId);
 
         String message= userValidator.validateForEdit(userDto);
 
         if (message.equals("Данные успешно обновлены")){
-            System.out.println("saving...");
             backendResponse.setMessage(message);
-            userService.toDto(user,userDto);
+            userService.editUser(user,userDto);
             userService.addAvatarToUser(user,avatar);
-            System.out.println(user.getAvatar()+user.getUsername()+user.getId()+user.getFirstName()+user.getLastName()+user.getRole()+user.getPassword());
             userService.save(user);
             return ResponseEntity.ok(backendResponse);
         }
@@ -94,7 +92,6 @@ public class UserController {
     ) {
 
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
         String filename= imageService.upload(avatar);
@@ -114,16 +111,13 @@ public class UserController {
         User user=userService.findById(userId);
         HashMap<String,String> map= new HashMap<>();
         backendResponse.addMap(map);
-        addInfo(backendResponse,map,user);
-        if(backendResponse.getMessage().equals("Данные пользователя")){
-            return ResponseEntity.ok(backendResponse);
-        }
-        else{
-            return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
-        }
+        addInfoToResponse(backendResponse,map,user);
+
+        return ResponseEntity.ok(backendResponse);
+
     }
 
-    public void addInfo(BackendResponse response, HashMap<String,String> map, User user){
+    public void addInfoToResponse(BackendResponse response, HashMap<String,String> map, User user){
 
             response.addData(map, "username", user.getUsername());
             response.addData(map,"avatar",user.getAvatar());

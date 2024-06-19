@@ -1,14 +1,13 @@
 package ru.mal.unialbumsbackend.web.dto;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class BackendResponse {
 
@@ -24,26 +23,9 @@ public class BackendResponse {
         data.add(map);
     }
 
-    public void removeFromData(String refreshToken) {
-        data.get(0).remove(refreshToken);
-    }
-
     public static BackendResponse initializeResponse() {
         BackendResponse universeResponse=new BackendResponse();
         universeResponse.setData(new ArrayList<>());
         return universeResponse;
     }
 }
-
-// TODO: 09.06.2024 try to replace BackendResponse with ResponseEntity 
-
-//} else {
-//        Product product = this.productService.createProduct(payload.title(), payload.details());
-//        return ResponseEntity
-//        .created(uriComponentsBuilder
-//        .replacePath("/catalogue-api/products/{productId}")
-//        .build(Map.of("productId", product.getId())))
-//        .body(
-//        Map.of("data",List.of())
-//        product);
-//        }

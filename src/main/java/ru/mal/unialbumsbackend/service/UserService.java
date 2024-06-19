@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mal.unialbumsbackend.domain.Album;
 import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 import ru.mal.unialbumsbackend.repositories.UserRepository;
@@ -30,7 +29,7 @@ public class UserService {
 
     @Transactional
     public void register(UserDto userDto) {
-        User user= toEntity(userDto);
+        User user= convertUserDtoToUser(userDto);
         save(user);
     }
 
@@ -39,7 +38,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User toEntity(UserDto userDto) {
+    public User convertUserDtoToUser(UserDto userDto) {
 
         User user = modelMapper.map(userDto, User.class);
         user.setRole("USER");
@@ -49,7 +48,7 @@ public class UserService {
         return user;
     }
 
-    public void toDto(User user, UserDto userDto){
+    public void editUser(User user, UserDto userDto){
 
         user.setUsername(userDto.getUsername());
         user.setFirstName(userDto.getFirstName());

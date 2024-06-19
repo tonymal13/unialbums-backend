@@ -36,9 +36,10 @@ public class AlbumsController {
     )
     {
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
+        long userId = ((Number)jsonObject.get("userId")).longValue();
+
         BackendResponse backendResponse=initializeResponse();
         backendResponse.setMessage("Альбом создан");
-        long userId = ((Number)jsonObject.get("userId")).longValue();
 
         String filename= imageService.upload(cover);
         albumService.create(createAlbumDto,userId,filename);
@@ -48,7 +49,6 @@ public class AlbumsController {
     @GetMapping("/getByUserId")
     public ResponseEntity<BackendResponse> getByUserId(@RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
          List<AlbumDto> albums= albumService.getAlbumsByUserId(userId);
@@ -57,17 +57,17 @@ public class AlbumsController {
          backendResponse.setMessage("Альбомы пользователя:");
 
         for (AlbumDto album : albums) {
-            addData(backendResponse,album);
+            addDataToResponse(backendResponse,album);
 
         }
          return ResponseEntity.ok(backendResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BackendResponse> deleteAlbumById(@RequestHeader(name = "Authorization") String jwt,
-                                                           @PathVariable ("id") long albumId){
-        JSONObject jsonObject = decodeJWTGetHeader(jwt);
 
+    @DeleteMapping("/{albumId}")
+    public ResponseEntity<BackendResponse> deleteAlbumById(@RequestHeader(name = "Authorization") String jwt,
+                                                           @PathVariable ("albumId") long albumId){
+        JSONObject jsonObject = decodeJWTGetHeader(jwt);
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
         BackendResponse backendResponse = initializeResponse();
@@ -75,24 +75,20 @@ public class AlbumsController {
         AlbumDto albumDto = findAlbumByAlbumId(userId, albumId);
 
         if(albumDto !=null){
-
             albumService.deleteAlbumById(albumId);
             backendResponse.setMessage("Альбом удален");
         }
         else{
-            backendResponse = new BackendResponse();
+            backendResponse = initializeResponse();
             backendResponse.setMessage("Вы не можете получить доступ к этому альбому");
         }
         return ResponseEntity.ok(backendResponse);
     }
 
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<?> editAlbumInfo(@PathVariable("id") long albumId, @RequestBody CreateAlbumDto req, @RequestHeader(name = "Authorization") String jwt){
+    public ResponseEntity<?> editAlbumInfo(@PathVariable("id") long albumId, @RequestBody CreateAlbumDto createAlbumDto, @RequestHeader(name = "Authorization") String jwt){
 
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-
         long userId = ((Number) jsonObject.get("userId")).longValue();
 
         AlbumDto albumDto = findAlbumByAlbumId(userId, albumId);
@@ -100,7 +96,7 @@ public class AlbumsController {
         if(albumDto !=null){
             BackendResponse backendResponse = initializeResponse();
             Album album =albumService.findById(albumId);
-            edit(album,req);
+            editAlbum(album,createAlbumDto);
             albumService.save(album);
             backendResponse.setMessage("Данные успешно обновлены");
             return ResponseEntity.ok(backendResponse);
@@ -113,7 +109,7 @@ public class AlbumsController {
 
     }
 
-    private void edit(Album album, CreateAlbumDto createAlbumDto){
+    private void editAlbum(Album album, CreateAlbumDto createAlbumDto){
         album.setTitle(createAlbumDto.getTitle());
         album.setArtist(createAlbumDto.getArtist());
     }
@@ -121,15 +117,15 @@ public class AlbumsController {
     @GetMapping("/{id}")
     public ResponseEntity<BackendResponse> getAlbumInfo(@PathVariable("id") long albumId, @RequestHeader(name = "Authorization") String jwt){
         JSONObject jsonObject = decodeJWTGetHeader(jwt);
-
         long userId = ((Number) jsonObject.get("userId")).longValue();
+
         BackendResponse backendResponse = initializeResponse();
 
         AlbumDto albumDto = findAlbumByAlbumId(userId, albumId);
 
         if(albumDto !=null){
 
-            addData(backendResponse, albumDto);
+            addDataToResponse(backendResponse, albumDto);
             backendResponse.setMessage("Информация об альбоме:");
         }
         else{
@@ -140,29 +136,23 @@ public class AlbumsController {
     }
 
     private AlbumDto findAlbumByAlbumId(long userId, long albumId) {
-
-        List<AlbumDto> albums=albumService.getAlbumsByUserId(userId);
-
-        AlbumDto albumDto =null;
-        for(AlbumDto album:albums){
-            if(album.getId()==albumId)
-                albumDto =album;
-        }
-
-        return albumDto;
+        return albumService.getAlbumsByUserId(userId).stream()
+                .filter(album -> album.getId() == albumId)
+                .findFirst()
+                .orElse(null);
     }
 
-    public void addData(BackendResponse universeResponse, AlbumDto albumDto){
+    public void addDataToResponse(BackendResponse backendResponse, AlbumDto albumDto){
         HashMap<String, String> map = new HashMap<>();
-        universeResponse.addMap(map);
-        universeResponse.addData(map, "title", albumDto.getTitle());
-        universeResponse.addData(map, "cover", albumDto.getCover());
-        universeResponse.addData(map, "tracksRating", Integer.toString(albumDto.getTracksRating()));
-        universeResponse.addData(map, "atmosphereRating", Integer.toString(albumDto.getAtmosphereRating()));
-        universeResponse.addData(map, "bitsRating", Integer.toString(albumDto.getBitsRating()));
-        universeResponse.addData(map, "textRating", Integer.toString(albumDto.getTextRating()));
-        universeResponse.addData(map, "artist", albumDto.getArtist());
-        universeResponse.addData(map, "albumId", Long.toString(albumDto.getId()));
+        backendResponse.addMap(map);
+        backendResponse.addData(map, "title", albumDto.getTitle());
+        backendResponse.addData(map, "cover", albumDto.getCover());
+        backendResponse.addData(map, "tracksRating", Integer.toString(albumDto.getTracksRating()));
+        backendResponse.addData(map, "atmosphereRating", Integer.toString(albumDto.getAtmosphereRating()));
+        backendResponse.addData(map, "bitsRating", Integer.toString(albumDto.getBitsRating()));
+        backendResponse.addData(map, "textRating", Integer.toString(albumDto.getTextRating()));
+        backendResponse.addData(map, "artist", albumDto.getArtist());
+        backendResponse.addData(map, "albumId", Long.toString(albumDto.getId()));
     }
 
 }
