@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: unialbums-backend-app
+          image: tonymal13/unialbums-backend-app:working_version
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgresql:5432/unialbums-backend"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_MINIO_BUCKET
+              value: images
+            - name: SPRING_MINIO_URL
+              value: "http://minio:9000"
+            - name: SPRING_MINIO_ACCESS_KEY
+              value: admin
+            - name: SPRING_MINIO_SECRET_KEY
+              value: admin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: http
+      port: 8081
+      targetPort: 8081
+  type: LoadBalancer
+

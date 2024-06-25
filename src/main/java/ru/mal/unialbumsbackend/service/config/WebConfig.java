@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.config;
+package ru.mal.unialbumsbackend.service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 
-import static ru.mal.unialbumsbackend.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
 
 @Configuration
 @EnableWebMvc
@@ -20,8 +20,7 @@ import static ru.mal.unialbumsbackend.config.WebConfig.host;
         host+","
         +host+":3000,"
         +host+":9000,"
-        +host+":9002,"
-        +host+":6006"
+        +host+":9002"
         ,allowCredentials = "true")
 public class WebConfig {
 

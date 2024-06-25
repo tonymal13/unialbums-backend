@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.mal.unialbumsbackend.domain.User;
 import ru.mal.unialbumsbackend.util.UserValidator;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.web.dto.auth.RefreshAndAccessDto;
@@ -17,6 +18,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
+import ru.mal.unialbumsbackend.web.security.JwtProvider;
 
 import java.util.HashMap;
 
@@ -48,7 +50,6 @@ public class AuthController {
         backendResponse.addMap(map);
         backendResponse.addData(map,"accessToken",tokens.getAccessToken());
 
-
         Cookie cookie=new Cookie("refreshToken",refreshToken);
         sendRefreshToken(cookie,response);
 
@@ -78,12 +79,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> register(@RequestBody UserDto userDto,HttpServletResponse response) {
         BackendResponse backendResponse = initializeResponse();
         String message =userValidator.validateForRegister(userDto);
         if (message.equals("Вы успешно зарегистрировались")){
-            userService.register(userDto);
+            User user= userService. convertUserDtoToUser(userDto);
+            userService.register(user);
             backendResponse.setMessage(message);
+            String refreshToken=authService. generateRefreshToken(user);
+
+            Cookie cookie=new Cookie("refreshToken",refreshToken);
+            sendRefreshToken(cookie,response);
             return ResponseEntity.ok(backendResponse);
         }
         else {

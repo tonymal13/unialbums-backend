@@ -17,7 +17,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.HashMap;
 
-import static ru.mal.unialbumsbackend.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
 import static ru.mal.unialbumsbackend.web.dto.BackendResponse.initializeResponse;
 import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 

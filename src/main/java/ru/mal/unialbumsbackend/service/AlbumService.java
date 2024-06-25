@@ -2,7 +2,6 @@ package ru.mal.unialbumsbackend.service;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mal.unialbumsbackend.domain.Album;
@@ -13,7 +12,7 @@ import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 
 import java.util.*;
 
-import static ru.mal.unialbumsbackend.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
 
 @Service
 @AllArgsConstructor

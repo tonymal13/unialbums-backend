@@ -13,7 +13,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.Optional;
 
-import static ru.mal.unialbumsbackend.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
 
 @Service
 @AllArgsConstructor
@@ -28,8 +28,7 @@ public class UserService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public void register(UserDto userDto) {
-        User user= convertUserDtoToUser(userDto);
+    public void register(User user) {
         save(user);
     }
 

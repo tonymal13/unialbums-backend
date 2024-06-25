@@ -2,7 +2,6 @@ package ru.mal.unialbumsbackend.service;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mal.unialbumsbackend.exception.AuthException;
@@ -67,4 +66,7 @@ public class AuthService {
         throw new AuthException("Невалидный JWT токен");
     }
 
+    public String generateRefreshToken(User user) {
+        return jwtProvider.generateRefreshToken(user);
+    }
 }
