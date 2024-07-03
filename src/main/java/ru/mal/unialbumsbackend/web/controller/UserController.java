@@ -17,7 +17,7 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 
 import java.util.HashMap;
 
-import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 import static ru.mal.unialbumsbackend.web.dto.BackendResponse.initializeResponse;
 import static ru.mal.unialbumsbackend.web.security.JwtUtils.decodeJWTGetHeader;
 
@@ -69,19 +69,18 @@ public class UserController {
 
         String message= userValidator.validateForEdit(userDto);
 
+        backendResponse.setMessage(message);
+
         if (message.equals("Данные успешно обновлены")){
-            backendResponse.setMessage(message);
             userService.editUser(user,userDto);
             userService.addAvatarToUser(user,avatar);
             userService.save(user);
             return ResponseEntity.ok(backendResponse);
         }
         else if(message.equals("Пароль должен быть от 1 до 20 символов :)")||message.equals("Логин должен быть от 1 до 20 символов :)")) {
-            backendResponse.setMessage(message);
             return new ResponseEntity<>(backendResponse,HttpStatus.BAD_REQUEST);
         }
         else{
-            backendResponse.setMessage(message);
             return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
         }
 
@@ -98,7 +97,7 @@ public class UserController {
 
         User user=userService.findById(userId);
         user.setAvatar(host+":9000/images/"+filename);
-        userRepository.save(user);
+        userService.save(user);
     }
 
     @GetMapping("/getUserInfo")
@@ -124,5 +123,4 @@ public class UserController {
             response.setMessage("Данные пользователя");
 
     }
-
 }

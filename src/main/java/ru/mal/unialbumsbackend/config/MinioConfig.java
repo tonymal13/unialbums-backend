@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.service.config;
+package ru.mal.unialbumsbackend.config;
 
 import io.minio.MinioClient;
 import lombok.Data;

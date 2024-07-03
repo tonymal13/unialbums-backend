@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.service.config;
+package ru.mal.unialbumsbackend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 
-import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 
 @Configuration
 @EnableWebMvc

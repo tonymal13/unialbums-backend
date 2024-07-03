@@ -11,8 +11,6 @@ import ru.mal.unialbumsbackend.domain.*;
 import ru.mal.unialbumsbackend.web.dto.auth.LogInDto;
 import ru.mal.unialbumsbackend.exception.UserNotFoundException;
 
-import java.util.HashMap;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -28,7 +26,6 @@ public class AuthService {
             if (passwordEncoder.matches(logInDto.getPassword() ,user.getPassword())){
                 final String accessToken = jwtProvider.generateAccessTokenForLogin(user);
                 final String refreshToken = jwtProvider.generateRefreshToken(user);
-                HashMap<String,String> map=new HashMap<>();
                 refreshAndAccessDto.setAccessToken(accessToken);
                 refreshAndAccessDto.setRefreshToken(refreshToken);
 

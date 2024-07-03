@@ -45,14 +45,6 @@ public class JwtAuthentication implements Authentication {
     @Override
     public String getName() { return firstName; }
 
-    public void setRole(String  role) {
-        this.role=role;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName=firstName;
-    }
-
     public void setUsername(String subject) {
         username=subject;
     }

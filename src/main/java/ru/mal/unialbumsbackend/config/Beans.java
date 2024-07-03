@@ -1,4 +1,4 @@
-package ru.mal.unialbumsbackend.service.config;
+package ru.mal.unialbumsbackend.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

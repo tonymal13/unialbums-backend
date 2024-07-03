@@ -12,7 +12,7 @@ import ru.mal.unialbumsbackend.repositories.AlbumRepository;
 
 import java.util.*;
 
-import static ru.mal.unialbumsbackend.service.config.WebConfig.host;
+import static ru.mal.unialbumsbackend.config.WebConfig.host;
 
 @Service
 @AllArgsConstructor
@@ -25,11 +25,11 @@ public class AlbumService {
 
     @Transactional
     public void create(CreateAlbumDto createAlbumDto, long userId, String fileName) {
-        Album album = enrich(createAlbumDto,userId,fileName);
+        Album album = cretaAlbumDtoToAlbum(createAlbumDto,userId,fileName);
         albumRepository.save(album);
     }
 
-    public Album enrich(CreateAlbumDto createAlbumDto, long userId, String fileName) {
+    public Album cretaAlbumDtoToAlbum(CreateAlbumDto createAlbumDto, long userId, String fileName) {
         Album album = modelMapper.map(createAlbumDto, Album.class);
         album.setCover(host + ":9000/images/" + fileName);
 

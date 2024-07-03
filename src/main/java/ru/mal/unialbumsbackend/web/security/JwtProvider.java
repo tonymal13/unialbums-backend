@@ -89,13 +89,13 @@ public class JwtProvider {
     }
 
     public String generateAccessTokenForLogin(@NonNull User user) {
-        return generateToken(user)
+        return generateToken()
                 .claim("userId",user.getId())
                 .claim("role", user.getRole())
                 .compact();
     }
 
-    private JwtBuilder generateToken(User user) {
+    private JwtBuilder generateToken() {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);

@@ -18,7 +18,6 @@ import ru.mal.unialbumsbackend.web.dto.auth.UserDto;
 import ru.mal.unialbumsbackend.web.dto.BackendResponse;
 import ru.mal.unialbumsbackend.service.AuthService;
 import ru.mal.unialbumsbackend.service.UserService;
-import ru.mal.unialbumsbackend.web.security.JwtProvider;
 
 import java.util.HashMap;
 
@@ -82,10 +81,11 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody UserDto userDto,HttpServletResponse response) {
         BackendResponse backendResponse = initializeResponse();
         String message =userValidator.validateForRegister(userDto);
+        backendResponse.setMessage(message);
         if (message.equals("Вы успешно зарегистрировались")){
             User user= userService. convertUserDtoToUser(userDto);
             userService.register(user);
-            backendResponse.setMessage(message);
+
             String refreshToken=authService. generateRefreshToken(user);
 
             Cookie cookie=new Cookie("refreshToken",refreshToken);
@@ -93,7 +93,6 @@ public class AuthController {
             return ResponseEntity.ok(backendResponse);
         }
         else {
-            backendResponse.setMessage(message);
             return new ResponseEntity<>(backendResponse,HttpStatus.NOT_FOUND);
         }
 
@@ -126,7 +125,7 @@ public class AuthController {
     }
     @GetMapping("/test")
     public String test(){
-        return "Test1";
+        return "Made by def1s and tonymal13";
     }
 
 }

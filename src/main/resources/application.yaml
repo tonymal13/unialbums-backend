@@ -41,3 +41,7 @@ jwt:
   secret:
     access: ${JWT_SECRET_ACCESS}
     refresh: ${JWT_SECRET_REFRESH}
+
+client:
+  id: ${CLIENT_ID}
+  secret: ${CLIENT_SECRET}

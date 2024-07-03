@@ -1,6 +1,5 @@
 package ru.mal.unialbumsbackend.web.security;
 
-
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

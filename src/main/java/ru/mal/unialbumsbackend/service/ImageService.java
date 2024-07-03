@@ -67,7 +67,7 @@ public class ImageService {
 
     @SneakyThrows
     private void saveImage(InputStream inputStream,String fileName){
-        ObjectWriteResponse response= minioClient.putObject(PutObjectArgs.builder()
+        minioClient.putObject(PutObjectArgs.builder()
                         .stream(inputStream, inputStream.available(), -1)
                         .bucket(minioProperties.getBucket())
                         .object(fileName)
