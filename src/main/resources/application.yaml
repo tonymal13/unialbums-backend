@@ -19,10 +19,10 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   minio:
-    url: ${SPRING_MINIO_URL}
-    bucket: ${SPRING_MINIO_BUCKET}
-    access-key: ${SPRING_MINIO_ACCESS_KEY}
-    secret-key: ${SPRING_MINIO_SECRET_KEY}
+    url: http://minio
+    bucket: images
+    access-key: admin
+    secret-key: password
 
   servlet:
     multipart:

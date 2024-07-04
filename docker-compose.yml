@@ -34,8 +34,8 @@ services:
     image: quay.io/minio/minio
     command: server /data --console-address ":9002"
     environment:
-      - MINIO_ROOT_USER=${SPRING_MINIO_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${SPRING_MINIO_SECRET_KEY}
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
     volumes:
       - minio_data:/data
     ports:
