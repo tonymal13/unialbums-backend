@@ -15,6 +15,7 @@ public class MinioProperties {
 
     @Value("${spring.minio.access-key}")
     private String accessKey;
+
     @Value("${spring.minio.secret-key}")
     private String secretKey;
 

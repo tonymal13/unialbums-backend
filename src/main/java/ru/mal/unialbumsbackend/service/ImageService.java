@@ -2,6 +2,7 @@ package ru.mal.unialbumsbackend.service;
 
 import io.minio.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
+@Data
 @AllArgsConstructor
 
 public class ImageService {

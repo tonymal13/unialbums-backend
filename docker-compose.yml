@@ -36,8 +36,6 @@ services:
     environment:
       - MINIO_ROOT_USER=${SPRING_MINIO_ACCESS_KEY}
       - MINIO_ROOT_PASSWORD=${SPRING_MINIO_SECRET_KEY}
-      - SPRING_MINIO_URL=${SPRING_MINIO_URL}
-      - SPRING_MINIO_BUCKET=${SPRING_MINIO_BUCKET}
     volumes:
       - minio_data:/data
     ports:
