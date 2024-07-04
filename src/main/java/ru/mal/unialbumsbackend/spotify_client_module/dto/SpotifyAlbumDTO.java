@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AlbumDTO {
+public class SpotifyAlbumDTO {
 
     private String name;
 

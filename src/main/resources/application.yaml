@@ -19,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   minio:
-    url: http://minio
+    url: http://minio:9000
     bucket: images
     access-key: admin
     secret-key: password

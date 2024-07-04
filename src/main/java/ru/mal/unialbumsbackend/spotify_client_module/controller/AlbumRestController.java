@@ -3,7 +3,7 @@ package ru.mal.unialbumsbackend.spotify_client_module.controller;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.mal.unialbumsbackend.spotify_client_module.client.SpotifyAPIClient;
-import ru.mal.unialbumsbackend.spotify_client_module.dto.AlbumDTO;
+import ru.mal.unialbumsbackend.spotify_client_module.dto.SpotifyAlbumDTO;
 import ru.mal.unialbumsbackend.spotify_client_module.entity.Artist;
 
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/spotify")
 public class AlbumRestController {
 
     private final SpotifyAPIClient spotifyAPIClient;
@@ -22,12 +22,12 @@ public class AlbumRestController {
     }
 
     @GetMapping("/albums")
-    public Mono<List<AlbumDTO>> getAlbums(@RequestParam("q") String query,@RequestHeader(name = "Authorization") String jwt){
+    public Mono<List<SpotifyAlbumDTO>> getAlbums(@RequestParam("q") String query, @RequestHeader(name = "Authorization") String jwt){
 
         return spotifyAPIClient. getAlbumsByTitle(query)
                 .map(albumResponse -> albumResponse.getAlbums().getItems().stream()
                         .map(albumItem -> {
-                            AlbumDTO dto = new AlbumDTO();
+                            SpotifyAlbumDTO dto = new SpotifyAlbumDTO();
                             dto.setId(albumItem.getId());
                             dto.setName(albumItem.getName());
                             // Извлекаем только имена исполнителей

@@ -1,8 +1,10 @@
 package ru.mal.unialbumsbackend.web.dto.album;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class AlbumDto {
 
     private Long id;
