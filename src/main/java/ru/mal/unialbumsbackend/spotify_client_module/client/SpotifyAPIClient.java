@@ -52,6 +52,8 @@ public class SpotifyAPIClient {
 
         String accessToken = tokenPayloadJson.getString("access_token");
 
+        System.out.println("accessToken"+accessToken);
+
         return webClient.get()
                 .uri(String.format( "https://api.spotify.com/v1/search?type=album&q=%s",query))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)

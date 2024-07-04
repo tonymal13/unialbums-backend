@@ -20,7 +20,9 @@ import static ru.mal.unialbumsbackend.config.WebConfig.host;
         host+","
         +host+":3000,"
         +host+":9000,"
-        +host+":9002"
+        +host+":9002,"
+        +"https://accounts.spotify.com,"
+        +"https://api.spotify.com"
         ,allowCredentials = "true")
 public class WebConfig {
 
@@ -39,6 +41,8 @@ public class WebConfig {
         config.addAllowedOrigin(host+":3000");
         config.addAllowedOrigin(host+":9000");
         config.addAllowedOrigin(host+":9002");
+        config.addAllowedOrigin("https://accounts.spotify.com");
+        config.addAllowedOrigin("https://api.spotify.com");
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,
